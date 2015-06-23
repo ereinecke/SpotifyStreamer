@@ -1,0 +1,147 @@
+https://api.spotify.com/v1/search?q=Gil%20Gutierrez&type=artist
+
+{
+  "artists": {
+    "href": "https://api.spotify.com/v1/search?query=Gil+Gutierrez&offset=0&limit=20&type=artist",
+    "items": [
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+        },
+        "followers": {
+          "href": null,
+          "total": 38
+        },
+        "genres": [],
+        "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+        "id": "7uTneuG35UZirj7UmMq7YA",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Gil Gutierrez",
+        "popularity": 9,
+        "type": "artist",
+        "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+      },
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/3RpuqExVvm1hynqAqmov2E"
+        },
+        "followers": {
+          "href": null,
+          "total": 9
+        },
+        "genres": [],
+        "href": "https://api.spotify.com/v1/artists/3RpuqExVvm1hynqAqmov2E",
+        "id": "3RpuqExVvm1hynqAqmov2E",
+        "images": [],
+        "name": "Gil Gutierrez & Pedro Cartas",
+        "popularity": 0,
+        "type": "artist",
+        "uri": "spotify:artist:3RpuqExVvm1hynqAqmov2E"
+      },
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/2Ld4uKlwGg1jL58NaaAEX0"
+        },
+        "followers": {
+          "href": null,
+          "total": 2
+        },
+        "genres": [],
+        "href": "https://api.spotify.com/v1/artists/2Ld4uKlwGg1jL58NaaAEX0",
+        "id": "2Ld4uKlwGg1jL58NaaAEX0",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/aada9472fae8ea959aed10a53c3776bc35c19685",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/9cbfdb2e2172f59c20dbfa157d94ee977363aba5",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/d7625bc0bea63c1fc18af712bc8704baba0770db",
+            "width": 64
+          }
+        ],
+        "name": "Gil Gutierrez & Doc Severinsen",
+        "popularity": 0,
+        "type": "artist",
+        "uri": "spotify:artist:2Ld4uKlwGg1jL58NaaAEX0"
+      },
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/6nhE7v6Cwc28Ydb0PDNSkA"
+        },
+        "followers": {
+          "href": null,
+          "total": 2
+        },
+        "genres": [],
+        "href": "https://api.spotify.com/v1/artists/6nhE7v6Cwc28Ydb0PDNSkA",
+        "id": "6nhE7v6Cwc28Ydb0PDNSkA",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/0c1b48fec308fd768e12747a65b263c1841dd43f",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/1de225f1d0d16b53f83bad9d830c36d883f4b2d1",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/24bc3c82d2ef4b8d7bcb97c4c27451136e748900",
+            "width": 64
+          }
+        ],
+        "name": "Gil Gutierrez, Pedro Cartas, & Doc Severinsen",
+        "popularity": 0,
+        "type": "artist",
+        "uri": "spotify:artist:6nhE7v6Cwc28Ydb0PDNSkA"
+      },
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/2k30PP820DUD47ST88INIM"
+        },
+        "followers": {
+          "href": null,
+          "total": 9
+        },
+        "genres": [],
+        "href": "https://api.spotify.com/v1/artists/2k30PP820DUD47ST88INIM",
+        "id": "2k30PP820DUD47ST88INIM",
+        "images": [],
+        "name": "Gil Gutierrez, Pedro Cartas & Doc Severinsen",
+        "popularity": 1,
+        "type": "artist",
+        "uri": "spotify:artist:2k30PP820DUD47ST88INIM"
+      }
+    ],
+    "limit": 20,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total": 5
+  }
+}
