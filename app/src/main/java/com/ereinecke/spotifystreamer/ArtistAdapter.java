@@ -2,7 +2,6 @@ package com.ereinecke.spotifystreamer;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ import android.widget.TextView;
  */
 public class ArtistAdapter extends CursorAdapter {
 
-    // TODO:
+    // TODO: Utterly confused with this
     private static final int figureThisOut = 1;
 
     /**
@@ -67,10 +66,10 @@ public class ArtistAdapter extends CursorAdapter {
         or setImageBitmap(android.graphics.Bitmap) and BitmapFactory instead.
          */
         // Get artist artwork
-        viewHolder.artistImageView.setImageResource(figureThisOut);
+        viewHolder.artistImageView.setImageResource(R.mipmap.ic_launcher);
 
         // Get artist name
-        viewHolder.artistNameView.setText(figureThisOut);
+        viewHolder.artistNameView.setText(R.string.artist_name_placeholder);
 
     }
 

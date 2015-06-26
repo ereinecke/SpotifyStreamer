@@ -1,15 +1,21 @@
 package com.ereinecke.spotifystreamer;
 
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
 
 /**
  * FindArtistFragment handles searching for an artist and displaying all artists that
@@ -19,11 +25,15 @@ import java.util.ArrayList;
 public class FindArtistFragment extends Fragment {
 
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
+
+    private int mPosition = ListView.INVALID_POSITION;
     private ArtistAdapter mArtistAdapter;
     private ListView mListView;
-    private int mPosition = ListView.INVALID_POSITION;
+    private SpotifyApi mSpotifyApi = new SpotifyApi();
+    private ArtistsPager artistsPager;
 
     public FindArtistFragment() {
+
     }
 
     @Override
@@ -36,10 +46,44 @@ public class FindArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        /* Create ArrayAdapter to display dummy artist data */
+        // Debugging purposes
+        // For now, construct URL in here; in future, pass whole string
+        String debugArtist = "Gil+Gutierrez";
+        String response = null;
+        String queryUrl = SpotifyApi.SPOTIFY_WEB_API_ENDPOINT + "?q=" + debugArtist + "&type=artist";
+        Log.d(LOG_TAG, "Query URL: " + queryUrl);
+
+        // AsyncTask to execute search
+        fetchSpotifyData spotifyData = new fetchSpotifyData();
+        spotifyData.execute(queryUrl);
+
+        // Create ArrayAdapter to display dummy artist data
         mArtistAdapter = new ArtistAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        // Set up focus listener for Search Artist editText
+        final EditText artistSearch = (EditText) rootView.findViewById(R.id.search_artist_editText);
+        artistSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Log.d(LOG_TAG, "hasFocus true");
+                    String artist = artistSearch.getText().toString();
+                    Log.d(LOG_TAG, " Artist: " + artist + "len(artist): " + artist.length());
+
+                    if ((artist != null) && (artist.length() != 0)) {
+
+                        artistsPager = mSpotifyApi.getService().searchArtists(artist);
+                        // just for debug purposes
+                        logArtistsPager(artistsPager);
+                    }
+                }
+                else {
+                    Log.d(LOG_TAG, "hasFocus false");
+                }
+            }
+        });
 
         // Get a reference to the ListView and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_artist);
@@ -79,14 +123,45 @@ public class FindArtistFragment extends Fragment {
         return rootView;
     }
 
-    private ArrayList<String> dummyArtistList() {
-        ArrayList<String> dummyList = new ArrayList<String>();
-        dummyList.add("Gil Gutierrez");
-        dummyList.add("Gil Gutierrez & Pedro Cartas");
-        dummyList.add("Gil Gutierrez & Doc Severinsen");
-        dummyList.add("Gil Gutierrez, Pedro Cartas & Doc Severinsen");
+    public class fetchSpotifyData extends AsyncTask<String, Void, String> {
 
-        return dummyList;
+        private final String LOG_TAG = "FetchSpotifyData";
+
+        @Override
+        protected String doInBackground(String... params) {
+            String queryUrl = null;
+            String response = null;
+            if (params.length == 0) {
+                    return null;
+            }
+            else {queryUrl = params[0];}
+
+            // Use direct call to okhttp for starters
+/*
+            HttpClient test = new HttpClient();
+            String response = null;
+                try {
+                    response = test.run(queryUrl, accessToken);
+                    Log.d(LOG_TAG, "Response: " + response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+*/
+            // TODO: Now try the spotify wrapper
+
+
+            return response;
+        } // end FetchSpotifyData.doInBackground
+
+    } // end FetchSpotifyData
+
+    private void logArtistsPager(ArtistsPager artistsPager) {
+    Log.v(LOG_TAG, "artistsPager:");
+    if (artistsPager == null) Log.d(LOG_TAG, "artistsPager is null");
+    else {
+        for (Artist artist : artistsPager.artists.items) {
+            Log.d(LOG_TAG, "  artist id: " + artist.id + "; artist name: " + artist.name);
+        }
     }
-
+    }
 }
