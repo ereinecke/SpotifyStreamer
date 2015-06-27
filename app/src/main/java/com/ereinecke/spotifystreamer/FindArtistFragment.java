@@ -5,15 +5,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 
@@ -47,41 +50,31 @@ public class FindArtistFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Debugging purposes
-        // For now, construct URL in here; in future, pass whole string
-        String debugArtist = "Gil+Gutierrez";
-        String response = null;
-        String queryUrl = SpotifyApi.SPOTIFY_WEB_API_ENDPOINT + "?q=" + debugArtist + "&type=artist";
-        Log.d(LOG_TAG, "Query URL: " + queryUrl);
+        String debugArtist = "Gil Gutierrez";
 
         // AsyncTask to execute search
-        fetchSpotifyData spotifyData = new fetchSpotifyData();
-        spotifyData.execute(queryUrl);
+        searchSpotifyArtists spotifyData = new searchSpotifyArtists();
+        spotifyData.execute(debugArtist);
 
         // Create ArrayAdapter to display dummy artist data
         mArtistAdapter = new ArtistAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Set up focus listener for Search Artist editText
+        // Set up action listener for Search Artist editText
         final EditText artistSearch = (EditText) rootView.findViewById(R.id.search_artist_editText);
-        artistSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
+        artistSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    Log.d(LOG_TAG, "hasFocus true");
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String artist = artistSearch.getText().toString();
-                    Log.d(LOG_TAG, " Artist: " + artist + "len(artist): " + artist.length());
-
-                    if ((artist != null) && (artist.length() != 0)) {
-
-                        artistsPager = mSpotifyApi.getService().searchArtists(artist);
-                        // just for debug purposes
-                        logArtistsPager(artistsPager);
-                    }
+                    Log.d(LOG_TAG, " Artist: " + artist);
+                    searchSpotifyArtists spotifyData = new searchSpotifyArtists();
+                    spotifyData.execute(artist);
+                    handled = true;
                 }
-                else {
-                    Log.d(LOG_TAG, "hasFocus false");
-                }
+                return handled;
             }
         });
 
@@ -123,45 +116,47 @@ public class FindArtistFragment extends Fragment {
         return rootView;
     }
 
-    public class fetchSpotifyData extends AsyncTask<String, Void, String> {
 
-        private final String LOG_TAG = "FetchSpotifyData";
+    public class searchSpotifyArtists extends AsyncTask<String, Void, ArtistsPager> {
+
+        private final String LOG_TAG = searchSpotifyArtists.class.getSimpleName();
 
         @Override
-        protected String doInBackground(String... params) {
-            String queryUrl = null;
+        protected ArtistsPager doInBackground(String... params) {
+            String artist = null;
             String response = null;
             if (params.length == 0) {
-                    return null;
+                return null;
             }
-            else {queryUrl = params[0];}
+            else {artist = params[0];}
 
-            // Use direct call to okhttp for starters
-/*
-            HttpClient test = new HttpClient();
-            String response = null;
-                try {
-                    response = test.run(queryUrl, accessToken);
-                    Log.d(LOG_TAG, "Response: " + response);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-*/
-            // TODO: Now try the spotify wrapper
+            SpotifyApi api = new SpotifyApi();
+            api.setAccessToken(MainActivity.accessToken());
 
+            SpotifyService spotify = api.getService();
+            ArtistsPager artistsPager = spotify.searchArtists(artist);
+            Log.d(LOG_TAG, artistsPager.toString());
+            logArtistsPager(artistsPager);
 
-            return response;
-        } // end FetchSpotifyData.doInBackground
+            return artistsPager;
+        } // end searchSpotifyData.doInBackground
 
-    } // end FetchSpotifyData
-
-    private void logArtistsPager(ArtistsPager artistsPager) {
-    Log.v(LOG_TAG, "artistsPager:");
-    if (artistsPager == null) Log.d(LOG_TAG, "artistsPager is null");
-    else {
-        for (Artist artist : artistsPager.artists.items) {
-            Log.d(LOG_TAG, "  artist id: " + artist.id + "; artist name: " + artist.name);
+        @Override
+        protected void onPostExecute(ArtistsPager artistsPager) {
+            logArtistsPager(artistsPager);
+            // TODO: populate ListView here?
         }
-    }
+
+    } // end searchSpotifyData
+
+    /* for debugging purposes */
+    private void logArtistsPager(ArtistsPager artistsPager) {
+        Log.v(LOG_TAG, "artistsPager:");
+        if (artistsPager == null) Log.d(LOG_TAG, "artistsPager is null");
+        else {
+            for (Artist artist : artistsPager.artists.items) {
+                Log.d(LOG_TAG, "  artist id: " + artist.id + "; artist name: " + artist.name);
+            }
+        }
     }
 }

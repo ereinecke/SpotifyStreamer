@@ -21,10 +21,10 @@ public class MainActivity extends ActionBarActivity {
     private static final String CLIENT_ID = "0801969fcfb940d69497cd585393a7d0";
     private static final String REDIRECT_URI = "whatup://callback";
 
-    private String accessToken = null;
+    private static String accessToken = null;
 
-    public boolean isLoggedIn() {return (accessToken != null);}
-    public String accessToken() {return accessToken;}
+    public static boolean isLoggedIn() {return (accessToken != null);}
+    public static String accessToken() {return accessToken;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,4 +111,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     }
+
+
 }
