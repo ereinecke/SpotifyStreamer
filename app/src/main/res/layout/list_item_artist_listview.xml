@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_item_artist_display"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ArtistActivity">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    tools:context=".ArtistActivity" >
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/list_artist_imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="2dp"
+        android:background="#22ffffff" />
 
+    <TextView
+        android:id="@+id/list_artist_textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
 
-
-        <ImageView
-            android:id="@+id/list_artist_imageView"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:minHeight="70dp"
-            android:minWidth="70dp"
-            android:background="#22ffffff" />
-
-        <TextView
-            android:id="@+id/list_artist_textView"
-
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:text="Artist Name"
-            android:textSize="@dimen/abc_text_size_medium_material"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:gravity="fill_horizontal|center_vertical|start" />
-    </LinearLayout>
-</ListView>
+        android:text="Artist Name"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:gravity="fill_horizontal|center_vertical|start" />
+</LinearLayout>

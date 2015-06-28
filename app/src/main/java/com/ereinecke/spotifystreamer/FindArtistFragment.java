@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
@@ -30,13 +32,13 @@ public class FindArtistFragment extends Fragment {
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
 
     private int mPosition = ListView.INVALID_POSITION;
+    private ArrayList<ArtistList> artistArray = new ArrayList<>();
     private ArtistAdapter mArtistAdapter;
     private ListView mListView;
     private SpotifyApi mSpotifyApi = new SpotifyApi();
-    private ArtistsPager artistsPager;
+    // private ArtistsPager artistsPager;
 
     public FindArtistFragment() {
-
     }
 
     @Override
@@ -48,16 +50,6 @@ public class FindArtistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Debugging purposes
-        String debugArtist = "Gil Gutierrez";
-
-        // AsyncTask to execute search
-        searchSpotifyArtists spotifyData = new searchSpotifyArtists();
-        spotifyData.execute(debugArtist);
-
-        // Create ArrayAdapter to display dummy artist data
-        mArtistAdapter = new ArtistAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -72,6 +64,7 @@ public class FindArtistFragment extends Fragment {
                     Log.d(LOG_TAG, " Artist: " + artist);
                     searchSpotifyArtists spotifyData = new searchSpotifyArtists();
                     spotifyData.execute(artist);
+
                     handled = true;
                 }
                 return handled;
@@ -80,7 +73,6 @@ public class FindArtistFragment extends Fragment {
 
         // Get a reference to the ListView and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_artist);
-        mListView.setAdapter(mArtistAdapter);
 
         // Set up listener for clicking on an item in the ListView
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,10 +102,14 @@ public class FindArtistFragment extends Fragment {
                     // swapout in onLoadFinished.
                     mPosition = savedInstanceState.getInt(SELECTED_KEY);
                 } */
-
             }
         });
         return rootView;
+    }
+
+    // TODO: Need to do something here to restore ListView on rotate?
+    @Override
+    public void onResume() {
     }
 
 
@@ -130,33 +126,39 @@ public class FindArtistFragment extends Fragment {
             }
             else {artist = params[0];}
 
-            SpotifyApi api = new SpotifyApi();
-            api.setAccessToken(MainActivity.accessToken());
+            mSpotifyApi.setAccessToken(MainActivity.accessToken());
 
-            SpotifyService spotify = api.getService();
+            SpotifyService spotify = mSpotifyApi.getService();
             ArtistsPager artistsPager = spotify.searchArtists(artist);
             Log.d(LOG_TAG, artistsPager.toString());
-            logArtistsPager(artistsPager);
 
             return artistsPager;
         } // end searchSpotifyData.doInBackground
 
         @Override
         protected void onPostExecute(ArtistsPager artistsPager) {
-            logArtistsPager(artistsPager);
-            // TODO: populate ListView here?
-        }
-
-    } // end searchSpotifyData
-
-    /* for debugging purposes */
-    private void logArtistsPager(ArtistsPager artistsPager) {
-        Log.v(LOG_TAG, "artistsPager:");
-        if (artistsPager == null) Log.d(LOG_TAG, "artistsPager is null");
-        else {
-            for (Artist artist : artistsPager.artists.items) {
-                Log.d(LOG_TAG, "  artist id: " + artist.id + "; artist name: " + artist.name);
+            if (artistsPager == null) {
+                Log.d(LOG_TAG, "artistsPager is null");
+                return;
             }
+
+            // Populate ListArray here
+            artistArray.clear();
+            for (Artist artist : artistsPager.artists.items) {
+                String url;
+                if (artist.images.size() > 0) {
+                    url = artist.images.get(1).url;
+                }
+                else {
+                    url = ArtistList.NO_IMAGE;
+                }
+                ArtistList artistList = new ArtistList(artist.name, artist.id, url);
+                final boolean added = artistArray.add(artistList);
+                Log.d(LOG_TAG, " Artist List: " + artistList.toString());
+            }
+            // Create ArrayAdapter to display dummy artist data
+            mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
+            mListView.setAdapter(mArtistAdapter);
         }
-    }
+    } // end searchSpotifyData
 }
