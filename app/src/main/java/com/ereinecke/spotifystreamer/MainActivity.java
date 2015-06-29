@@ -29,15 +29,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        spotifyLogin();
-
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new FindArtistFragment())
                     .commit();
         }
+        spotifyLogin();
     }
 
     @Override
@@ -111,6 +109,4 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     }
-
-
 }

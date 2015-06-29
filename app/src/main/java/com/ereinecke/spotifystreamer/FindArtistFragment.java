@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,13 +31,14 @@ import kaaes.spotify.webapi.android.models.ArtistsPager;
 public class FindArtistFragment extends Fragment {
 
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
+    public static final String ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
 
     private int mPosition = ListView.INVALID_POSITION;
-    private ArrayList<ArtistList> artistArray = new ArrayList<>();
+
+    private ArrayList<ShowArtist> artistArray = new ArrayList<>();
     private ArtistAdapter mArtistAdapter;
     private ListView mListView;
     private SpotifyApi mSpotifyApi = new SpotifyApi();
-    // private ArtistsPager artistsPager;
 
     public FindArtistFragment() {
     }
@@ -74,6 +76,17 @@ public class FindArtistFragment extends Fragment {
         // Get a reference to the ListView and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_artist);
 
+        if (savedInstanceState != null) {
+            artistArray = savedInstanceState.getParcelableArrayList(ARTIST_ARRAY);
+
+            // Create ArrayAdapter using persisted artist data
+            if (artistArray != null) {
+                mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
+                mListView.setAdapter(mArtistAdapter);
+            }
+        }
+
+
         // Set up listener for clicking on an item in the ListView
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -107,11 +120,11 @@ public class FindArtistFragment extends Fragment {
         return rootView;
     }
 
-    // TODO: Need to do something here to restore ListView on rotate?
     @Override
-    public void onResume() {
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(ARTIST_ARRAY, artistArray);
     }
-
 
     public class searchSpotifyArtists extends AsyncTask<String, Void, ArtistsPager> {
 
@@ -138,6 +151,8 @@ public class FindArtistFragment extends Fragment {
         @Override
         protected void onPostExecute(ArtistsPager artistsPager) {
             if (artistsPager == null) {
+                Toast.makeText(getActivity(), "No results found.",
+                        Toast.LENGTH_SHORT).show();
                 Log.d(LOG_TAG, "artistsPager is null");
                 return;
             }
@@ -150,15 +165,15 @@ public class FindArtistFragment extends Fragment {
                     url = artist.images.get(1).url;
                 }
                 else {
-                    url = ArtistList.NO_IMAGE;
+                    url = ShowArtist.NO_IMAGE;
                 }
-                ArtistList artistList = new ArtistList(artist.name, artist.id, url);
-                final boolean added = artistArray.add(artistList);
-                Log.d(LOG_TAG, " Artist List: " + artistList.toString());
+                ShowArtist showArtist = new ShowArtist(artist.name, artist.id, url);
+                final boolean added = artistArray.add(showArtist);
+                Log.d(LOG_TAG, " Artist List: " + showArtist.toString());
             }
-            // Create ArrayAdapter to display dummy artist data
+            // Create ArrayAdapter artist data
             mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
             mListView.setAdapter(mArtistAdapter);
-        }
+        } // end searchSpotifyData.onPostExecute
     } // end searchSpotifyData
 }

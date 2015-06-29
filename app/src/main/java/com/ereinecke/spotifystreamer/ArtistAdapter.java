@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 /**
@@ -19,7 +19,7 @@ import java.util.List;
  * {@link ArtistAdapter} exposes a list of artists matching the search term
  * from a {@link Cursor} to a {@link android.widget.ListView}.
  */
-public class ArtistAdapter extends ArrayAdapter<ArtistList> {
+public class ArtistAdapter extends ArrayAdapter<ShowArtist> {
 
 
     private static final String LOG_TAG = ArtistAdapter.class.getSimpleName();
@@ -28,16 +28,15 @@ public class ArtistAdapter extends ArrayAdapter<ArtistList> {
      * This is our own custom constructor (it doesn't mirror a superclass constructor).
      * The context is used to inflate the layout file, and the List is the data we want
      * to populate into the lists
-     *
-     * @param context        The current context. Used to inflate the layout file.
-     * @param artistList     A List of ArtistList objects to display in a list
+     *  @param context        The current context. Used to inflate the layout file.
+     * @param showArtist     A List of showArtist objects to display in a list
      */
-    public ArtistAdapter(Activity context, List<ArtistList> artistList) {
+    public ArtistAdapter(Activity context, ArrayList<ShowArtist> showArtist) {
         // Here, we initialize the ArrayAdapter's internal storage for the context and the list.
         // the second argument is used when the ArrayAdapter is populating a single TextView.
         // Because this is a custom adapter for two TextViews and an ImageView, the adapter is not
         // going to use this second argument, so it can be any value. Here, we used 0.
-        super(context, 0, artistList);
+        super(context, 0, showArtist);
     }
 
     /**
@@ -51,7 +50,7 @@ public class ArtistAdapter extends ArrayAdapter<ArtistList> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Gets the AndroidFlavor object from the ArrayAdapter at the appropriate position
-        ArtistList artistList = getItem(position);
+        ShowArtist showArtist = getItem(position);
 
         // Adapters recycle views to AdapterViews.
         // If this is a new View object we're getting, then inflate the layout.
@@ -65,13 +64,13 @@ public class ArtistAdapter extends ArrayAdapter<ArtistList> {
         ImageView artistImageView = (ImageView) convertView.findViewById(R.id.list_artist_imageView);
         int thumbnailHeight = getContext().getResources().getInteger(R.integer.thumbnail_width);
         Picasso.with(getContext())
-                .load(artistList.artistImageUrl)
+                .load(showArtist.artistImageUrl)
                 .resize(thumbnailHeight, thumbnailHeight) // going with square photo
                 .centerCrop()
                 .into(artistImageView);
 
         TextView artistNameView = (TextView) convertView.findViewById(R.id.list_artist_textView);
-        artistNameView.setText(artistList.artistName);
+        artistNameView.setText(showArtist.artistName);
 
         return convertView;
     }
