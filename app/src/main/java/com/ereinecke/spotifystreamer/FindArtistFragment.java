@@ -4,19 +4,19 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -57,7 +57,10 @@ public class FindArtistFragment extends Fragment {
 
         // Set up action listener for Search Artist editText
         final EditText artistSearch = (EditText) rootView.findViewById(R.id.search_artist_editText);
-        artistSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+/*          // Issues with this watcher: went to multiline input field in landscape mode,
+            // couldn't get keyboard to close up on 'Search'
+            artistSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
@@ -71,6 +74,24 @@ public class FindArtistFragment extends Fragment {
                 }
                 return handled;
             }
+        });
+*/
+
+        // Set up action listener for Search Artist editText
+        artistSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                boolean handled = false;
+                    String artist = artistSearch.getText().toString();
+                    Log.d(LOG_TAG, " Artist: " + artist);
+                    searchSpotifyArtists spotifyData = new searchSpotifyArtists();
+                    spotifyData.execute(artist);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         });
 
         // Get a reference to the ListView and attach this adapter to it.
@@ -162,7 +183,9 @@ public class FindArtistFragment extends Fragment {
             for (Artist artist : artistsPager.artists.items) {
                 String url;
                 if (artist.images.size() > 0) {
-                    url = artist.images.get(1).url;
+
+                    // select random image just for fun
+                    url = artist.images.get(new Random().nextInt(artist.images.size())).url;
                 }
                 else {
                     url = ShowArtist.NO_IMAGE;
