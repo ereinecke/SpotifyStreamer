@@ -145,3 +145,720 @@ https://api.spotify.com/v1/search?q=Gil%20Gutierrez&type=artist
     "total": 5
   }
 }
+
+/********** Top Tracks ************************/
+{
+  "tracks": [
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"
+        ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"      ],
+      "disc_number": 1,
+      "duration_ms": 203413,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120864"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/4wA5tEmd3zg29BArFs6ypM"
+      },
+      "href": "https://api.spotify.com/v1/tracks/4wA5tEmd3zg29BArFs6ypM",
+      "id": "4wA5tEmd3zg29BArFs6ypM",
+      "name": "Xilitla",
+      "popularity": 3,
+      "preview_url": "https://p.scdn.co/mp3-preview/0debdc18f56365c6c0746976941877b76695eef5",
+      "track_number": 1,
+      "type": "track",
+      "uri": "spotify:track:4wA5tEmd3zg29BArFs6ypM"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"       ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"      ],
+      "disc_number": 1,
+      "duration_ms": 244893,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120866"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/1CHwMvTcU9E5n0FxeQBWAb"
+      },
+      "href": "https://api.spotify.com/v1/tracks/1CHwMvTcU9E5n0FxeQBWAb",
+      "id": "1CHwMvTcU9E5n0FxeQBWAb",
+      "name": "Milonga de Mis Amores",
+      "popularity": 3,
+      "preview_url": "https://p.scdn.co/mp3-preview/53ea33750984a6c7f2b82381bc201e0a5c37a082",
+      "track_number": 3,
+      "type": "track",
+      "uri": "spotify:track:1CHwMvTcU9E5n0FxeQBWAb"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"        ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"      ],
+      "disc_number": 1,
+      "duration_ms": 135413,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120865"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/2zvGdKsrRG1u3bnBCcEWv4"
+      },
+      "href": "https://api.spotify.com/v1/tracks/2zvGdKsrRG1u3bnBCcEWv4",
+      "id": "2zvGdKsrRG1u3bnBCcEWv4",
+      "name": "Danza",
+      "popularity": 3,
+      "preview_url": "https://p.scdn.co/mp3-preview/ed0b9461f814d09e188e83fd75fabf0ec4a8a262",
+      "track_number": 2,
+      "type": "track",
+      "uri": "spotify:track:2zvGdKsrRG1u3bnBCcEWv4"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY" ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+      "disc_number": 1,
+      "duration_ms": 287133,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120867"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/2eWzw0eyLKWe1ftQtin3oB"
+      },
+      "href": "https://api.spotify.com/v1/tracks/2eWzw0eyLKWe1ftQtin3oB",
+      "id": "2eWzw0eyLKWe1ftQtin3oB",
+      "name": "Blackbird",
+      "popularity": 3,
+      "preview_url": "https://p.scdn.co/mp3-preview/208a3fc15f8469e3593792fa6e2212e697ce1aae",
+      "track_number": 4,
+      "type": "track",
+      "uri": "spotify:track:2eWzw0eyLKWe1ftQtin3oB"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"   ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+      "disc_number": 1,
+      "duration_ms": 407866,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120871"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/18A208E1mIkaNLq77ENkpi"
+      },
+      "href": "https://api.spotify.com/v1/tracks/18A208E1mIkaNLq77ENkpi",
+      "id": "18A208E1mIkaNLq77ENkpi",
+      "name": "Cinema Paraiso",
+      "popularity": 2,
+      "preview_url": "https://p.scdn.co/mp3-preview/1d9d88ad71206aa67b251c6a664f83cee6392bb7",
+      "track_number": 8,
+      "type": "track",
+      "uri": "spotify:track:18A208E1mIkaNLq77ENkpi"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+      "disc_number": 1,
+      "duration_ms": 242173,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120870"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/6dLQb1S0wP8wii2JGgRXUp"
+      },
+      "href": "https://api.spotify.com/v1/tracks/6dLQb1S0wP8wii2JGgRXUp",
+      "id": "6dLQb1S0wP8wii2JGgRXUp",
+      "name": "Marruecos",
+      "popularity": 2,
+      "preview_url": "https://p.scdn.co/mp3-preview/da54449f07331f7891c7ddb97209678a0a662aec",
+      "track_number": 7,
+      "type": "track",
+      "uri": "spotify:track:6dLQb1S0wP8wii2JGgRXUp"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"   ],
+      "disc_number": 1,
+      "duration_ms": 324853,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120868"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/7LvK1XEgUlsn9bacl1H5tK"
+      },
+      "href": "https://api.spotify.com/v1/tracks/7LvK1XEgUlsn9bacl1H5tK",
+      "id": "7LvK1XEgUlsn9bacl1H5tK",
+      "name": "Irene & Diego",
+      "popularity": 2,
+      "preview_url": "https://p.scdn.co/mp3-preview/8c5c64c6832c6107b923c604f3251673ea8b0a53",
+      "track_number": 5,
+      "type": "track",
+      "uri": "spotify:track:7LvK1XEgUlsn9bacl1H5tK"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"   ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+      "disc_number": 1,
+      "duration_ms": 285466,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120873"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/0ciqZlNyph79gEyz34Ibdd"
+      },
+      "href": "https://api.spotify.com/v1/tracks/0ciqZlNyph79gEyz34Ibdd",
+      "id": "0ciqZlNyph79gEyz34Ibdd",
+      "name": "Caminos del Pan Bendito",
+      "popularity": 2,
+      "preview_url": "https://p.scdn.co/mp3-preview/ebb7aec1b8b62096b1314268ef5f856a1c8dc8ff",
+      "track_number": 10,
+      "type": "track",
+      "uri": "spotify:track:0ciqZlNyph79gEyz34Ibdd"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"   ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+      "disc_number": 1,
+      "duration_ms": 192400,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120875"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/140KPonj3wNILYoSxB8C8F"
+      },
+      "href": "https://api.spotify.com/v1/tracks/140KPonj3wNILYoSxB8C8F",
+      "id": "140KPonj3wNILYoSxB8C8F",
+      "name": "Cucurrucucu Paloma",
+      "popularity": 2,
+      "preview_url": "https://p.scdn.co/mp3-preview/d90d0d211b98c9d3833cc46377bda1beb8882edc",
+      "track_number": 12,
+      "type": "track",
+      "uri": "spotify:track:140KPonj3wNILYoSxB8C8F"
+    },
+    {
+      "album": {
+        "album_type": "album",
+        "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"   ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/1uAXCLo3NKMOMiJW7cDePV"
+        },
+        "href": "https://api.spotify.com/v1/albums/1uAXCLo3NKMOMiJW7cDePV",
+        "id": "1uAXCLo3NKMOMiJW7cDePV",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/23a9dd45f24640d143cfe9178e345b3abb8798fb",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ae1edb50a915155cf45763db806f7666106fffd3",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/9111085fde2c221d1f322ebca31d5fe76451b7a0",
+            "width": 64
+          }
+        ],
+        "name": "Lagrima del Toro",
+        "type": "album",
+        "uri": "spotify:album:1uAXCLo3NKMOMiJW7cDePV"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/7uTneuG35UZirj7UmMq7YA"
+          },
+          "href": "https://api.spotify.com/v1/artists/7uTneuG35UZirj7UmMq7YA",
+          "id": "7uTneuG35UZirj7UmMq7YA",
+          "name": "Gil Gutierrez",
+          "type": "artist",
+          "uri": "spotify:artist:7uTneuG35UZirj7UmMq7YA"
+        }
+      ],
+      "available_markets": [
+          "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CA", "CH", "CL", "CO", "CR",
+          "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+          "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MX",
+          "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SE",
+          "SG", "SI", "SK", "SV", "TR", "TW", "US", "UY"  ],
+      "disc_number": 1,
+      "duration_ms": 245933,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "ushm21120869"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/32ynY8tSF47VskUK03EY10"
+      },
+      "href": "https://api.spotify.com/v1/tracks/32ynY8tSF47VskUK03EY10",
+      "id": "32ynY8tSF47VskUK03EY10",
+      "name": "Lagrima del Toro",
+      "popularity": 2,
+      "preview_url": "https://p.scdn.co/mp3-preview/0f09b68685befd7e55a54b1f1155053dcc9ea957",
+      "track_number": 6,
+      "type": "track",
+      "uri": "spotify:track:32ynY8tSF47VskUK03EY10"
+    }
+  ]
+}

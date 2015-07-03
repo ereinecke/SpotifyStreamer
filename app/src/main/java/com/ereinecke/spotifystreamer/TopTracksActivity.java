@@ -3,13 +3,22 @@ package com.ereinecke.spotifystreamer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ArtistActivity extends ActionBarActivity {
+public class TopTracksActivity extends ActionBarActivity {
+
+    public static String artistName;
+    public static String artistId;
+
+    public static String LOG_TAG = TopTracksActivity.class.getSimpleName();
+
+    // public static String getArtistName() {return artistName;}
+    // public static String getArtistId()   {return artistId;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,9 +26,18 @@ public class ArtistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ArtistFragment())
+                    .add(R.id.container, new TopTracksFragment())
                     .commit();
         }
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            artistName = extras.getString(FindArtistFragment.ARTIST_NAME);
+            artistId = extras.getString(FindArtistFragment.ARTIST_ID);
+            // artistImageUrl = extras.getString(FindArtistFragment.ARTIST_IMAGE_URL);
+            Log.d(LOG_TAG, "Artist ID: " + artistId);
+        }
+        else {Log.d(LOG_TAG, "intent is null");}
     }
 
     @Override
@@ -48,12 +66,12 @@ public class ArtistActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class ArtistFragment extends Fragment {
+    public static class TopTenFragment extends Fragment {
 
-        private static final String LOG_TAG = ArtistFragment.class.getSimpleName();
+        private static final String LOG_TAG = TopTenFragment.class.getSimpleName();
         // private String mForecastStr;
 
-        public ArtistFragment() {
+        public TopTenFragment() {
             setHasOptionsMenu(true);
         }
 
@@ -61,7 +79,8 @@ public class ArtistActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.list_item_artist_listview, container, false);
+            View rootView = inflater.inflate(R.layout.list_item_topten_listview, container, false);
+
             return rootView;
         }
     }

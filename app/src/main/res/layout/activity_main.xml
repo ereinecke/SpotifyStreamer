@@ -8,4 +8,4 @@
 
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame"
-    tools:layout="@layout/fragment_main" />
+    tools:layout="@layout/fragment_artists" />

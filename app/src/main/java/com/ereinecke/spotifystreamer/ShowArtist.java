@@ -38,6 +38,7 @@ public class ShowArtist implements Parcelable {
      public void writeToParcel(Parcel dest, int flags) {
         Log.d(LOG_TAG, "writeToParcel..." + flags);
         dest.writeString(artistName);
+        Log.d(LOG_TAG,"artistName: " + artistName);
         dest.writeString(artistId);
         dest.writeString(artistImageUrl);
     }

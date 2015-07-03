@@ -1,6 +1,6 @@
 package com.ereinecke.spotifystreamer;
 
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -31,7 +29,9 @@ import kaaes.spotify.webapi.android.models.ArtistsPager;
 public class FindArtistFragment extends Fragment {
 
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
-    public static final String ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
+    public static final String  ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
+    public static final String  ARTIST_NAME      = "ArtistName";     // key for intent extra
+    public static final String  ARTIST_ID        = "ArtistId";       // key for intent extra
 
     private int mPosition = ListView.INVALID_POSITION;
 
@@ -53,29 +53,10 @@ public class FindArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_artists, container, false);
 
         // Set up action listener for Search Artist editText
         final EditText artistSearch = (EditText) rootView.findViewById(R.id.search_artist_editText);
-
-/*          // Issues with this watcher: went to multiline input field in landscape mode,
-            // couldn't get keyboard to close up on 'Search'
-            artistSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    String artist = artistSearch.getText().toString();
-                    Log.d(LOG_TAG, " Artist: " + artist);
-                    searchSpotifyArtists spotifyData = new searchSpotifyArtists();
-                    spotifyData.execute(artist);
-
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-*/
 
         // Set up action listener for Search Artist editText
         artistSearch.addTextChangedListener(new TextWatcher() {
@@ -113,29 +94,14 @@ public class FindArtistFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
 
-                    /*
-                    String locationSetting = Utility.getPreferredLocation(getActivity());
-                    ((Callback) getActivity())
-                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
-                            )); */
-                }
                 mPosition = position;
 
-                // If there's instance state, mine it for useful information.
-                // The end-goal here is that the user never knows that turning their device sideways
-                // does crazy lifecycle related things.  It should feel like some stuff stretched out,
-                // or magically appeared to take advantage of room, but data or place in the app was never
-                // actually *lost*.
-                /*
-                if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-                    // The listview probably hasn't even been populated yet.  Actually perform the
-                    // swapout in onLoadFinished.
-                    mPosition = savedInstanceState.getInt(SELECTED_KEY);
-                } */
+                // Launch the TopTracksActivity
+                Intent intent = new Intent(getActivity(), TopTracksActivity.class);
+                intent.putExtra(ARTIST_NAME, artistArray.get(mPosition).artistName);
+                intent.putExtra(ARTIST_ID, artistArray.get(mPosition).artistId);
+                startActivity(intent);
             }
         });
         return rootView;
@@ -154,7 +120,6 @@ public class FindArtistFragment extends Fragment {
         @Override
         protected ArtistsPager doInBackground(String... params) {
             String artist = null;
-            String response = null;
             if (params.length == 0) {
                 return null;
             }
@@ -171,10 +136,7 @@ public class FindArtistFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArtistsPager artistsPager) {
-            if (artistsPager == null) {
-                Toast.makeText(getActivity(), "No results found.",
-                        Toast.LENGTH_SHORT).show();
-                Log.d(LOG_TAG, "artistsPager is null");
+            if (artistsPager.artists.items.size() == 0) {
                 return;
             }
 
@@ -183,9 +145,7 @@ public class FindArtistFragment extends Fragment {
             for (Artist artist : artistsPager.artists.items) {
                 String url;
                 if (artist.images.size() > 0) {
-
-                    // select random image just for fun
-                    url = artist.images.get(new Random().nextInt(artist.images.size())).url;
+                    url = artist.images.get(1).url;
                 }
                 else {
                     url = ShowArtist.NO_IMAGE;

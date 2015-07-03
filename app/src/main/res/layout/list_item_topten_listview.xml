@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_item_top_tracks_display"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    tools:context=".ArtistActivity" >
+
+    <ImageView
+        android:id="@+id/list_top_tracks_imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="2dp"
+        android:background="#22ffffff" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/list_album_textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:text="Album Name"
+            android:textSize="@dimen/abc_text_size_medium_material"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical|fill_horizontal|start" />
+
+        <TextView
+            android:id="@+id/list_track_textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:text="Track Name"
+            android:textSize="@dimen/abc_text_size_medium_material"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:gravity="fill_horizontal|center_vertical|start"
+            android:paddingTop="@dimen/list_vertical_margin" />
+
+    </LinearLayout>
+</LinearLayout>
+

@@ -5,5 +5,6 @@
     <string name="action_logout">Logout</string>
 
     <string name="artist_name_placeholder">Gil Gutierrez</string>
+    <string name="top_tracks_label">Top 10 Tracks</string>
 
 </resources>
