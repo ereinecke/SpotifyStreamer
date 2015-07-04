@@ -5,14 +5,14 @@ import android.os.Parcelable;
 import android.util.Log;
 
 /**
- * Class used to generate the Artist Listview
+ * Class used to generate the Artist ListView
  */
 
 public class ShowArtist implements Parcelable {
 
-    String artistName;
-    String artistId;
-    String artistImageUrl;
+    final String artistName;
+    final String artistId;
+    final String artistImageUrl;
 
     public static final String NO_IMAGE = "No_Image_Found";
     private static final String LOG_TAG = ShowArtist.class.getSimpleName();
@@ -27,7 +27,7 @@ public class ShowArtist implements Parcelable {
     }
 
     // Constructor for use by Parcelable creator
-    public ShowArtist(Parcel source) {
+    private ShowArtist(Parcel source) {
         // Reconstruct from the parcel
         Log.d(LOG_TAG, "Recreating from parcel");
         artistName     = source.readString();

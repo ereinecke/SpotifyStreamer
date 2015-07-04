@@ -1,10 +1,24 @@
 <resources>
     <string name="app_name">SpotifyStreamer</string>
 
+    <!-- Action bar strings -->
     <string name="action_settings">Settings</string>
+    <!-- Log out of Spotify -->
     <string name="action_logout">Logout</string>
 
-    <string name="artist_name_placeholder">Gil Gutierrez</string>
+    <!-- Top tracks activity label for action bar -->
     <string name="top_tracks_label">Top 10 Tracks</string>
+
+    <!-- Hint for search field -->
+    <string name="search_hint">Artist Search</string>
+
+    <!-- Placeholders for TextViews -->
+    <string name="artist_name_placeholder">Artist Name</string>
+    <string name="album_name_placeholder">Album Name</string>
+    <string name="track_name_placeholder">Track Name</string>
+
+    <!-- Content description for ImageViews -->
+    <string name="artist_image">Artist Image</string>
+    <string name="track_image">Track Image</string>
 
 </resources>

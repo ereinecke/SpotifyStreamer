@@ -5,16 +5,16 @@ import android.os.Parcelable;
 import android.util.Log;
 
 /**
- * Class used to generate the Top Tracks Listview
+ * Class used to generate the Top Tracks ListView
  */
 
 public class ShowTopTracks implements Parcelable {
 
-    String trackName;
-    String albumName;
-    String artistName;
-    String trackId;
-    String trackImageUrl;
+    final String trackName;
+    final String albumName;
+    private final String artistName;
+    private final String trackId;
+    final String trackImageUrl;
 
     public static final String NO_IMAGE = "No_Image_Found";
     private static final String LOG_TAG = ShowTopTracks.class.getSimpleName();
@@ -32,7 +32,7 @@ public class ShowTopTracks implements Parcelable {
     }
 
     // Constructor for use by Parcelable creator
-    public ShowTopTracks(Parcel source) {
+    private ShowTopTracks(Parcel source) {
         // Reconstruct from the parcel
         Log.d(LOG_TAG, "Recreating from parcel");
         trackName     = source.readString();

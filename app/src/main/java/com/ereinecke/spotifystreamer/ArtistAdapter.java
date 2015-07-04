@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * {@link ArtistAdapter} exposes a list of artists matching the search term
  * from a {@link Cursor} to a {@link android.widget.ListView}.
  */
-public class ArtistAdapter extends ArrayAdapter<ShowArtist> {
+class ArtistAdapter extends ArrayAdapter<ShowArtist> {
 
 
     private static final String LOG_TAG = ArtistAdapter.class.getSimpleName();

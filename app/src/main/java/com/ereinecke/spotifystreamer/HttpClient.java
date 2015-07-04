@@ -11,10 +11,10 @@ import java.io.IOException;
 /**
  * Client for making http requests, used for debugging
  */
-public class HttpClient {
+class HttpClient {
 
     /* No access token */
-    String run(String url) throws IOException {
+    private String run(String url) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()

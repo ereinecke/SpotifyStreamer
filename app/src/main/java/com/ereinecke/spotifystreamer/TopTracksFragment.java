@@ -29,15 +29,15 @@ public class TopTracksFragment extends Fragment {
 
     private static final String LOG_TAG = TopTracksFragment.class.getSimpleName();
     // key for persisting retrieved tracks
-    public static final String TOP_TRACKS_ARRAY = "TopTracksArray";
-    public static final String COUNTRY_CODE = "MX"; // TODO: this should look up device location
+    private static final String TOP_TRACKS_ARRAY = "TopTracksArray";
+    private static final String COUNTRY_CODE = "MX"; // TODO: this should look up device location
 
     private int mPosition = ListView.INVALID_POSITION;
 
     private ArrayList<ShowTopTracks> topTracksArray = new ArrayList<>();
     private TopTracksAdapter mTopTracksAdapter;
     private ListView mListView;
-    private SpotifyApi mSpotifyApi = new SpotifyApi();
+    private final SpotifyApi mSpotifyApi = new SpotifyApi();
 
     public TopTracksFragment() {
     }
@@ -100,8 +100,6 @@ public class TopTracksFragment extends Fragment {
 
         @Override
         protected Tracks doInBackground(String... params) {
-            String artistId = null;
-            String response = null;
             if (params.length == 0) {
                 return null;
             } else {
@@ -112,7 +110,7 @@ public class TopTracksFragment extends Fragment {
             // mSpotifyApi.setAccessToken(MainActivity.accessToken());
 
             SpotifyService spotify = mSpotifyApi.getService();
-            Map<String, Object> countryCode = new HashMap<String, Object>();
+            Map<String, Object> countryCode = new HashMap<>();
             countryCode.put("country", COUNTRY_CODE);
             Log.d(LOG_TAG, "artistId: " + artistId);
             Tracks tracks = spotify.getArtistTopTrack(artistId, countryCode);

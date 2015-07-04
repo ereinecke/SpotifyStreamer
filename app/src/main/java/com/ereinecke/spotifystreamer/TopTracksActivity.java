@@ -15,10 +15,7 @@ public class TopTracksActivity extends ActionBarActivity {
     public static String artistName;
     public static String artistId;
 
-    public static String LOG_TAG = TopTracksActivity.class.getSimpleName();
-
-    // public static String getArtistName() {return artistName;}
-    // public static String getArtistId()   {return artistId;}
+    private static final String LOG_TAG = TopTracksActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +76,7 @@ public class TopTracksActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.list_item_topten_listview, container, false);
-
-            return rootView;
+            return inflater.inflate(R.layout.list_item_topten_listview, container, false);
         }
     }
 }

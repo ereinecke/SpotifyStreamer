@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * {@link TopTracksAdapter} exposes a list of artists matching the search term
  * from a {@link Cursor} to a {@link android.widget.ListView}.
  */
-public class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
+class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
 
     private static final String LOG_TAG = TopTracksAdapter.class.getSimpleName();
 

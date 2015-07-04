@@ -29,7 +29,7 @@ import kaaes.spotify.webapi.android.models.ArtistsPager;
 public class FindArtistFragment extends Fragment {
 
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
-    public static final String  ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
+    private static final String  ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
     public static final String  ARTIST_NAME      = "ArtistName";     // key for intent extra
     public static final String  ARTIST_ID        = "ArtistId";       // key for intent extra
 
@@ -38,7 +38,7 @@ public class FindArtistFragment extends Fragment {
     private ArrayList<ShowArtist> artistArray = new ArrayList<>();
     private ArtistAdapter mArtistAdapter;
     private ListView mListView;
-    private SpotifyApi mSpotifyApi = new SpotifyApi();
+    private final SpotifyApi mSpotifyApi = new SpotifyApi();
 
     public FindArtistFragment() {
     }
@@ -62,11 +62,10 @@ public class FindArtistFragment extends Fragment {
         artistSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                boolean handled = false;
-                    String artist = artistSearch.getText().toString();
-                    Log.d(LOG_TAG, " Artist: " + artist);
-                    searchSpotifyArtists spotifyData = new searchSpotifyArtists();
-                    spotifyData.execute(artist);
+                String artist = artistSearch.getText().toString();
+                Log.d(LOG_TAG, " Artist: " + artist);
+                searchSpotifyArtists spotifyData = new searchSpotifyArtists();
+                spotifyData.execute(artist);
             }
 
             @Override
@@ -119,7 +118,7 @@ public class FindArtistFragment extends Fragment {
 
         @Override
         protected ArtistsPager doInBackground(String... params) {
-            String artist = null;
+            String artist;
             if (params.length == 0) {
                 return null;
             }

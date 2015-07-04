@@ -5,7 +5,7 @@ package com.ereinecke.spotifystreamer;
  * Created by ereinecke on 6/23/15.
  *
  */
-public class SpotifyUtilities {
+class SpotifyUtilities {
 
     private static final String LOG_TAG = SpotifyUtilities.class.getSimpleName();
     private static final String SPOTIFY_QUERY =
@@ -17,9 +17,6 @@ public class SpotifyUtilities {
 
     private boolean loggedIn = false;
 
-    public boolean isLoggedIn() {
-        return true;
-    }
 
 /*  TODO: have this in FindArtistFragment, but I think it should be factored out into a separate file
     // Log in to Spotify

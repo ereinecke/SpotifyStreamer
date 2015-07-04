@@ -61,8 +61,7 @@ public class ArtistActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.list_item_artist_listview, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.list_item_artist_listview, container, false);
         }
     }
 }
