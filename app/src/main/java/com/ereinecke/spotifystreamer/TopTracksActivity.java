@@ -2,15 +2,14 @@ package com.ereinecke.spotifystreamer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class TopTracksActivity extends ActionBarActivity {
+public class TopTracksActivity extends AppCompatActivity {
 
     public static String artistName;
     public static String artistId;
@@ -35,9 +34,17 @@ public class TopTracksActivity extends ActionBarActivity {
             Log.d(LOG_TAG, "Artist ID: " + artistId);
         }
         else {Log.d(LOG_TAG, "intent is null");}
-    }
 
-    @Override
+        // Put artist name in the action bar subtitle
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setTitle(getString(R.string.top_tracks_label));
+            actionbar.setSubtitle(artistName);
+        }
+        else {Log.d(LOG_TAG,"action bar null");}
+     }
+
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // getMenuInflater().inflate(R.menu.detail, menu);
@@ -58,7 +65,7 @@ public class TopTracksActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    } */
 
     /**
      * A placeholder fragment containing a simple view.

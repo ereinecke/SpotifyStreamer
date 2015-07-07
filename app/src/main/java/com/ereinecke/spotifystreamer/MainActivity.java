@@ -2,7 +2,7 @@ package com.ereinecke.spotifystreamer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +13,7 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -23,7 +23,6 @@ public class MainActivity extends ActionBarActivity {
 
     private static String accessToken = null;
 
-    public static boolean isLoggedIn() {return (accessToken != null);}
     public static String accessToken() {return accessToken;}
 
     @Override
