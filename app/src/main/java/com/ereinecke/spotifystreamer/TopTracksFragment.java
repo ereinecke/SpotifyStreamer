@@ -46,7 +46,6 @@ public class TopTracksFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "in onCreate");
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -100,6 +99,7 @@ public class TopTracksFragment extends Fragment {
 
         @Override
         protected Tracks doInBackground(String... params) {
+            String artistId;
             if (params.length == 0) {
                 return null;
             } else {
