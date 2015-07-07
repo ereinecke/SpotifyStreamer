@@ -16,7 +16,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:padding="2dp"
-        android:background="#22ffffff"
         android:contentDescription="@string/track_image"/>
 
     <LinearLayout

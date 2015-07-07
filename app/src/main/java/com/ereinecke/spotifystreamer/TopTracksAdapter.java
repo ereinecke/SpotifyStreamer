@@ -61,14 +61,18 @@ class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
                     .inflate((R.layout.list_item_topten_listview), parent, false);
         }
 
-        // TODO: Update for this view
         ImageView artistImageView = (ImageView) convertView.findViewById(R.id.list_top_tracks_imageView);
-        int thumbnailHeight = getContext().getResources().getInteger(R.integer.thumbnail_width);
         Log.d(LOG_TAG, "trackImageUrl: " + showTopTracks.trackImageUrl);
-        Picasso.with(getContext())
-                .load(showTopTracks.trackImageUrl)
-                .resize(thumbnailHeight, thumbnailHeight)
-                .into(artistImageView);
+        if (showTopTracks.trackImageUrl.equals(showTopTracks.NO_IMAGE)) {
+            artistImageView.setImageResource(R.drawable.no_image);
+        }
+        else {
+            int thumbnailHeight = getContext().getResources().getInteger(R.integer.thumbnail_width);
+            Picasso.with(getContext())
+                    .load(showTopTracks.trackImageUrl)
+                    .resize(thumbnailHeight, thumbnailHeight)
+                    .into(artistImageView);
+        }
 
         TextView albumNameView = (TextView) convertView.findViewById(R.id.list_album_textView);
         albumNameView.setText(showTopTracks.albumName);

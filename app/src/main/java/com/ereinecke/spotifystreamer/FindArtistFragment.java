@@ -29,7 +29,7 @@ import kaaes.spotify.webapi.android.models.ArtistsPager;
 public class FindArtistFragment extends Fragment {
 
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
-    private static final String  ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
+    private static final String ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
     public static final String  ARTIST_NAME      = "ArtistName";     // key for intent extra
     public static final String  ARTIST_ID        = "ArtistId";       // key for intent extra
 

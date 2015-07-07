@@ -16,7 +16,7 @@ public class ShowTopTracks implements Parcelable {
     private final String trackId;
     final String trackImageUrl;
 
-    public static final String NO_IMAGE = "No_Image_Found";
+    public final String NO_IMAGE = "No_Image_Found";
     private static final String LOG_TAG = ShowTopTracks.class.getSimpleName();
 
 

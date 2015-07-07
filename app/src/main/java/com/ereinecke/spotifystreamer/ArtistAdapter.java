@@ -62,11 +62,16 @@ class ArtistAdapter extends ArrayAdapter<ShowArtist> {
         }
 
         ImageView artistImageView = (ImageView) convertView.findViewById(R.id.list_artist_imageView);
-        int thumbnailHeight = getContext().getResources().getInteger(R.integer.thumbnail_width);
-        Picasso.with(getContext())
-                .load(showArtist.artistImageUrl)
-                .resize(thumbnailHeight, thumbnailHeight)
-                .into(artistImageView);
+        if (showArtist.artistImageUrl.equals(showArtist.NO_IMAGE)) {
+            artistImageView.setImageResource(R.drawable.no_image);
+        }
+        else {
+            int thumbnailHeight = getContext().getResources().getInteger(R.integer.thumbnail_width);
+            Picasso.with(getContext())
+                    .load(showArtist.artistImageUrl)
+                    .resize(thumbnailHeight, thumbnailHeight)
+                    .into(artistImageView);
+        }
 
         TextView artistNameView = (TextView) convertView.findViewById(R.id.list_artist_textView);
         artistNameView.setText(showArtist.artistName);
