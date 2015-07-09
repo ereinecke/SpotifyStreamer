@@ -12,7 +12,10 @@ import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
-
+/**
+ * MainActivity for SpotifyStreamer
+ * Handles login to Spotify and launches FindArtistFragment
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -69,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Log in to Spotify
+    /**
+     * Handles login to Spotify via WebView
+     */
     private void spotifyLogin() {
 
         AuthenticationRequest.Builder builder =
@@ -82,16 +87,20 @@ public class MainActivity extends AppCompatActivity {
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
     }
 
+    /**
+     * Handles the result of the spotifyLogin activity
+     * @param requestCode - identifies the correct activity result
+     * @param resultCode -
+     * @param intent - intent that launched spotify login
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        Log.d(LOG_TAG, "onActivityResult started");
-
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            Log.d(LOG_TAG, "Spotify responseType: " + response.getType());
             switch (response.getType()) {
                 // Response was successful and contains auth token
                 case TOKEN:

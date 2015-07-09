@@ -2,10 +2,9 @@ package com.ereinecke.spotifystreamer;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 /**
- * Class used to generate the Top Tracks ListView
+ * Generates the Top Tracks ListView
  */
 
 public class ShowTopTracks implements Parcelable {
@@ -17,8 +16,6 @@ public class ShowTopTracks implements Parcelable {
     final String trackImageUrl;
 
     public final String NO_IMAGE = "No_Image_Found";
-    private static final String LOG_TAG = ShowTopTracks.class.getSimpleName();
-
 
     // Basic constructor
     public ShowTopTracks(String trackName, String albumName, String artistName, String trackId,
@@ -34,7 +31,7 @@ public class ShowTopTracks implements Parcelable {
     // Constructor for use by Parcelable creator
     private ShowTopTracks(Parcel source) {
         // Reconstruct from the parcel
-        Log.d(LOG_TAG, "Recreating from parcel");
+
         trackName     = source.readString();
         albumName     = source.readString();
         artistName    = source.readString();
@@ -43,7 +40,6 @@ public class ShowTopTracks implements Parcelable {
     }
 
     public void writeToParcel(Parcel dest, int flags) {
-        Log.d(LOG_TAG, "writeToParcel..." + flags);
         dest.writeString(trackName);
         dest.writeString(albumName);
         dest.writeString(artistName);

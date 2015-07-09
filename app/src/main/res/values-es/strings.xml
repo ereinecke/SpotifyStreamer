@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <!-- Cadenas para la Barra de Acción -->
+        <string name="action_settings">Configuración</string>
+
+        <!-- Cerrar la sesión de Spotify -->
+        <string name="action_logout">Cerrar Sesión</string>
+
+        <!-- Etiqueta para la actividad de éxitos máximos -->
+        <string name="top_tracks_label">10 Éxitos Máximos</string>
+
+        <!-- Texto cuando no hay resultado -->
+        <string name="no_results_found">No hay resultados para</string>
+
+        <!-- Insinuación para campo de búsqueda -->
+        <string name="search_hint">Búsqueda de Artista</string>
+</resources>

@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-
 /**
  * Adapted, without pun intention, from Udacity class example
  * {@link TopTracksAdapter} exposes a list of artists matching the search term

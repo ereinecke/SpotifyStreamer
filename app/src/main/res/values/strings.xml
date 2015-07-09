@@ -1,5 +1,5 @@
-<resources>
-    <string name="app_name">SpotifyStreamer</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translateable="false" tools:ignore="MissingTranslation">Spotify Streamer</string>
 
     <!-- Action bar strings -->
     <string name="action_settings">Settings</string>
@@ -12,13 +12,16 @@
     <!-- Hint for search field -->
     <string name="search_hint">Artist Search</string>
 
+    <!-- No results found text -->
+    <string name="no_results_found">No results found for</string>
+
     <!-- Placeholders for TextViews -->
-    <string name="artist_name_placeholder">Artist Name</string>
-    <string name="album_name_placeholder">Album Name</string>
-    <string name="track_name_placeholder">Track Name</string>
+    <string name="artist_name_placeholder" translateable="false" tools:ignore="MissingTranslation">Artist Name</string>
+    <string name="album_name_placeholder" translateable="false" tools:ignore="MissingTranslation">Album Name</string>
+    <string name="track_name_placeholder" translateable="false" tools:ignore="MissingTranslation">Track Name</string>
 
     <!-- Content description for ImageViews -->
-    <string name="artist_image">Artist Image</string>
-    <string name="track_image">Track Image</string>
+    <string name="artist_image" translateable="false" tools:ignore="MissingTranslation">Artist Image</string>
+    <string name="track_image" translateable="false" tools:ignore="MissingTranslation">Track Image</string>
 
 </resources>

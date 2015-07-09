@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 /**
- * Class used to generate the Artist ListView
+ * Generate the Artist ListView
  */
 
 public class ShowArtist implements Parcelable {
@@ -16,7 +16,6 @@ public class ShowArtist implements Parcelable {
 
     public static final String NO_IMAGE = "No_Image_Found";
     private static final String LOG_TAG = ShowArtist.class.getSimpleName();
-    private ShowArtist mShowArtist;
 
     // Basic constructor
     public ShowArtist(String artistName, String artistId, String artistImageUrl)

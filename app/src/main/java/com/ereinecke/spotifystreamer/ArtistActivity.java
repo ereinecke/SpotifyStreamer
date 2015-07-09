@@ -9,6 +9,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * ArtistActivity hosts FindArtistFragment.
+ */
+
 public class ArtistActivity extends AppCompatActivity {
 
     @Override
@@ -46,12 +50,9 @@ public class ArtistActivity extends AppCompatActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * ArtistFragment is a container for the artist ListView.
      */
     public static class ArtistFragment extends Fragment {
-
-        private static final String LOG_TAG = ArtistFragment.class.getSimpleName();
-        // private String mForecastStr;
 
         public ArtistFragment() {
             setHasOptionsMenu(true);

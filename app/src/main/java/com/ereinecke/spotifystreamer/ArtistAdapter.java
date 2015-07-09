@@ -13,7 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-
 /**
  * Adapted, without pun intention, from Udacity class example
  * {@link ArtistAdapter} exposes a list of artists matching the search term
@@ -21,15 +20,12 @@ import java.util.ArrayList;
  */
 class ArtistAdapter extends ArrayAdapter<ShowArtist> {
 
-
-    private static final String LOG_TAG = ArtistAdapter.class.getSimpleName();
-
     /**
      * This is our own custom constructor (it doesn't mirror a superclass constructor).
      * The context is used to inflate the layout file, and the List is the data we want
      * to populate into the lists
      *  @param context        The current context. Used to inflate the layout file.
-     * @param showArtist     A List of showArtist objects to display in a list
+     *  @param showArtist     A List of showArtist objects to display in a list
      */
     public ArtistAdapter(Activity context, ArrayList<ShowArtist> showArtist) {
         // Here, we initialize the ArrayAdapter's internal storage for the context and the list.

@@ -1,8 +1,14 @@
+/*
+ * Copyright (C) 2015 The Android Open Source Project
+ */
+
 package com.ereinecke.spotifystreamer;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +19,15 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
+import retrofit.RetrofitError;
 
 
 /**
@@ -30,7 +39,8 @@ public class TopTracksFragment extends Fragment {
     private static final String LOG_TAG = TopTracksFragment.class.getSimpleName();
     // key for persisting retrieved tracks
     private static final String TOP_TRACKS_ARRAY = "TopTracksArray";
-    private static final String COUNTRY_CODE = "MX"; // TODO: this should look up device location
+    private static final String COUNTRY_CODE = "MX"; // fallback country code
+    private static String countryCode;
 
     private int mPosition = ListView.INVALID_POSITION;
 
@@ -46,6 +56,12 @@ public class TopTracksFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "in onCreate");
+
+        // Get country code
+        countryCode = getUserCountry(getActivity());
+        Log.d(LOG_TAG, "Country Code: " + countryCode);
+        if (countryCode == null) countryCode = COUNTRY_CODE;
+
     }
 
     @Override
@@ -73,8 +89,8 @@ public class TopTracksFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                mPosition = position;
-                // Will be launching player
+        mPosition = position;
+        // Will be launching player
 
             }
         });
@@ -93,6 +109,11 @@ public class TopTracksFragment extends Fragment {
         outState.putParcelableArrayList(TOP_TRACKS_ARRAY, topTracksArray);
     }
 
+    /**
+     * FetchTopTracks is an AsyncTask to fetch the Top 10 Tracks for an artist from Spotify.
+     * A List of Track is passed to onPostExecute to populate the ListArray
+     * tracksArray
+     */
     public class FetchTopTracks extends AsyncTask<String, Void, Tracks> {
 
         private final String LOG_TAG = FetchTopTracks.class.getSimpleName();
@@ -106,24 +127,29 @@ public class TopTracksFragment extends Fragment {
                 artistId = params[0];
             }
 
-            // Not sure if this is necessary, having been applied in FindArtistsFragment
-            // mSpotifyApi.setAccessToken(MainActivity.accessToken());
 
             SpotifyService spotify = mSpotifyApi.getService();
-            Map<String, Object> countryCode = new HashMap<>();
-            countryCode.put("country", COUNTRY_CODE);
+            Map<String, Object> country = new HashMap<>();
+            country.put("country", countryCode);
             Log.d(LOG_TAG, "artistId: " + artistId);
-            Tracks tracks = spotify.getArtistTopTrack(artistId, countryCode);
-            Log.d(LOG_TAG, tracks.toString());
+            Tracks tracks = null;
+            try {
+                tracks = spotify.getArtistTopTrack(artistId, country);
+                Log.d(LOG_TAG, tracks.toString());
+            } catch (RetrofitError error) {
+                SpotifyError spotifyError = SpotifyError.fromRetrofitError(error);
+                Log.d(LOG_TAG,"spotifyError: " + spotifyError.toString());
+                tracks = null; // redundant?
+            }
 
             return tracks;
         } // end searchSpotifyData.doInBackground
 
         @Override
         protected void onPostExecute(Tracks tracks) {
-            if (tracks.tracks.size() == 0) {
-                Toast.makeText(getActivity(), "No results found.",
-                        Toast.LENGTH_SHORT).show();
+            if (tracks == null || tracks.tracks.isEmpty()) {
+                Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
+                        TopTracksActivity.artistName + "\'", Toast.LENGTH_SHORT).show();
                 Log.d(LOG_TAG, "Tracks is null");
                 return;
             }
@@ -147,6 +173,31 @@ public class TopTracksFragment extends Fragment {
             mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
             mListView.setAdapter(mTopTracksAdapter);
         } // end searchSpotifyData.onPostExecute
-
     }
+
+    /**
+     * Get ISO 3166-1 alpha-2 country code for this device (or null if not available)
+     * This method was lifted verbatim from StackOverflow, thanks to Marco W.
+     * @param context Context reference to get the TelephonyManager instance from
+     * @return country code or null
+     * TODO: this only works on phones, not on tablet
+     */
+    private static String getUserCountry(Context context) {
+        try {
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String simCountry = tm.getSimCountryIso();
+            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
+                return simCountry.toLowerCase(Locale.US);
+            }
+            else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
+                String networkCountry = tm.getNetworkCountryIso();
+                if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
+                    return networkCountry.toLowerCase(Locale.US);
+                }
+            }
+        }
+        catch (Exception e) { }
+        return null;
+    }
+
 }

@@ -9,6 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Displays Top 10 tracks for artist selected in FindArtistFragment
+ * Adds artist name to ActionBar as a subtitle.
+ */
+
 public class TopTracksActivity extends AppCompatActivity {
 
     public static String artistName;
@@ -50,12 +55,7 @@ public class TopTracksActivity extends AppCompatActivity {
      */
     public static class TopTenFragment extends Fragment {
 
-        private static final String LOG_TAG = TopTenFragment.class.getSimpleName();
-        // private String mForecastStr;
-
-        public TopTenFragment() {
-            setHasOptionsMenu(true);
-        }
+        public TopTenFragment() {}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,

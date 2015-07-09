@@ -13,13 +13,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
+import retrofit.RetrofitError;
 
 /**
  * FindArtistFragment handles searching for an artist and displaying all artists that
@@ -30,14 +33,17 @@ public class FindArtistFragment extends Fragment {
 
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
     private static final String ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
-    public static final String  ARTIST_NAME      = "ArtistName";     // key for intent extra
-    public static final String  ARTIST_ID        = "ArtistId";       // key for intent extra
+    private static final String LIST_POSITION = "ListPosition";
+    public static final String  ARTIST_NAME  = "ArtistName";     // key for intent extra
+    public static final String  ARTIST_ID    = "ArtistId";       // key for intent extra
 
     private int mPosition = ListView.INVALID_POSITION;
 
     private ArrayList<ShowArtist> artistArray = new ArrayList<>();
+    private String artist;
     private ArtistAdapter mArtistAdapter;
     private ListView mListView;
+    private Toast toast;
     private final SpotifyApi mSpotifyApi = new SpotifyApi();
 
     public FindArtistFragment() {
@@ -53,6 +59,7 @@ public class FindArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        if (savedInstanceState != null) {savedInstanceState.getInt(LIST_POSITION);}
         View rootView = inflater.inflate(R.layout.fragment_artists, container, false);
 
         // Set up action listener for Search Artist editText
@@ -62,7 +69,7 @@ public class FindArtistFragment extends Fragment {
         artistSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String artist = artistSearch.getText().toString();
+                artist = artistSearch.getText().toString();
                 Log.d(LOG_TAG, " Artist: " + artist);
                 searchSpotifyArtists spotifyData = new searchSpotifyArtists();
                 spotifyData.execute(artist);
@@ -87,20 +94,19 @@ public class FindArtistFragment extends Fragment {
             }
         }
 
-
         // Set up listener for clicking on an item in the ListView
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                mPosition = position;
+            mPosition = position;
 
-                // Launch the TopTracksActivity
-                Intent intent = new Intent(getActivity(), TopTracksActivity.class);
-                intent.putExtra(ARTIST_NAME, artistArray.get(mPosition).artistName);
-                intent.putExtra(ARTIST_ID, artistArray.get(mPosition).artistId);
-                startActivity(intent);
+            // Launch the TopTracksActivity
+            Intent intent = new Intent(getActivity(), TopTracksActivity.class);
+            intent.putExtra(ARTIST_NAME, artistArray.get(mPosition).artistName);
+            intent.putExtra(ARTIST_ID, artistArray.get(mPosition).artistId);
+            startActivity(intent);
             }
         });
         return rootView;
@@ -109,12 +115,19 @@ public class FindArtistFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt(LIST_POSITION, mPosition);
         outState.putParcelableArrayList(ARTIST_ARRAY, artistArray);
     }
 
+    /**
+     * searchSpotifyArtists is an AsyncTask called after every change in the Search EditText.
+     * Artists meeting the search criteria passed to onPostExecute to populate the ListArray
+     * artistsArray
+     */
     public class searchSpotifyArtists extends AsyncTask<String, Void, ArtistsPager> {
 
         private final String LOG_TAG = searchSpotifyArtists.class.getSimpleName();
+
 
         @Override
         protected ArtistsPager doInBackground(String... params) {
@@ -126,16 +139,31 @@ public class FindArtistFragment extends Fragment {
 
             mSpotifyApi.setAccessToken(MainActivity.accessToken());
 
-            SpotifyService spotify = mSpotifyApi.getService();
-            ArtistsPager artistsPager = spotify.searchArtists(artist);
-            Log.d(LOG_TAG, artistsPager.toString());
+
+            ArtistsPager artistsPager = null;
+            try {
+                SpotifyService spotify = mSpotifyApi.getService();
+                artistsPager = spotify.searchArtists(artist);
+                Log.d(LOG_TAG, artistsPager.toString());
+            } catch (RetrofitError error) {
+                SpotifyError spotifyError = SpotifyError.fromRetrofitError(error);
+                Log.d(LOG_TAG,"spotifyError: " + spotifyError.toString());
+                artistsPager = null; // redundant?
+            }
+
 
             return artistsPager;
         } // end searchSpotifyData.doInBackground
 
         @Override
         protected void onPostExecute(ArtistsPager artistsPager) {
-            if (artistsPager.artists.items.size() == 0) {
+            // Cancel pending toast - this happens because search occurs after every keystroke
+            if (toast != null) {toast.cancel();}
+            if (artistsPager == null || artistsPager.artists.items.size() == 0) {
+                toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
+                        artist + "\'", Toast.LENGTH_SHORT).show();
+                Log.d(LOG_TAG, "Tracks is null");
+                artistArray.clear();
                 return;
             }
 
