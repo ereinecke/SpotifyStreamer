@@ -15,13 +15,15 @@
     <!-- No results found text -->
     <string name="no_results_found">No results found for</string>
 
-    <!-- Placeholders for TextViews -->
-    <string name="artist_name_placeholder" translateable="false" tools:ignore="MissingTranslation">Artist Name</string>
-    <string name="album_name_placeholder" translateable="false" tools:ignore="MissingTranslation">Album Name</string>
-    <string name="track_name_placeholder" translateable="false" tools:ignore="MissingTranslation">Track Name</string>
+    <!-- No image found marker -->
+    <string  name="no_image_found" translateable="false">No Image Found</string>
 
-    <!-- Content description for ImageViews -->
-    <string name="artist_image" translateable="false" tools:ignore="MissingTranslation">Artist Image</string>
-    <string name="track_image" translateable="false" tools:ignore="MissingTranslation">Track Image</string>
+    <!-- Bundle keys -->
+    <string name="key_artist_name" translateable="false">ArtistName</string>
+    <string name="key_artist_id"   translateable="false">ArtistId</string>
+
+    <!-- Accessibility strings -->
+    <string name="artist_image">Artist Image</string>
+    <string name="track_image">Track Image</string>
 
 </resources>

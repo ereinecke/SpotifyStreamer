@@ -28,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="@string/album_name_placeholder"
             android:textSize="@dimen/abc_text_size_medium_material"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -39,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="@string/track_name_placeholder"
             android:textSize="@dimen/abc_text_size_medium_material"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"

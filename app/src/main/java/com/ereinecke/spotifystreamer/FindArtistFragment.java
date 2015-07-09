@@ -1,5 +1,6 @@
 package com.ereinecke.spotifystreamer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,8 +35,6 @@ public class FindArtistFragment extends Fragment {
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
     private static final String ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
     private static final String LIST_POSITION = "ListPosition";
-    public static final String  ARTIST_NAME  = "ArtistName";     // key for intent extra
-    public static final String  ARTIST_ID    = "ArtistId";       // key for intent extra
 
     private int mPosition = ListView.INVALID_POSITION;
 
@@ -104,8 +103,10 @@ public class FindArtistFragment extends Fragment {
 
             // Launch the TopTracksActivity
             Intent intent = new Intent(getActivity(), TopTracksActivity.class);
-            intent.putExtra(ARTIST_NAME, artistArray.get(mPosition).artistName);
-            intent.putExtra(ARTIST_ID, artistArray.get(mPosition).artistId);
+            intent.putExtra(getString(R.string.key_artist_name),
+                    artistArray.get(mPosition).artistName);
+            intent.putExtra(getString(R.string.key_artist_id),
+                    artistArray.get(mPosition).artistId);
             startActivity(intent);
             }
         });
@@ -163,7 +164,13 @@ public class FindArtistFragment extends Fragment {
                 toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
                         artist + "\'", Toast.LENGTH_SHORT).show();
                 Log.d(LOG_TAG, "Tracks is null");
+                // Clear previous results.  This is necessary because the search is done after
+                // every keystroke.  When adding or removing a char takes you from having results
+                // to no results found, you have to clear the ListView.
                 artistArray.clear();
+                if (mArtistAdapter != null) {
+                    mArtistAdapter.notifyDataSetChanged();
+                }
                 return;
             }
 
@@ -181,9 +188,23 @@ public class FindArtistFragment extends Fragment {
                 final boolean added = artistArray.add(showArtist);
                 Log.d(LOG_TAG, " Artist List: " + showArtist.toString());
             }
-            // Create ArrayAdapter artist data
-            mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
-            mListView.setAdapter(mArtistAdapter);
+            // Create ArrayAdapter artist data.  Make sure activity is ready (exists) before
+            // calling ArtistAdapter
+            Context context = getActivity();
+            while (context == null) {
+                // NOTE: not sure if this is a good approach
+                try {
+                    wait(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                context = getActivity();
+            }
+            if (context != null) {
+                mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
+                mListView.setAdapter(mArtistAdapter);
+            }
         } // end searchSpotifyData.onPostExecute
     } // end searchSpotifyData
 }

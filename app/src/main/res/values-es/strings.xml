@@ -14,4 +14,9 @@
 
         <!-- Insinuación para campo de búsqueda -->
         <string name="search_hint">Búsqueda de Artista</string>
+
+        <!-- Accessibility strings -->
+        <string name="artist_image">Imágen del Artista</string>
+        <string name="track_image">Imágen del Éxito</string>
+
 </resources>

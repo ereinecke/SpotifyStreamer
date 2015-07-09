@@ -31,7 +31,6 @@ public class ShowTopTracks implements Parcelable {
     // Constructor for use by Parcelable creator
     private ShowTopTracks(Parcel source) {
         // Reconstruct from the parcel
-
         trackName     = source.readString();
         albumName     = source.readString();
         artistName    = source.readString();

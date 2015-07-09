@@ -33,6 +33,7 @@ class ArtistAdapter extends ArrayAdapter<ShowArtist> {
         // Because this is a custom adapter for two TextViews and an ImageView, the adapter is not
         // going to use this second argument, so it can be any value. Here, we used 0.
         super(context, 0, showArtist);
+
     }
 
     /**
@@ -58,7 +59,7 @@ class ArtistAdapter extends ArrayAdapter<ShowArtist> {
         }
 
         ImageView artistImageView = (ImageView) convertView.findViewById(R.id.list_artist_imageView);
-        if (showArtist.artistImageUrl.equals(showArtist.NO_IMAGE)) {
+        if (showArtist.artistImageUrl.equals(getContext().getString(R.string.no_image_found))) {
             artistImageView.setImageResource(R.drawable.no_image);
         }
         else {

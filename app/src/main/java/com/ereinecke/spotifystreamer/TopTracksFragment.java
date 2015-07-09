@@ -8,7 +8,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -43,6 +41,8 @@ public class TopTracksFragment extends Fragment {
     private static String countryCode;
 
     private int mPosition = ListView.INVALID_POSITION;
+    private String artistName;
+    private String artistId;
 
     private ArrayList<ShowTopTracks> topTracksArray = new ArrayList<>();
     private TopTracksAdapter mTopTracksAdapter;
@@ -55,13 +55,16 @@ public class TopTracksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, "in onCreate");
 
-        // Get country code
-        countryCode = getUserCountry(getActivity());
+        // Get country code not yet implemented
+        countryCode = MainActivity.getUserCountry();
         Log.d(LOG_TAG, "Country Code: " + countryCode);
         if (countryCode == null) countryCode = COUNTRY_CODE;
 
+        Bundle extras = getActivity().getIntent().getExtras();
+        artistId = extras.getString(getString(R.string.key_artist_id));
+        artistName = extras.getString(getString(R.string.key_artist_name));
+        Log.d(LOG_TAG,"onCreate: ArtistName: " + artistName + " ArtistId: " + artistId);
     }
 
     @Override
@@ -83,6 +86,7 @@ public class TopTracksFragment extends Fragment {
             }
         }
 
+
         // Set up listener for clicking on an item in the ListView
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -96,8 +100,8 @@ public class TopTracksFragment extends Fragment {
         });
 
         FetchTopTracks spotifyData = new FetchTopTracks();
-        if (TopTracksActivity.artistId != null) {
-            spotifyData.execute(TopTracksActivity.artistId);
+        if (artistId != null) {
+            spotifyData.execute(artistId);
         }
         else {Log.d(LOG_TAG, "artistId null");}
         return rootView;
@@ -149,7 +153,7 @@ public class TopTracksFragment extends Fragment {
         protected void onPostExecute(Tracks tracks) {
             if (tracks == null || tracks.tracks.isEmpty()) {
                 Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
-                        TopTracksActivity.artistName + "\'", Toast.LENGTH_SHORT).show();
+                        artistName + "\'", Toast.LENGTH_SHORT).show();
                 Log.d(LOG_TAG, "Tracks is null");
                 return;
             }
@@ -165,39 +169,26 @@ public class TopTracksFragment extends Fragment {
                     url = ShowArtist.NO_IMAGE;
                 }
                 ShowTopTracks showTopTracks = new ShowTopTracks(track.name, track.album.name,
-                        TopTracksActivity.artistName, track.id, url);
+                        artistName, track.id, url);
                 final boolean added = topTracksArray.add(showTopTracks);
                 Log.d(LOG_TAG, " Track List: " + showTopTracks.toString());
             }
-            // Create ArrayAdapter artist data
-            mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
-            mListView.setAdapter(mTopTracksAdapter);
+            Context context = getActivity();
+            while (context == null) {
+                // NOTE: not sure if this is a good approach
+                try {
+                    wait(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                context = getActivity();
+            }
+            if (context != null) {  // This check may be redundant
+                // Create ArrayAdapter artist data
+                mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
+                mListView.setAdapter(mTopTracksAdapter);
+            }
         } // end searchSpotifyData.onPostExecute
     }
-
-    /**
-     * Get ISO 3166-1 alpha-2 country code for this device (or null if not available)
-     * This method was lifted verbatim from StackOverflow, thanks to Marco W.
-     * @param context Context reference to get the TelephonyManager instance from
-     * @return country code or null
-     * TODO: this only works on phones, not on tablet
-     */
-    private static String getUserCountry(Context context) {
-        try {
-            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            final String simCountry = tm.getSimCountryIso();
-            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
-                return simCountry.toLowerCase(Locale.US);
-            }
-            else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
-                String networkCountry = tm.getNetworkCountryIso();
-                if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
-                    return networkCountry.toLowerCase(Locale.US);
-                }
-            }
-        }
-        catch (Exception e) { }
-        return null;
-    }
-
 }

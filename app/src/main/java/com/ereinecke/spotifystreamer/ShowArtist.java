@@ -2,7 +2,6 @@ package com.ereinecke.spotifystreamer;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 /**
  * Generate the Artist ListView
@@ -15,7 +14,6 @@ public class ShowArtist implements Parcelable {
     final String artistImageUrl;
 
     public static final String NO_IMAGE = "No_Image_Found";
-    private static final String LOG_TAG = ShowArtist.class.getSimpleName();
 
     // Basic constructor
     public ShowArtist(String artistName, String artistId, String artistImageUrl)
@@ -28,16 +26,13 @@ public class ShowArtist implements Parcelable {
     // Constructor for use by Parcelable creator
     private ShowArtist(Parcel source) {
         // Reconstruct from the parcel
-        Log.d(LOG_TAG, "Recreating from parcel");
         artistName     = source.readString();
         artistId       = source.readString();
         artistImageUrl = source.readString();
     }
 
      public void writeToParcel(Parcel dest, int flags) {
-        Log.d(LOG_TAG, "writeToParcel..." + flags);
         dest.writeString(artistName);
-        Log.d(LOG_TAG,"artistName: " + artistName);
         dest.writeString(artistId);
         dest.writeString(artistImageUrl);
     }

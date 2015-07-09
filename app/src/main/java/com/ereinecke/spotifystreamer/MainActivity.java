@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String CLIENT_ID = "0801969fcfb940d69497cd585393a7d0";
     private static final String REDIRECT_URI = "whatup://callback";
 
+    private static String countryCode;
     private static String accessToken = null;
-
-    public static String accessToken() {return accessToken;}
+    public static  String accessToken() {return accessToken;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,5 +116,17 @@ public class MainActivity extends AppCompatActivity {
                     accessToken = null;
             }
         }
+    }
+
+    /**
+     * Get ISO 3166-1 alpha-2 country code for this device using IP address.  This involves
+     * calling http://ip-api.com/json and parsing the country code from it.
+     * TODO: not yet implmented, currently returns null.
+     */
+    public static String getUserCountry() {
+        if (countryCode == null) {
+            // AsyncTask here
+            return countryCode;
+        } else return null;
     }
 }
