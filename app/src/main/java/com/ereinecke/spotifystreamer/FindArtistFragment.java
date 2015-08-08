@@ -141,7 +141,7 @@ public class FindArtistFragment extends Fragment {
             mSpotifyApi.setAccessToken(MainActivity.accessToken());
 
 
-            ArtistsPager artistsPager = null;
+            ArtistsPager artistsPager;
             try {
                 SpotifyService spotify = mSpotifyApi.getService();
                 artistsPager = spotify.searchArtists(artist);
@@ -162,7 +162,7 @@ public class FindArtistFragment extends Fragment {
             if (toast != null) {toast.cancel();}
             if (artistsPager == null || artistsPager.artists.items.size() == 0) {
                 toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
-                        artist + "\'", Toast.LENGTH_SHORT).show();
+                        artist + "\'", toast.LENGTH_SHORT).show();
                 Log.d(LOG_TAG, "Tracks is null");
                 // Clear previous results.  This is necessary because the search is done after
                 // every keystroke.  When adding or removing a char takes you from having results
@@ -185,7 +185,7 @@ public class FindArtistFragment extends Fragment {
                     url = ShowArtist.NO_IMAGE;
                 }
                 ShowArtist showArtist = new ShowArtist(artist.name, artist.id, url);
-                final boolean added = artistArray.add(showArtist);
+                artistArray.add(showArtist);
                 Log.d(LOG_TAG, " Artist List: " + showArtist.toString());
             }
             // Create ArrayAdapter artist data.  Make sure activity is ready (exists) before
@@ -201,10 +201,8 @@ public class FindArtistFragment extends Fragment {
                 }
                 context = getActivity();
             }
-            if (context != null) {
-                mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
-                mListView.setAdapter(mArtistAdapter);
-            }
+            mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
+            mListView.setAdapter(mArtistAdapter);
         } // end searchSpotifyData.onPostExecute
     } // end searchSpotifyData
 }

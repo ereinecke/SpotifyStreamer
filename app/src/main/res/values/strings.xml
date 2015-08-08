@@ -25,5 +25,10 @@
     <!-- Accessibility strings -->
     <string name="artist_image">Artist Image</string>
     <string name="track_image">Track Image</string>
+    <string name="previous">Previous</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="next">Next</string>
+    <string name="album_art">Album Art</string>
 
 </resources>

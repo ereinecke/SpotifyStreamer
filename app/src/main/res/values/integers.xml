@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <!-- These dimen are here without dp for Picasso; to change, modify in both places -->
     <integer name="thumbnail_height">80</integer>
     <integer name="thumbnail_width" >80</integer>
+    <integer name="player_track_art_size">200</integer>
 </resources>

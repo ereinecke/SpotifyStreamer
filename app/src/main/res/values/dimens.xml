@@ -5,4 +5,7 @@
 
     <dimen name="list_horizontal_margin">8dp</dimen>
     <dimen name="list_vertical_margin">8dp</dimen>
+
+    <!-- This dimen is also in integers.xml, without dp for Picasso; to change, modify in both places -->
+    <dimen name="player_track_art_size">200dp</dimen>
 </resources>

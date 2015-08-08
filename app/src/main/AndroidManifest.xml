@@ -3,7 +3,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ereinecke.spotifystreamer" >
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"  />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,14 +23,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ArtistActivity"/>
+
         <activity
             android:name=".TopTracksActivity"
             android:parentActivityName=".MainActivity"/>
+
+        <activity android:name=".PlayerActivity" />
+
+        <service android:name=".PlayerService"
+            android:exported="false"/>
+
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity android:name=".SettingsActivity" />
+
     </application>
 
 </manifest>

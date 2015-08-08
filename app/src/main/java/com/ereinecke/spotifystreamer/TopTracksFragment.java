@@ -5,6 +5,7 @@
 package com.ereinecke.spotifystreamer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,8 +37,17 @@ public class TopTracksFragment extends Fragment {
 
     private static final String LOG_TAG = TopTracksFragment.class.getSimpleName();
     // key for persisting retrieved tracks
+    public static final String TRACK_INFO = "TrackInfo";
     private static final String TOP_TRACKS_ARRAY = "TopTracksArray";
     private static final String COUNTRY_CODE = "MX"; // fallback country code
+    public static final String ARTIST_NAME_KEY = "ArtistName";
+    public static final String ALBUM_NAME_KEY = "AlbumName";
+    public static final String TRACK_NAME_KEY = "TrackName";
+    public static final String TRACK_URL_KEY = "TrackUrl";
+    public static final String IMAGE_URL_KEY = "ImageUrl";
+    public static final String DURATION_KEY = "Duration";
+    
+    private static Bundle trackInfoBundle;
     private static String countryCode;
 
     private int mPosition = ListView.INVALID_POSITION;
@@ -93,9 +103,9 @@ public class TopTracksFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-        mPosition = position;
-        // Will be launching player
-
+                mPosition = position;
+                ShowTopTracks trackInfo = (ShowTopTracks) adapterView.getItemAtPosition(position);
+                showMediaPlayer(trackInfo);
             }
         });
 
@@ -111,6 +121,7 @@ public class TopTracksFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(TOP_TRACKS_ARRAY, topTracksArray);
+        outState.putBundle(TRACK_INFO, trackInfoBundle);
     }
 
     /**
@@ -131,12 +142,11 @@ public class TopTracksFragment extends Fragment {
                 artistId = params[0];
             }
 
-
             SpotifyService spotify = mSpotifyApi.getService();
             Map<String, Object> country = new HashMap<>();
             country.put("country", countryCode);
             Log.d(LOG_TAG, "artistId: " + artistId);
-            Tracks tracks = null;
+            Tracks tracks;
             try {
                 tracks = spotify.getArtistTopTrack(artistId, country);
                 Log.d(LOG_TAG, tracks.toString());
@@ -161,16 +171,19 @@ public class TopTracksFragment extends Fragment {
             // Populate ListArray here
             topTracksArray.clear();
             for (Track track : tracks.tracks) {
-                String url;
+                String trackUrl = track.external_urls.get("spotify");
+                long trackLength = track.duration_ms;
+                String imageUrl;
                 // The image is pulled from the album the track is from
                 if (track.album.images.size() > 0) {
-                    url = track.album.images.get(1).url;
+                    // TODO: better way to get right size image? Picasso?
+                    imageUrl = track.album.images.get(1).url;
                 } else {
-                    url = ShowArtist.NO_IMAGE;
+                    imageUrl = ShowArtist.NO_IMAGE;
                 }
                 ShowTopTracks showTopTracks = new ShowTopTracks(track.name, track.album.name,
-                        artistName, track.id, url);
-                final boolean added = topTracksArray.add(showTopTracks);
+                        artistName, track.id, imageUrl, trackUrl, trackLength);
+                topTracksArray.add(showTopTracks);
                 Log.d(LOG_TAG, " Track List: " + showTopTracks.toString());
             }
             Context context = getActivity();
@@ -184,11 +197,25 @@ public class TopTracksFragment extends Fragment {
                 }
                 context = getActivity();
             }
-            if (context != null) {  // This check may be redundant
-                // Create ArrayAdapter artist data
-                mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
-                mListView.setAdapter(mTopTracksAdapter);
-            }
+
+            // Create ArrayAdapter artist data
+            mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
+            mListView.setAdapter(mTopTracksAdapter);
         } // end searchSpotifyData.onPostExecute
+    }
+
+    private void showMediaPlayer(ShowTopTracks trackInfo) {
+
+        Intent intent = new Intent(getActivity(), PlayerActivity.class);
+        trackInfoBundle = new Bundle();
+        trackInfoBundle.putParcelable(TRACK_INFO, trackInfo);
+        intent.putExtras(trackInfoBundle);
+        startActivity(intent);
+    }
+
+    // TODO: Need to pass trackInfo via intent
+    // Don't like doing this, but having a heck of a time passing trackInfo through intent extra
+    public static Bundle getTrackInfo() {
+        return trackInfoBundle;
     }
 }

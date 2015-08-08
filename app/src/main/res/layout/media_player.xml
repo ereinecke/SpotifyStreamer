@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Artist Name"
+        android:id="@+id/artist_name_textview"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Album name"
+        android:id="@+id/album_name_textview"
+        android:layout_gravity="center_horizontal" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/album_art_imageview"
+        android:minHeight="@dimen/player_track_art_size"
+        android:minWidth="@dimen/player_track_art_size"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/ic_launcher"
+        android:layout_margin="30dp"
+        android:contentDescription="@string/album_art" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Song Title"
+        android:id="@+id/song_title_textview"
+        android:layout_gravity="center_horizontal" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrubber"
+        android:layout_margin="@dimen/activity_horizontal_margin" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0:00"
+            android:id="@+id/start_time_textview"
+            android:layout_weight="1"
+            android:layout_marginStart="30dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0:30"
+            android:id="@+id/end_time_textview"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:layout_marginEnd="30dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start">
+
+        <ImageButton
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:id="@+id/previous_button"
+            android:src="@android:drawable/ic_media_previous"
+            android:layout_weight="1"
+            android:layout_margin="20dp"
+            android:contentDescription="@string/previous" />
+
+        <ImageButton
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:id="@+id/imageButton2"
+            android:src="@android:drawable/ic_media_play"
+            android:layout_weight="1"
+            android:layout_margin="20dp"
+            android:contentDescription="@string/play" />
+
+        <ImageButton
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:id="@+id/imageButton"
+            android:src="@android:drawable/ic_media_next"
+            android:layout_weight="1"
+            android:layout_margin="20dp"
+            android:contentDescription="@string/next" />
+    </LinearLayout>
+
+</LinearLayout>

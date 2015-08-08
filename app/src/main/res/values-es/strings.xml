@@ -16,7 +16,12 @@
         <string name="search_hint">Búsqueda de Artista</string>
 
         <!-- Accessibility strings -->
-        <string name="artist_image">Imágen del Artista</string>
-        <string name="track_image">Imágen del Éxito</string>
+        <string name="artist_image">Imagen del Artista</string>
+        <string name="track_image">Imagen del Éxito</string>
+        <string name="previous">Previo</string>
+        <string name="play">Tocar</string>
+        <string name="pause">Pausar</string>
+        <string name="next">Próximo</string>
+        <string name="album_art">Imagen del Álbum</string>
 
 </resources>
