@@ -59,7 +59,8 @@
             android:text="0:00"
             android:id="@+id/start_time_textview"
             android:layout_weight="1"
-            android:layout_marginStart="30dp" />
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"/>
 
         <TextView
             android:layout_width="0dp"
@@ -69,7 +70,8 @@
             android:id="@+id/end_time_textview"
             android:layout_weight="1"
             android:gravity="end"
-            android:layout_marginEnd="30dp" />
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"/>
 
     </LinearLayout>
 
@@ -91,7 +93,7 @@
         <ImageButton
             android:layout_width="64dp"
             android:layout_height="48dp"
-            android:id="@+id/imageButton2"
+            android:id="@+id/play_button"
             android:src="@android:drawable/ic_media_play"
             android:layout_weight="1"
             android:layout_margin="20dp"
@@ -100,7 +102,7 @@
         <ImageButton
             android:layout_width="64dp"
             android:layout_height="48dp"
-            android:id="@+id/imageButton"
+            android:id="@+id/next_button"
             android:src="@android:drawable/ic_media_next"
             android:layout_weight="1"
             android:layout_margin="20dp"

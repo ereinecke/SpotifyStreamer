@@ -6,6 +6,7 @@ package com.ereinecke.spotifystreamer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,13 +41,7 @@ public class TopTracksFragment extends Fragment {
     public static final String TRACK_INFO = "TrackInfo";
     private static final String TOP_TRACKS_ARRAY = "TopTracksArray";
     private static final String COUNTRY_CODE = "MX"; // fallback country code
-    public static final String ARTIST_NAME_KEY = "ArtistName";
-    public static final String ALBUM_NAME_KEY = "AlbumName";
-    public static final String TRACK_NAME_KEY = "TrackName";
-    public static final String TRACK_URL_KEY = "TrackUrl";
-    public static final String IMAGE_URL_KEY = "ImageUrl";
-    public static final String DURATION_KEY = "Duration";
-    
+
     private static Bundle trackInfoBundle;
     private static String countryCode;
 
@@ -58,6 +53,7 @@ public class TopTracksFragment extends Fragment {
     private TopTracksAdapter mTopTracksAdapter;
     private ListView mListView;
     private final SpotifyApi mSpotifyApi = new SpotifyApi();
+    private static Bitmap selectedAlbumArt;
 
     public TopTracksFragment() {
     }
@@ -96,16 +92,14 @@ public class TopTracksFragment extends Fragment {
             }
         }
 
-
         // Set up listener for clicking on an item in the ListView
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-                mPosition = position;
-                ShowTopTracks trackInfo = (ShowTopTracks) adapterView.getItemAtPosition(position);
-                showMediaPlayer(trackInfo);
+            mPosition = position;
+            ShowTopTracks trackInfo = (ShowTopTracks) adapterView.getItemAtPosition(position);
+            showMediaPlayer(trackInfo);
             }
         });
 

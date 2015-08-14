@@ -2,28 +2,15 @@ package com.ereinecke.spotifystreamer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * PlayerActivity hosts PlayerFragment, which runs a Media Player instance on small screens
  */
 
 public class PlayerActivity extends AppCompatActivity {
-
-    public interface MediaPlayerListener {
-        void onPreviousClick(PlayerFragment player);
-        void onNextClick(PlayerFragment player);
-        void onPlayClick(PlayerFragment player);
-        void onPauseClick(PlayerFragment player);
-        void onScrubber(PlayerFragment player);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +26,6 @@ public class PlayerActivity extends AppCompatActivity {
         // Intent intent = getIntent();
         // Bundle trackInfo = intent.getExtras();
         Bundle trackInfo = TopTracksFragment.getTrackInfo();
-
-
-        // Faking it for now
-        trackInfo.putString(TopTracksFragment.ARTIST_NAME_KEY, "Deja Vu");
-        trackInfo.putString(TopTracksFragment.ALBUM_NAME_KEY, "Crosby, Stills, Nash & Young");
-        trackInfo.putString(TopTracksFragment.TRACK_NAME_KEY, "Carry On");
-        trackInfo.putString(TopTracksFragment.TRACK_URL_KEY, "https://open.spotify.com/track/4bjvLvKovcWqZwDbXT5QQX");
-        trackInfo.putString(TopTracksFragment.IMAGE_URL_KEY, "https://i.scdn.co/image/1287b3b9201fc5ed8c51101dbeb0326a450671ec");
-        trackInfo.putLong(TopTracksFragment.DURATION_KEY, 265933L);
 
         // Pass trackInfo to fragment and launch it
         PlayerFragment player = new PlayerFragment();
@@ -79,5 +57,25 @@ public class PlayerActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * StartPlayer starts the foreground service PlayerService when requested
+     */
+    public void startPlayer(String uri) {
+        Intent startIntent = new Intent(this, PlayerService.class);
+        startIntent.putExtra(MainActivity.CURRENT_TRACK_KEY, uri);
+        startIntent.setAction(MainActivity.STARTFOREGROUND_ACTION);
+        startService(startIntent);
+    }
+
+    /**
+     * StopPlayer stops the PlayerService
+     */
+    public void stopPlayer() {
+        Intent stopIntent = new Intent(this, PlayerService.class);
+        stopIntent.setAction(MainActivity.STOPFOREGROUND_ACTION);
+        startService(stopIntent);
+
     }
 }

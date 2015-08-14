@@ -23,6 +23,15 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1137;
     private static final String CLIENT_ID = "0801969fcfb940d69497cd585393a7d0";
     private static final String REDIRECT_URI = "whatup://callback";
+    public static final String CURRENT_TRACK_KEY = "CurrentTrack";
+    public static final String MAIN_ACTION = "com.ereinecke.spotifystreamer.action.main";
+    public static final String PREV_ACTION = "com.ereinecke.spotifystreamer.action.prev";
+    public static final String PLAY_ACTION = "com.ereinecke.spotifystreamer.action.play";
+    public static final String NEXT_ACTION = "com.ereinecke.spotifystreamer.action.next";
+    public static final String STARTFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.startforeground";
+    public static final String STOPFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.stopforeground";
+    public static final int NOTIFICATION_ID = 111;
+
     private static String countryCode;
 
     private static String accessToken = null;
@@ -116,6 +125,26 @@ public class MainActivity extends AppCompatActivity {
                     accessToken = null;
             }
         }
+    }
+
+    /**
+     * StartPlayer starts the foreground service PlayerService when requested
+     */
+    public void startPlayer(String uri) {
+        Intent startIntent = new Intent(this, PlayerService.class);
+        startIntent.putExtra(CURRENT_TRACK_KEY, uri);
+        startIntent.setAction(STARTFOREGROUND_ACTION);
+        startService(startIntent);
+    }
+
+    /**
+     * StopPlayer stops the PlayerService
+     */
+    public void stopPlayer() {
+        Intent stopIntent = new Intent(this, PlayerService.class);
+        stopIntent.setAction(STOPFOREGROUND_ACTION);
+        startService(stopIntent);
+
     }
 
     /**

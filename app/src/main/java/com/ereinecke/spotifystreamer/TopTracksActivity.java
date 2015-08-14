@@ -10,8 +10,7 @@ import android.util.Log;
  * Adds artist name to ActionBar as a subtitle.
  */
 
-public class TopTracksActivity extends AppCompatActivity
-        implements PlayerActivity.MediaPlayerListener {
+public class TopTracksActivity extends AppCompatActivity  {
 
     private static final String LOG_TAG = TopTracksActivity.class.getSimpleName();
 
@@ -42,25 +41,4 @@ public class TopTracksActivity extends AppCompatActivity
         }
         else {Log.d(LOG_TAG,"action bar null");}
      }
-
-    // Player button listeners
-    public void onPreviousClick(PlayerFragment player) {
-
-    }
-
-    public void onNextClick(PlayerFragment player) {
-
-    }
-    public void onPlayClick(PlayerFragment player) {
-
-    }
-
-    public void onPauseClick(PlayerFragment player) {
-
-    }
-
-    public void onScrubber(PlayerFragment player) {
-        
-    }
-
 }
