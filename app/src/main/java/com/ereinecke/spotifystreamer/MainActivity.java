@@ -20,20 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private static final int REQUEST_CODE = 1137;
-    private static final String CLIENT_ID = "0801969fcfb940d69497cd585393a7d0";
-    private static final String REDIRECT_URI = "whatup://callback";
-    public static final String CURRENT_TRACK_KEY = "CurrentTrack";
-    public static final String MAIN_ACTION = "com.ereinecke.spotifystreamer.action.main";
-    public static final String PREV_ACTION = "com.ereinecke.spotifystreamer.action.prev";
-    public static final String PLAY_ACTION = "com.ereinecke.spotifystreamer.action.play";
-    public static final String NEXT_ACTION = "com.ereinecke.spotifystreamer.action.next";
-    public static final String STARTFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.startforeground";
-    public static final String STOPFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.stopforeground";
-    public static final int NOTIFICATION_ID = 111;
-
     private static String countryCode;
-
     private static String accessToken = null;
     public static  String accessToken() {return accessToken;}
 
@@ -87,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
     private void spotifyLogin() {
 
         AuthenticationRequest.Builder builder =
-                new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN,
-                        REDIRECT_URI);
+                new AuthenticationRequest.Builder(Constants.CLIENT_ID,
+                        AuthenticationResponse.Type.TOKEN, Constants.REDIRECT_URI);
 
         builder.setScopes(new String[]{"streaming"});
         AuthenticationRequest request = builder.build();
 
-        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+        AuthenticationClient.openLoginActivity(this, Constants.REQUEST_CODE, request);
     }
 
     /**
@@ -108,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
 
         // Check if result comes from the correct activity
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == Constants.REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
             switch (response.getType()) {
                 // Response was successful and contains auth token
@@ -129,21 +116,23 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * StartPlayer starts the foreground service PlayerService when requested
+     * This is duplicated in PlayerActivity for phone layouts
      */
     public void startPlayer(String uri) {
         Intent startIntent = new Intent(this, PlayerService.class);
-        startIntent.putExtra(CURRENT_TRACK_KEY, uri);
-        startIntent.setAction(STARTFOREGROUND_ACTION);
+        startIntent.putExtra(Constants.CURRENT_TRACK_KEY, uri);
+        startIntent.setAction(Constants.STARTFOREGROUND_ACTION);
         startService(startIntent);
     }
 
     /**
      * StopPlayer stops the PlayerService
+     * This is duplicated in PlayerActivity for phone layouts
      */
     public void stopPlayer() {
         Intent stopIntent = new Intent(this, PlayerService.class);
-        stopIntent.setAction(STOPFOREGROUND_ACTION);
-        startService(stopIntent);
+        stopIntent.setAction(Constants.STOPFOREGROUND_ACTION);
+//        startService(stopIntent);
 
     }
 

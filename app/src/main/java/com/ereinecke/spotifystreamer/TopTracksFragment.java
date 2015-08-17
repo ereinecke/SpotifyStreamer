@@ -37,10 +37,6 @@ import retrofit.RetrofitError;
 public class TopTracksFragment extends Fragment {
 
     private static final String LOG_TAG = TopTracksFragment.class.getSimpleName();
-    // key for persisting retrieved tracks
-    public static final String TRACK_INFO = "TrackInfo";
-    private static final String TOP_TRACKS_ARRAY = "TopTracksArray";
-    private static final String COUNTRY_CODE = "MX"; // fallback country code
 
     private static Bundle trackInfoBundle;
     private static String countryCode;
@@ -65,7 +61,7 @@ public class TopTracksFragment extends Fragment {
         // Get country code not yet implemented
         countryCode = MainActivity.getUserCountry();
         Log.d(LOG_TAG, "Country Code: " + countryCode);
-        if (countryCode == null) countryCode = COUNTRY_CODE;
+        if (countryCode == null) countryCode = Constants.COUNTRY_CODE;
 
         Bundle extras = getActivity().getIntent().getExtras();
         artistId = extras.getString(getString(R.string.key_artist_id));
@@ -83,7 +79,7 @@ public class TopTracksFragment extends Fragment {
         mListView = (ListView) rootView.findViewById(R.id.list_top_tracks);
 
         if (savedInstanceState != null) {
-            topTracksArray = savedInstanceState.getParcelableArrayList(TOP_TRACKS_ARRAY);
+            topTracksArray = savedInstanceState.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
 
             // Create ArrayAdapter using persisted artist data
             if (topTracksArray != null) {
@@ -114,8 +110,8 @@ public class TopTracksFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(TOP_TRACKS_ARRAY, topTracksArray);
-        outState.putBundle(TRACK_INFO, trackInfoBundle);
+        outState.putParcelableArrayList(Constants.TOP_TRACKS_ARRAY, topTracksArray);
+        outState.putBundle(Constants.TRACK_INFO, trackInfoBundle);
     }
 
     /**
@@ -173,7 +169,7 @@ public class TopTracksFragment extends Fragment {
                     // TODO: better way to get right size image? Picasso?
                     imageUrl = track.album.images.get(1).url;
                 } else {
-                    imageUrl = ShowArtist.NO_IMAGE;
+                    imageUrl = Constants.NO_IMAGE;
                 }
                 ShowTopTracks showTopTracks = new ShowTopTracks(track.name, track.album.name,
                         artistName, track.id, imageUrl, trackUrl, trackLength);
@@ -202,7 +198,7 @@ public class TopTracksFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), PlayerActivity.class);
         trackInfoBundle = new Bundle();
-        trackInfoBundle.putParcelable(TRACK_INFO, trackInfo);
+        trackInfoBundle.putParcelable(Constants.TRACK_INFO, trackInfo);
         intent.putExtras(trackInfoBundle);
         startActivity(intent);
     }

@@ -33,8 +33,6 @@ import retrofit.RetrofitError;
 public class FindArtistFragment extends Fragment {
 
     private static final String LOG_TAG = FindArtistFragment.class.getSimpleName();
-    private static final String ARTIST_ARRAY = "ArtistArray"; // key for persisting retrieved artists
-    private static final String LIST_POSITION = "ListPosition";
 
     private int mPosition = ListView.INVALID_POSITION;
 
@@ -58,7 +56,7 @@ public class FindArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (savedInstanceState != null) {savedInstanceState.getInt(LIST_POSITION);}
+        if (savedInstanceState != null) {savedInstanceState.getInt(Constants.LIST_POSITION);}
         View rootView = inflater.inflate(R.layout.fragment_artists, container, false);
 
         // Set up action listener for Search Artist editText
@@ -84,7 +82,7 @@ public class FindArtistFragment extends Fragment {
         mListView = (ListView) rootView.findViewById(R.id.list_artist);
 
         if (savedInstanceState != null) {
-            artistArray = savedInstanceState.getParcelableArrayList(ARTIST_ARRAY);
+            artistArray = savedInstanceState.getParcelableArrayList(Constants.ARTIST_ARRAY);
 
             // Create ArrayAdapter using persisted artist data
             if (artistArray != null) {
@@ -116,8 +114,8 @@ public class FindArtistFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(LIST_POSITION, mPosition);
-        outState.putParcelableArrayList(ARTIST_ARRAY, artistArray);
+        outState.putInt(Constants.LIST_POSITION, mPosition);
+        outState.putParcelableArrayList(Constants.ARTIST_ARRAY, artistArray);
     }
 
     /**
@@ -161,8 +159,9 @@ public class FindArtistFragment extends Fragment {
             // Cancel pending toast - this happens because search occurs after every keystroke
             if (toast != null) {toast.cancel();}
             if (artistsPager == null || artistsPager.artists.items.size() == 0) {
-                toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
-                        artist + "\'", toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
+                        artist + "\'", Toast.LENGTH_SHORT);
+                toast.show();
                 Log.d(LOG_TAG, "Tracks is null");
                 // Clear previous results.  This is necessary because the search is done after
                 // every keystroke.  When adding or removing a char takes you from having results
@@ -182,7 +181,7 @@ public class FindArtistFragment extends Fragment {
                     url = artist.images.get(1).url;
                 }
                 else {
-                    url = ShowArtist.NO_IMAGE;
+                    url = Constants.NO_IMAGE;
                 }
                 ShowArtist showArtist = new ShowArtist(artist.name, artist.id, url);
                 artistArray.add(showArtist);

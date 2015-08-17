@@ -13,8 +13,6 @@ public class ShowArtist implements Parcelable {
     final String artistId;
     final String artistImageUrl;
 
-    public static final String NO_IMAGE = "No_Image_Found";
-
     // Basic constructor
     public ShowArtist(String artistName, String artistId, String artistImageUrl)
     {

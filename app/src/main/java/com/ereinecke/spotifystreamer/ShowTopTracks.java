@@ -12,12 +12,10 @@ public class ShowTopTracks implements Parcelable {
     public final String trackName;
     public final String albumName;
     public final String artistName;
-    public final String trackId;
+    private final String trackId;
     public final String trackImageUrl;
     public final String trackMediaUrl;
     public final long trackLength;
-
-    public final String NO_IMAGE = "No_Image_Found";
 
     // Basic constructor
     public ShowTopTracks(String trackName, String albumName, String artistName, String trackId,

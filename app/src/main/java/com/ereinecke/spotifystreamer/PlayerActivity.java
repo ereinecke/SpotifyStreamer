@@ -17,9 +17,9 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.player_container, new PlayerFragment())
-                    .commit();
+//            getFragmentManager().beginTransaction()
+//                    .add(R.id.player_container, new PlayerFragment())
+//                    .commit();
         }
 
         // Get the track info from the intent
@@ -30,7 +30,7 @@ public class PlayerActivity extends AppCompatActivity {
         // Pass trackInfo to fragment and launch it
         PlayerFragment player = new PlayerFragment();
         player.setArguments(trackInfo);
-         getFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .add(R.id.player_container, player)
                 .commit();
 
@@ -64,8 +64,8 @@ public class PlayerActivity extends AppCompatActivity {
      */
     public void startPlayer(String uri) {
         Intent startIntent = new Intent(this, PlayerService.class);
-        startIntent.putExtra(MainActivity.CURRENT_TRACK_KEY, uri);
-        startIntent.setAction(MainActivity.STARTFOREGROUND_ACTION);
+        startIntent.putExtra(Constants.CURRENT_TRACK_KEY, uri);
+        startIntent.setAction(Constants.STARTFOREGROUND_ACTION);
         startService(startIntent);
     }
 
@@ -74,7 +74,7 @@ public class PlayerActivity extends AppCompatActivity {
      */
     public void stopPlayer() {
         Intent stopIntent = new Intent(this, PlayerService.class);
-        stopIntent.setAction(MainActivity.STOPFOREGROUND_ACTION);
+        stopIntent.setAction(Constants.STOPFOREGROUND_ACTION);
         startService(stopIntent);
 
     }

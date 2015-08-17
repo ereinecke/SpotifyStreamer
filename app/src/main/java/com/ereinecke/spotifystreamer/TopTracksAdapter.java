@@ -62,7 +62,7 @@ class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
 
         ImageView artistImageView = (ImageView) convertView.findViewById(R.id.list_top_tracks_imageView);
         Log.d(LOG_TAG, "trackImageUrl: " + showTopTracks.trackImageUrl);
-        if (showTopTracks.trackImageUrl.equals(showTopTracks.NO_IMAGE)) {
+        if (showTopTracks.trackImageUrl.equals(Constants.NO_IMAGE)) {
             artistImageView.setImageResource(R.drawable.no_image);
         }
         else {
