@@ -21,8 +21,8 @@ class Constants {
     public static final int NOTIFICATION_ID = 111;
 
     // FindArtistsFragment
-// key for persisting retrieved artists
-    public static final String LIST_POSITION = "ListPosition";
+    // key for persisting retrieved artists
+    public static final String ARTISTS_LIST_POSITION = "ListPosition";
 
     // ShowArtist
     public static final String NO_IMAGE = "No_Image_Found";
@@ -33,6 +33,10 @@ class Constants {
     public static final String ARTIST_ARRAY = "ArtistArray";
     public static final String TRACK_INFO = "TrackInfo";
     public static final String TOP_TRACKS_ARRAY = "TopTracksArray";
+    public static final String TOP_TRACKS_POSITION = "TopTracksPosition";
     public static final String COUNTRY_CODE = "MX"; // fallback country code
+
+    // PlayerActivity
+    public static final String SERVICE_BOUND = "ServiceBound";
 
 }

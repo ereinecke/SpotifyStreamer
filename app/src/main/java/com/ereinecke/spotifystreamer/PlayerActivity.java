@@ -1,6 +1,5 @@
 package com.ereinecke.spotifystreamer;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -17,22 +16,10 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         if (savedInstanceState == null) {
-//            getFragmentManager().beginTransaction()
-//                    .add(R.id.player_container, new PlayerFragment())
-//                    .commit();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.player_container, new PlayerFragment())
+                    .commit();
         }
-
-        // Get the track info from the intent
-        // Intent intent = getIntent();
-        // Bundle trackInfo = intent.getExtras();
-        Bundle trackInfo = TopTracksFragment.getTrackInfo();
-
-        // Pass trackInfo to fragment and launch it
-        PlayerFragment player = new PlayerFragment();
-        player.setArguments(trackInfo);
-        getFragmentManager().beginTransaction()
-                .add(R.id.player_container, player)
-                .commit();
 
     }
 
@@ -57,25 +44,5 @@ public class PlayerActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * StartPlayer starts the foreground service PlayerService when requested
-     */
-    public void startPlayer(String uri) {
-        Intent startIntent = new Intent(this, PlayerService.class);
-        startIntent.putExtra(Constants.CURRENT_TRACK_KEY, uri);
-        startIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-        startService(startIntent);
-    }
-
-    /**
-     * StopPlayer stops the PlayerService
-     */
-    public void stopPlayer() {
-        Intent stopIntent = new Intent(this, PlayerService.class);
-        stopIntent.setAction(Constants.STOPFOREGROUND_ACTION);
-        startService(stopIntent);
-
     }
 }

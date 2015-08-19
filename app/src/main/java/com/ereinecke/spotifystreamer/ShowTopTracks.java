@@ -28,6 +28,7 @@ public class ShowTopTracks implements Parcelable {
         this.trackImageUrl = trackImageUrl;
         this.trackMediaUrl = trackMediaUrl;
         this.trackLength = trackLength;
+//        this.trackAlbumArt = trackAlbumArt;
     }
 
     // Constructor for use by Parcelable creator
@@ -50,6 +51,7 @@ public class ShowTopTracks implements Parcelable {
         dest.writeString(trackImageUrl);
         dest.writeString(trackMediaUrl);
         dest.writeLong(trackLength);
+
     }
 
     public int describeContents() {

@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -12,8 +13,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Media Player foreground service
@@ -28,9 +33,14 @@ import java.io.IOException;
             MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
     private static final String LOG_TAG = PlayerService.class.getSimpleName();
-    private static MediaPlayer mMediaPlayer;
+    private static DebugMediaPlayer mMediaPlayer;
+    // private static MediaPlayer mMediaPlayer;
     private static boolean playing = false;
+    private static boolean trackReady = false;
     private final IBinder mBinder = new PlayerBinder();
+    private ArrayList<ShowTopTracks> topTracksArrayList;
+    private int mPosition;
+    private static Bitmap trackAlbumArt;
 
     public PlayerService() {}
 
@@ -41,9 +51,10 @@ import java.io.IOException;
     }
 
     // Sets up notification
-    public void newTrack(ShowTopTracks currentTrack, Bitmap currentTrackArt) {
+    public void newTrack(ShowTopTracks currentTrack) {
 
         Log.d(LOG_TAG, "Setting up new track");
+        logMediaPlayerState();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Constants.MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -65,13 +76,22 @@ import java.io.IOException;
         nextIntent.setAction(Constants.NEXT_ACTION);
         PendingIntent pNextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
 
+
+        ImageView tempImageView = new ImageView(this);
+        Picasso.with(getApplicationContext()).load(currentTrack.trackImageUrl)
+                .resize(128,128).into(tempImageView);
+        // Probably won't be ready without a timeout
+        Bitmap trackAlbumArt = ((BitmapDrawable) tempImageView.getDrawable()).getBitmap();
+
         if (currentTrack != null) {
             // Set up notification
             Notification notification = new NotificationCompat.Builder(this)
-                    .setContentTitle(currentTrack.artistName)
+                    .setContentTitle(currentTrack.trackName)
                     .setTicker(currentTrack.trackName)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(Bitmap.createScaledBitmap(currentTrackArt, 128, 128, false))
+//                    .setLargeIcon(Bitmap.createScaledBitmap(currentTrack.trackAlbumArt,
+                    .setLargeIcon(Bitmap.createScaledBitmap(trackAlbumArt,
+                            128, 128, false))
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .addAction(android.R.drawable.ic_media_previous,
@@ -82,7 +102,12 @@ import java.io.IOException;
                             getResources().getString(R.string.next), pNextIntent)
                     .build();
 
-            startForeground(Constants.NOTIFICATION_ID, notification);
+            try {
+                startForeground(Constants.NOTIFICATION_ID, notification);
+            } catch (Exception e) {
+                Log.d(LOG_TAG,"Error trying to start Foreground service: probably already running.");
+                e.printStackTrace();
+            }
 
             try {
                 mMediaPlayer.setDataSource(currentTrack.trackMediaUrl);
@@ -94,18 +119,79 @@ import java.io.IOException;
         }
     }
 
-    public void playTrack() {
-        Log.i(LOG_TAG, "Clicked Play");
-        // If playing, pause
-//        if (mMediaPlayer.isPlaying()) {
-        if (playing) {
-            playing = false;
-            mMediaPlayer.pause();
-        } else {  // if not playing, play!
+    public void startTrack() {
+        Log.d(LOG_TAG, "in startTrack()");
+        logMediaPlayerState();
+        if (!mMediaPlayer.isPlaying()) {
+            PlayerFragment.onStartTrack();
             playing = true;
             mMediaPlayer.prepareAsync();
+        } else {
+            Log.d(LOG_TAG, "Attempted to startTrack() when already playing");
         }
     }
+
+    public void playTrack() {
+        Log.d(LOG_TAG, "in playTrack()");
+        logMediaPlayerState();
+        if (!mMediaPlayer.isPlaying()) {
+            playing = true;
+            mMediaPlayer.start();
+        } else {
+            Log.d(LOG_TAG, "Attempted to playTrack() when already playing");
+        }
+    }
+
+   public void pauseTrack() {
+        // If playing, pause
+        Log.d(LOG_TAG, "in pauseTrack()");
+        logMediaPlayerState();
+        if (mMediaPlayer.isPlaying()) {
+            playing = false;
+            mMediaPlayer.pause();
+        } else {
+            Log.d(LOG_TAG, "Attempted to pauseTrack() when not playing");
+        }
+    }
+
+    public void setSeek(int newPositionMillis) {
+        Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
+        logMediaPlayerState();
+        mMediaPlayer.seekTo(newPositionMillis);
+    }
+
+    public void prevTrack() {
+        Log.d(LOG_TAG, "in prevTrack()");
+        if (mPosition > 0) {
+            mPosition -= 1;
+        } else {
+            mPosition = topTracksArrayList.size() - 1;
+        }
+        if (isPlaying()) {
+            mMediaPlayer.reset();
+        }
+        playing = false;
+        stopForegroundService();
+        newTrack(topTracksArrayList.get(mPosition));
+        startTrack();
+    }
+
+    public void nextTrack() {
+        Log.d(LOG_TAG, "in nextTrack()");
+        if (mPosition < topTracksArrayList.size() - 1) {
+            mPosition += 1;
+        } else {
+            mPosition = 0;
+        }
+//        if (isPlaying()) {
+            mMediaPlayer.reset();
+            playing = false;
+//        }
+        stopForegroundService();
+        newTrack(topTracksArrayList.get(mPosition));
+        startTrack();
+    }
+
 
     public void stopForegroundService() {
         Log.i(LOG_TAG, "Stopping foreground service");
@@ -113,126 +199,31 @@ import java.io.IOException;
         stopSelf();
     }
 
-    // saved copy of OnHandleIntent
-
-//    // onHandleIntent if for intent service.  How do we handle intents for service?
-//    @Override
-//    public void onHandleIntent(Intent intent) {
-//        super(onHandleIntent(intent));
-//        Bitmap selectedAlbumArt;
-//
-//        String action = intent.getAction();
-//        if (action.equals(Constants.STARTFOREGROUND_ACTION)) {
-//
-//            // Start
-//            Log.d(LOG_TAG, "Received Start Foreground Intent ");
-//            Intent notificationIntent = new Intent(this, MainActivity.class);
-//            notificationIntent.setAction(Constants.MAIN_ACTION);
-//            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-//                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-//
-//            // Previous
-//            Intent previousIntent = new Intent(this, PlayerService.class);
-//            previousIntent.setAction(Constants.PREV_ACTION);
-//            PendingIntent pPreviousIntent = PendingIntent.getService(this, 0, previousIntent, 0);
-//
-//            // Play
-//            Intent playIntent = new Intent(this, PlayerService.class);
-//            playIntent.setAction(Constants.PLAY_ACTION);
-//            PendingIntent pPlayIntent = PendingIntent.getService(this, 0, playIntent, 0);
-//
-//            // Next
-//            Intent nextIntent = new Intent(this, PlayerService.class);
-//            nextIntent.setAction(Constants.NEXT_ACTION);
-//            PendingIntent pNextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
-//
-//            // Get current track info
-//            ShowTopTracks currentTrack = TopTracksFragment.getTrackInfo()
-//                    .getParcelable(Constants.TRACK_INFO);
-//            // Getting album art for notification
-//            if (currentTrack != null) {
-//                try {
-//                    selectedAlbumArt = Picasso.with(getApplicationContext())
-//                            .load(currentTrack.trackImageUrl)
-//                            .resize(128, 128)
-//                            .get();
-//                } catch (IOException e) {
-//                    selectedAlbumArt = ((BitmapDrawable) getResources()
-//                            .getDrawable(R.mipmap.ic_launcher)).getBitmap();
-//                    e.printStackTrace();
-//                }
-//
-//                // Set up notification
-//                Notification notification = new NotificationCompat.Builder(this)
-//                        .setContentTitle(currentTrack.artistName)
-//                        .setTicker(currentTrack.trackName)
-//                        .setSmallIcon(R.mipmap.ic_launcher)
-//                        .setLargeIcon(Bitmap.createScaledBitmap(selectedAlbumArt, 128, 128, false))
-//                        .setContentIntent(pendingIntent)
-//                        .setOngoing(true)
-//                        .addAction(android.R.drawable.ic_media_previous,
-//                                getResources().getString(R.string.previous), pPreviousIntent)
-//                        .addAction(android.R.drawable.ic_media_play,
-//                                getResources().getString(R.string.play), pPlayIntent)
-//                        .addAction(android.R.drawable.ic_media_next,
-//                                getResources().getString(R.string.next), pNextIntent)
-//                        .build();
-//
-//                startForeground(Constants.NOTIFICATION_ID, notification);
-//            }
-//
-//            // Previous Intent
-//            else if (intent.getAction().equals(Constants.PREV_ACTION)) {
-//                Log.i(LOG_TAG, "Clicked Previous");
-//            }
-//            // Play Intent
-//            else if (intent.getAction().equals(Constants.PLAY_ACTION)) {
-//                Log.i(LOG_TAG, "Clicked Play");
-//                // If playing, pause
-//                if (mMediaPlayer.isPlaying()) {
-//                    mMediaPlayer.pause();
-//                } else {  // if not playing, play!
-//                    // If no extras in play intent, bail out
-//                    if (intent.hasExtra(Constants.CURRENT_TRACK_KEY)) {
-//                        try {
-//                            mMediaPlayer.setDataSource(intent.getStringExtra(Constants.CURRENT_TRACK_KEY));
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        mMediaPlayer.prepareAsync();
-//                    }
-//                }
-//            }
-//            // Next Intent
-//            else if (intent.getAction().equals(Constants.NEXT_ACTION)) {
-//                Log.i(LOG_TAG, "Clicked Next");
-//            }
-//
-//            // Not sure if I'll be calling this
-//            else if (intent.getAction().equals(Constants.STOPFOREGROUND_ACTION)) {
-//                Log.i(LOG_TAG, "Received Stop Foreground Intent");
-//                stopForeground(true);
-//                stopSelf();
-//            }
-//        }
-//    }  // end OnHandleIntent()
+    public void setTrackList(ArrayList<ShowTopTracks> topTracksArrayList, int position) {
+        mPosition = position;
+        this.topTracksArrayList = topTracksArrayList;
+        newTrack(topTracksArrayList.get(mPosition));
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(LOG_TAG, "in onCreate()");
 
         // Initialize MediaPlayer
         if (mMediaPlayer == null) { initMediaPlayer(); }
     }
 
     private void initMediaPlayer() {
-        mMediaPlayer = new MediaPlayer();
+        // mMediaPlayer = new MediaPlayer();
+        mMediaPlayer = new DebugMediaPlayer();
         mMediaPlayer.setOnErrorListener(this);
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Log.d(LOG_TAG, "Exiting initMediaPlayer");
+        logMediaPlayerState();
     }
 
     // Callbacks for async operation
@@ -256,16 +247,36 @@ import java.io.IOException;
 
     @Override
     public void onPrepared(MediaPlayer player) {
+        Log.d(LOG_TAG, "onPrepared called: starting player");
+        trackReady = true;
+        PlayerFragment.onStartPlay();
         player.start();
     }
 
     @Override
     public void onCompletion(MediaPlayer player) {
-        // Go to next song?
+        nextTrack();
+    }
+
+    private void logMediaPlayerState() {
+        if (mMediaPlayer == null) Log.d(LOG_TAG, "MediaPlayer null");
+        else {
+            Log.d(LOG_TAG, "Media player isPlaying(): " + isPlaying() + "; " +
+                    "playing: " + playing + "\n");
+            if (isPlaying() != playing) {
+                Log.d(LOG_TAG, "isPlaying() and playing are not in agreement.");
+            }
+        }
     }
 
     public static boolean isPlaying() {
         return (mMediaPlayer != null && mMediaPlayer.isPlaying());
+    }
+
+    // Assumption that if trackReady = true and isPlaying() is false, must be paused.
+    public boolean isPaused() {
+        Log.d(LOG_TAG, "isPaused(): " + (trackReady && !isPlaying()));
+        return (trackReady && !isPlaying());
     }
 
     @Override
@@ -285,9 +296,12 @@ import java.io.IOException;
 
     @Override
     public boolean onUnbind(Intent intent) {
+        Log.d(LOG_TAG, "in onUnbind()");
         mMediaPlayer.stop();
         mMediaPlayer.release();
         mMediaPlayer = null;
         return false;
     }
+
+
 }

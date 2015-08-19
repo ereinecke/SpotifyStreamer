@@ -56,7 +56,7 @@ public class FindArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (savedInstanceState != null) {savedInstanceState.getInt(Constants.LIST_POSITION);}
+        if (savedInstanceState != null) {savedInstanceState.getInt(Constants.ARTISTS_LIST_POSITION);}
         View rootView = inflater.inflate(R.layout.fragment_artists, container, false);
 
         // Set up action listener for Search Artist editText
@@ -114,7 +114,7 @@ public class FindArtistFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Constants.LIST_POSITION, mPosition);
+        outState.putInt(Constants.ARTISTS_LIST_POSITION, mPosition);
         outState.putParcelableArrayList(Constants.ARTIST_ARRAY, artistArray);
     }
 

@@ -1,6 +1,8 @@
 package com.ereinecke.spotifystreamer;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static String countryCode;
     private static String accessToken = null;
     public static  String accessToken() {return accessToken;}
+    private static Bitmap placeholderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, new FindArtistFragment())
                     .commit();
         }
+        placeholderImage = ((BitmapDrawable) getResources()
+                .getDrawable(R.mipmap.ic_launcher)).getBitmap();
         spotifyLogin();
     }
 
@@ -115,25 +120,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * StartPlayer starts the foreground service PlayerService when requested
-     * This is duplicated in PlayerActivity for phone layouts
+     * Returns placeholder image
      */
-    public void startPlayer(String uri) {
-        Intent startIntent = new Intent(this, PlayerService.class);
-        startIntent.putExtra(Constants.CURRENT_TRACK_KEY, uri);
-        startIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-        startService(startIntent);
-    }
-
-    /**
-     * StopPlayer stops the PlayerService
-     * This is duplicated in PlayerActivity for phone layouts
-     */
-    public void stopPlayer() {
-        Intent stopIntent = new Intent(this, PlayerService.class);
-        stopIntent.setAction(Constants.STOPFOREGROUND_ACTION);
-//        startService(stopIntent);
-
+    public static Bitmap getPlaceholderImage() {
+        return placeholderImage;
     }
 
     /**
