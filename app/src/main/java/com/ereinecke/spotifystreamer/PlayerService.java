@@ -5,15 +5,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
@@ -40,7 +39,13 @@ import java.util.ArrayList;
     private final IBinder mBinder = new PlayerBinder();
     private ArrayList<ShowTopTracks> topTracksArrayList;
     private int mPosition;
-    private static Bitmap trackAlbumArt;
+    private PendingIntent pendingIntent;
+    private PendingIntent pPlayIntent;
+    private PendingIntent pPreviousIntent;
+    private PendingIntent pNextIntent;
+    private ShowTopTracks currentTrack;
+    private Notification notification;
+
 
     public PlayerService() {}
 
@@ -50,48 +55,73 @@ import java.util.ArrayList;
         }
     }
 
-    // Sets up notification
-    public void newTrack(ShowTopTracks currentTrack) {
+    // Prepares notification PendingIntents.
+    public void initTrack() {
 
-        Log.d(LOG_TAG, "Setting up new track");
+        Log.d(LOG_TAG, "Setting up new track, mPosition: " + mPosition);
         logMediaPlayerState();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Constants.MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         // Previous
         Intent previousIntent = new Intent(this, PlayerService.class);
         previousIntent.setAction(Constants.PREV_ACTION);
-        PendingIntent pPreviousIntent = PendingIntent.getService(this, 0, previousIntent, 0);
+        pPreviousIntent = PendingIntent.getService(this, 0, previousIntent, 0);
 
         // Play
         Intent playIntent = new Intent(this, PlayerService.class);
         playIntent.setAction(Constants.PLAY_ACTION);
-        PendingIntent pPlayIntent = PendingIntent.getService(this, 0, playIntent, 0);
+        pPlayIntent = PendingIntent.getService(this, 0, playIntent, 0);
 
         // Next
         Intent nextIntent = new Intent(this, PlayerService.class);
         nextIntent.setAction(Constants.NEXT_ACTION);
-        PendingIntent pNextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
+        pNextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
 
+        // Pull down album art for track on background thread
+        new getAlbumTrackArt().execute(currentTrack.trackImageUrl);
+    }
 
-        ImageView tempImageView = new ImageView(this);
-        Picasso.with(getApplicationContext()).load(currentTrack.trackImageUrl)
-                .resize(128,128).into(tempImageView);
-        // Probably won't be ready without a timeout
-        Bitmap trackAlbumArt = ((BitmapDrawable) tempImageView.getDrawable()).getBitmap();
+    // Pull down album art on background thread
+    public class getAlbumTrackArt extends AsyncTask<String, Void, Bitmap> {
+
+        private final String LOG_TAG = getAlbumTrackArt.class.getSimpleName();
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            String trackImageUrl = params[0];
+            Bitmap trackImageArt;
+
+            try {
+                trackImageArt = Picasso.with(getApplicationContext()).load(trackImageUrl)
+                        .resize(128, 128).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+                trackImageArt = MainActivity.getPlaceholderImage();
+            }
+            return trackImageArt;
+        } // end getAlbumTrackArt.doInBackground
+
+        @Override
+        protected void onPostExecute(Bitmap trackAlbumArt) {
+            setNotification(trackAlbumArt);
+        }
+    }
+
+    // Called after getAlbumTrackArt completes, sets up notification, starts the
+    // foreground service and sets track data source.
+    private void setNotification(Bitmap trackAlbumArt) {
 
         if (currentTrack != null) {
             // Set up notification
-            Notification notification = new NotificationCompat.Builder(this)
+            notification = new NotificationCompat.Builder(this)
                     .setContentTitle(currentTrack.trackName)
                     .setTicker(currentTrack.trackName)
                     .setSmallIcon(R.mipmap.ic_launcher)
-//                    .setLargeIcon(Bitmap.createScaledBitmap(currentTrack.trackAlbumArt,
-                    .setLargeIcon(Bitmap.createScaledBitmap(trackAlbumArt,
-                            128, 128, false))
+                    .setLargeIcon(trackAlbumArt)
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .addAction(android.R.drawable.ic_media_previous,
@@ -101,29 +131,19 @@ import java.util.ArrayList;
                     .addAction(android.R.drawable.ic_media_next,
                             getResources().getString(R.string.next), pNextIntent)
                     .build();
-
-            try {
-                startForeground(Constants.NOTIFICATION_ID, notification);
-            } catch (Exception e) {
-                Log.d(LOG_TAG,"Error trying to start Foreground service: probably already running.");
-                e.printStackTrace();
-            }
-
-            try {
-                mMediaPlayer.setDataSource(currentTrack.trackMediaUrl);
-                Log.d(LOG_TAG, "setDatasource to " + currentTrack.trackMediaUrl);
-            } catch (IOException e) {
-                Log.d(LOG_TAG, "Can't setDataSource to " + currentTrack.trackMediaUrl);
-                e.printStackTrace();
-            }
         }
     }
 
+    // Play from beginning
     public void startTrack() {
         Log.d(LOG_TAG, "in startTrack()");
         logMediaPlayerState();
         if (!mMediaPlayer.isPlaying()) {
-            PlayerFragment.onStartTrack();
+            mMediaPlayer.reset();
+            stopForegroundService();
+            startForegroundService();
+            initTrack();
+            PlayerFragment.onStartTrack();  // Starts buffering progress spinner
             playing = true;
             mMediaPlayer.prepareAsync();
         } else {
@@ -131,6 +151,7 @@ import java.util.ArrayList;
         }
     }
 
+    // Resume play from pause
     public void playTrack() {
         Log.d(LOG_TAG, "in playTrack()");
         logMediaPlayerState();
@@ -142,7 +163,7 @@ import java.util.ArrayList;
         }
     }
 
-   public void pauseTrack() {
+    public void pauseTrack() {
         // If playing, pause
         Log.d(LOG_TAG, "in pauseTrack()");
         logMediaPlayerState();
@@ -154,64 +175,54 @@ import java.util.ArrayList;
         }
     }
 
-    public void setSeek(int newPositionMillis) {
-        Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
-        logMediaPlayerState();
-        mMediaPlayer.seekTo(newPositionMillis);
-    }
-
     public void prevTrack() {
         Log.d(LOG_TAG, "in prevTrack()");
-        if (mPosition > 0) {
+        if (mPosition > 0) {  // decrement
             mPosition -= 1;
-        } else {
+        } else {              // set to last
             mPosition = topTracksArrayList.size() - 1;
         }
-        if (isPlaying()) {
-            mMediaPlayer.reset();
-        }
+        mMediaPlayer.stop();
         playing = false;
-        stopForegroundService();
-        newTrack(topTracksArrayList.get(mPosition));
+        currentTrack = topTracksArrayList.get(mPosition);
         startTrack();
     }
 
     public void nextTrack() {
         Log.d(LOG_TAG, "in nextTrack()");
-        if (mPosition < topTracksArrayList.size() - 1) {
+        if (mPosition < topTracksArrayList.size() - 1) {     // increment
             mPosition += 1;
-        } else {
+        } else {                // set to first
             mPosition = 0;
         }
-//        if (isPlaying()) {
-            mMediaPlayer.reset();
-            playing = false;
-//        }
-        stopForegroundService();
-        newTrack(topTracksArrayList.get(mPosition));
+        mMediaPlayer.stop();
+        playing = false;
+        currentTrack = topTracksArrayList.get(mPosition);
         startTrack();
     }
 
+    // Moves MediaPlayer to Initialized
+    public void startForegroundService() {
+        try {
+            startForeground(Constants.NOTIFICATION_ID, notification);
+        } catch (Exception e) {
+            Log.d(LOG_TAG,"Error trying to start Foreground service: probably already running.");
+            e.printStackTrace();
+        }
+
+        try {
+            mMediaPlayer.setDataSource(currentTrack.trackMediaUrl);
+            Log.d(LOG_TAG, "setDatasource to " + currentTrack.trackMediaUrl);
+        } catch (IOException e) {
+            Log.d(LOG_TAG, "Can't setDataSource to " + currentTrack.trackMediaUrl);
+            e.printStackTrace();
+        }
+    }
 
     public void stopForegroundService() {
         Log.i(LOG_TAG, "Stopping foreground service");
         stopForeground(true);
         stopSelf();
-    }
-
-    public void setTrackList(ArrayList<ShowTopTracks> topTracksArrayList, int position) {
-        mPosition = position;
-        this.topTracksArrayList = topTracksArrayList;
-        newTrack(topTracksArrayList.get(mPosition));
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(LOG_TAG, "in onCreate()");
-
-        // Initialize MediaPlayer
-        if (mMediaPlayer == null) { initMediaPlayer(); }
     }
 
     private void initMediaPlayer() {
@@ -224,6 +235,18 @@ import java.util.ArrayList;
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Log.d(LOG_TAG, "Exiting initMediaPlayer");
         logMediaPlayerState();
+    }
+
+     public void setTrackList(ArrayList<ShowTopTracks> topTracksArrayList, int position) {
+        mPosition = position;
+        this.topTracksArrayList = topTracksArrayList;
+        currentTrack = topTracksArrayList.get(mPosition);
+    }
+
+    public void setSeek(int newPositionMillis) {
+        Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
+        logMediaPlayerState();
+        mMediaPlayer.seekTo(newPositionMillis);
     }
 
     // Callbacks for async operation
@@ -280,6 +303,15 @@ import java.util.ArrayList;
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(LOG_TAG, "in onCreate()");
+
+        // Initialize MediaPlayer
+        if (mMediaPlayer == null) { initMediaPlayer(); }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         Log.i(LOG_TAG, "In onDestroy");
@@ -302,6 +334,4 @@ import java.util.ArrayList;
         mMediaPlayer = null;
         return false;
     }
-
-
 }

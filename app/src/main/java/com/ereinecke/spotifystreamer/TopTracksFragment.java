@@ -179,24 +179,13 @@ public class TopTracksFragment extends Fragment {
                 // and when populating the adapter.
                 if (track.album.images.size() > 0) {
                     imageUrl = track.album.images.get(1).url;
-//                    new Thread(new Runnable() {
-//                        public void run() {
-//                            try {
-//                                trackAlbumArt = Picasso.with(getActivity()).load(imageUrl)
-//                                        .resize(128, 128).get();
-//                            } catch (IOException e) {
-//                                Log.d(LOG_TAG, "Can't load " + imageUrl);
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }).start();
                 } else {
                     imageUrl = Constants.NO_IMAGE;
                     trackAlbumArt = MainActivity.getPlaceholderImage();
                 }
                 ShowTopTracks showTopTracks = new ShowTopTracks(track.name, track.album.name,
                         artistName, track.id, imageUrl, trackUrl, trackLength);
-
+                        // artistName, track.id, imageUrl, trackUrl, trackLength, trackAlbumArt);
                 topTracksArray.add(showTopTracks);
                 Log.d(LOG_TAG, " Track List: " + showTopTracks.toString());
             }
