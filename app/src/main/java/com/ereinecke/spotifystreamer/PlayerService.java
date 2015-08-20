@@ -47,6 +47,7 @@ import java.util.ArrayList;
     private Notification notification;
 
 
+
     public PlayerService() {}
 
     public class PlayerBinder extends Binder {
@@ -233,7 +234,7 @@ import java.util.ArrayList;
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        Log.d(LOG_TAG, "Exiting initMediaPlayer");
+        // Log.d(LOG_TAG, "Exiting initMediaPlayer");
         logMediaPlayerState();
     }
 
@@ -243,10 +244,19 @@ import java.util.ArrayList;
         currentTrack = topTracksArrayList.get(mPosition);
     }
 
+    public static int getSeek() {
+        if (mMediaPlayer != null ) {
+            return mMediaPlayer.getCurrentPosition();
+        } else return -1;
+    }
+
     public void setSeek(int newPositionMillis) {
+        mMediaPlayer.pause();
+        Log.d("SetSeek: ", "Current Position: " + mMediaPlayer.getCurrentPosition());
         Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
-        logMediaPlayerState();
         mMediaPlayer.seekTo(newPositionMillis);
+        Log.d("SetSeek: ", "New Position: " + mMediaPlayer.getCurrentPosition());
+        mMediaPlayer.start();
     }
 
     // Callbacks for async operation
