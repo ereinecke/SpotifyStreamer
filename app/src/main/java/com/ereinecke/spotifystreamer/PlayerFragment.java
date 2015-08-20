@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +32,7 @@ import static android.widget.SeekBar.OnSeekBarChangeListener;
 /**
  * PlayerFragment is a container for the MediaPlayer.
  */
-public class PlayerFragment extends DialogFragment  {
+public class PlayerFragment extends DialogFragment {
 
     private static final String LOG_TAG = PlayerFragment.class.getSimpleName();
     private static ImageButton playButton;
@@ -51,46 +50,29 @@ public class PlayerFragment extends DialogFragment  {
     private boolean mBound;
     private TextView currentTimeView;
     private static ProgressDialog spinner;
-    private static Toast buffering;
     private Timer seekTimer;
 
 
     public PlayerFragment() {
-    } // setHasOptionsMenu(true);
+     // setHasOptionsMenu(true);
 
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-       super.onCreate(savedInstanceState);
-
-       setRetainInstance(true);
-   }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(LOG_TAG, "in onStart(): mBound: " + mBound);
-        if (playIntent == null || !mBound) {
-            playIntent = new Intent(getActivity(), PlayerService.class);
-            // getActivity().startService(playIntent);
-            getActivity().bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
-        }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        // Unbind from mPlayerService
-        if (mBound) {
-            getActivity().unbindService(mConnection);
-            mBound = false;
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
     }
 
     @Override
     public void onDestroy() {
         Log.d(LOG_TAG, "in onDestroy()");
-        getActivity().stopService(playIntent);
+        // Unbind from mPlayerService
+        if (mBound) {
+            getActivity().unbindService(mConnection);
+            mBound = false;
+        }
         mPlayerService = null;
         super.onDestroy();
     }
@@ -126,21 +108,21 @@ public class PlayerFragment extends DialogFragment  {
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prevClick();
+                clickPrev();
             }
         });
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playClick();
+                clickPlay();
             }
         });
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextClick();
+                clickNext();
             }
         });
 
@@ -164,9 +146,6 @@ public class PlayerFragment extends DialogFragment  {
             public void onStopTrackingTouch(SeekBar seekbar) { }
         });
 
-        // set up buffering toast
-        buffering = Toast.makeText(getActivity(), R.string.buffering, Toast.LENGTH_LONG);
-
         // set up spinner
         spinner = new ProgressDialog(getActivity());
         spinner.setMessage(getResources().getString(R.string.buffering));
@@ -174,6 +153,13 @@ public class PlayerFragment extends DialogFragment  {
 
         // Populate layout fields
         setTrackInfo(playerView, trackInfo);
+
+        // Bind service if necessary
+        if (playIntent == null || !mBound) {
+            playIntent = new Intent(getActivity(), PlayerService.class);
+            // getActivity().startService(playIntent);
+            getActivity().bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
+        }
 
         return playerView;
     }
@@ -217,7 +203,7 @@ public class PlayerFragment extends DialogFragment  {
         seekBar.setProgress(0);
     }
 
-    private void playClick() {
+    private void clickPlay() {
         // Need to toggle Play and Pause
         if (PlayerService.isPlaying()) {
             // change button to Play, pause player
@@ -232,7 +218,7 @@ public class PlayerFragment extends DialogFragment  {
             } else if (mBound) { // Need to call prepareAsync()
                 mPlayerService.startTrack();
             } else{
-                Log.d(LOG_TAG, "playClick() called with PlayerService unbound");
+                Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
             }
         }
     }
@@ -240,7 +226,7 @@ public class PlayerFragment extends DialogFragment  {
     // Track controls, specified in media_player.xml
     // List wraps, so if at first item, go to last.
     // TODO: (for both prev & next) decide if current track should stop and new start automatically
-    public void prevClick() {
+    public void clickPrev() {
         if (mPosition > 0) {
             mPosition -= 1;
         } else {
@@ -254,7 +240,7 @@ public class PlayerFragment extends DialogFragment  {
 
     // The approach is to select previous track from ArrayList and regenerate fragment
     // Wrap to end if at last item
-    private void nextClick() {
+    private void clickNext() {
         if (mPosition < topTracksArrayList.size() - 1) {
             mPosition += 1;
         } else {
@@ -329,6 +315,7 @@ public class PlayerFragment extends DialogFragment  {
             mBound = true;
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
+            clickPlay();
         }
 
         @Override

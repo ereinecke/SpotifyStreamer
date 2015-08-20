@@ -18,6 +18,7 @@ class Constants {
     public static final String NEXT_ACTION = "com.ereinecke.spotifystreamer.action.next";
     public static final String STARTFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.startforeground";
     public static final String STOPFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.stopforeground";
+    public static final String SERVICE_TAG = "Service";
     public static final int    NOTIFICATION_ID = 111;
 
     // FindArtistsFragment

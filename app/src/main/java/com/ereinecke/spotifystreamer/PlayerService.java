@@ -108,7 +108,9 @@ import java.util.ArrayList;
 
         @Override
         protected void onPostExecute(Bitmap trackAlbumArt) {
+
             setNotification(trackAlbumArt);
+
         }
     }
 

@@ -1,5 +1,6 @@
 package com.ereinecke.spotifystreamer;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,9 +37,24 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, new FindArtistFragment())
                     .commit();
         }
+
+        // Bind to PlayerService via ServiceFragment
+        FragmentManager fm = getFragmentManager();
+        ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICE_TAG);
+
+        if (serviceFragment == null) {
+            serviceFragment = new ServiceFragment();
+            fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
+        }
+
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
         spotifyLogin();
+    }
+
+    @Override
+    protected void onDestroy() {
+
     }
 
     @Override
