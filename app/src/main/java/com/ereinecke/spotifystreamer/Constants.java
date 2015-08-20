@@ -7,7 +7,7 @@ class Constants {
 
     // MainActivity
     // Spotify service constants
-    public static final int REQUEST_CODE = 1137;
+    public static final int    REQUEST_CODE = 1137;
     public static final String CLIENT_ID = "0801969fcfb940d69497cd585393a7d0";
     public static final String REDIRECT_URI = "whatup://callback";
 
@@ -18,7 +18,7 @@ class Constants {
     public static final String NEXT_ACTION = "com.ereinecke.spotifystreamer.action.next";
     public static final String STARTFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.startforeground";
     public static final String STOPFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.stopforeground";
-    public static final int NOTIFICATION_ID = 111;
+    public static final int    NOTIFICATION_ID = 111;
 
     // FindArtistsFragment
     // key for persisting retrieved artists
@@ -38,5 +38,6 @@ class Constants {
 
     // PlayerActivity
     public static final String SERVICE_BOUND = "ServiceBound";
+    public static final int     SCRUBBER_INTERVAL = 300; // 30 seconds / 100
 
 }

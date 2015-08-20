@@ -13,7 +13,6 @@ public class DebugMediaPlayer extends MediaPlayer {
     @Override
     public void start() {
         Log.d(LOG_TAG, "Calling start()");
-
         super.start();
     }
 
@@ -40,5 +39,4 @@ public class DebugMediaPlayer extends MediaPlayer {
         Log.d(LOG_TAG, "Calling reset()");
         super.reset();
     }
-
 }

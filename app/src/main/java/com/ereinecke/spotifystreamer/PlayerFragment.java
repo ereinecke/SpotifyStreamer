@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static android.widget.SeekBar.OnSeekBarChangeListener;
@@ -47,8 +49,10 @@ public class PlayerFragment extends DialogFragment  {
     private Bitmap albumArt;
     private View playerView;
     private boolean mBound;
+    private TextView currentTimeView;
     private static ProgressDialog spinner;
     private static Toast buffering;
+    private Timer seekTimer;
 
 
     public PlayerFragment() {
@@ -65,7 +69,7 @@ public class PlayerFragment extends DialogFragment  {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(LOG_TAG,"in onStart(): mBound: " + mBound);
+        Log.d(LOG_TAG, "in onStart(): mBound: " + mBound);
         if (playIntent == null || !mBound) {
             playIntent = new Intent(getActivity(), PlayerService.class);
             // getActivity().startService(playIntent);
@@ -116,6 +120,7 @@ public class PlayerFragment extends DialogFragment  {
         seekBar = (SeekBar) playerView.findViewById(R.id.seek_bar);
         pauseButtonDrawable = getResources().getDrawable(android.R.drawable.ic_media_pause);
         playButtonDrawable = getResources().getDrawable(android.R.drawable.ic_media_play);
+        currentTimeView = (TextView) playerView.findViewById(R.id.current_time_textview);
 
         // Set up listeners
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -143,20 +148,20 @@ public class PlayerFragment extends DialogFragment  {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
-                int progress = 0;
+                int progress;
 
                 progress = progressValue;
                 if (fromUser) {
                     Log.d(LOG_TAG, "Progress from user: " + progress);
                     seekTo(progress);
-                };
+                }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekbar) {}
+            public void onStartTrackingTouch(SeekBar seekbar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekbar) {}
+            public void onStopTrackingTouch(SeekBar seekbar) { }
         });
 
         // set up buffering toast
@@ -209,7 +214,7 @@ public class PlayerFragment extends DialogFragment  {
                     .resize(trackArtSize, trackArtSize)
                     .into(trackArt);
         }
-        setSeekBar(0);
+        seekBar.setProgress(0);
     }
 
     private void playClick() {
@@ -218,8 +223,10 @@ public class PlayerFragment extends DialogFragment  {
             // change button to Play, pause player
             playButton.setImageDrawable(playButtonDrawable);
             mPlayerService.pauseTrack();
+            stopScrubber();
         } else { // change button to Pause
             playButton.setImageDrawable(pauseButtonDrawable);
+            startScrubber();
             if (mPlayerService.isPaused()) {  // if paused
                 mPlayerService.playTrack();
             } else if (mBound) { // Need to call prepareAsync()
@@ -241,6 +248,7 @@ public class PlayerFragment extends DialogFragment  {
         }
         TopTracksFragment.setListPosition(mPosition);
         setTrackInfo(playerView, topTracksArrayList.get(mPosition));
+        startScrubber();
         mPlayerService.prevTrack();
     }
 
@@ -254,19 +262,51 @@ public class PlayerFragment extends DialogFragment  {
         }
         TopTracksFragment.setListPosition(mPosition);
         setTrackInfo(playerView, topTracksArrayList.get(mPosition));
+        startScrubber();
         mPlayerService.nextTrack();
     }
 
     // newPosition is from 1 to 100
     private void seekTo(int newPosition) {
         // mPlayerService.setSeek((int) trackInfo.trackLength / newPosition);
-        mPlayerService.setSeek((int) 30000 / newPosition);
+        mPlayerService.setSeek(30000 / newPosition);
+        setSeekBar(30000 / newPosition);
     }
 
-    // field seekbar updates from PlayerService
+    // field seekbar updates from PlayerService and seekTo
     public void setSeekBar(int progress) {
-        seekBar.setProgress(progress);
+        int seekPos = mPlayerService.getSeek();
+        if (seekPos > 0) {
+            seekBar.setProgress(progress / Constants.SCRUBBER_INTERVAL);
+            currentTimeView.setText(millisToMinutes(mPlayerService.getSeek()));
+        }
     }
+
+    // Tracks the seek position on the scrubber.  Interval between updates set in milliseconds
+    private void startScrubber() {
+        seekTimer = new Timer();
+        seekTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                TimerMethod();
+            }
+        }, 0, Constants.SCRUBBER_INTERVAL);
+    }
+
+    // stops the scrubber updates
+    private void stopScrubber() {
+        seekTimer.cancel();
+    }
+
+    private void TimerMethod() {
+        getActivity().runOnUiThread(getSeek);
+    }
+
+    public Runnable getSeek = new Runnable() {
+        public void run() {
+            setSeekBar(PlayerService.getSeek());
+        }
+    };
 
     // start progress dialog
     public static void onStartTrack() {
@@ -307,7 +347,7 @@ public class PlayerFragment extends DialogFragment  {
         Long seconds = TimeUnit.SECONDS.convert(millis, TimeUnit.MILLISECONDS) % 60;
 
         if (hours > 0) minutesString =  String.format("%02d:%02d:%02d", hours, minutes, seconds);
-        else minutesString = String.format("%02d:%02d", minutes, seconds);
+        else minutesString = String.format("%2d:%02d", minutes, seconds);
 
         return minutesString;
     }
