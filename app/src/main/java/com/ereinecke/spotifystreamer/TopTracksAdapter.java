@@ -41,13 +41,31 @@ class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
     /**
      * Provides a view for an AdapterView (ListView, GridView, etc.)
      *
-     * @param position    The AdapterView position that is requesting a view
-     * @param convertView The recycled view to populate.
-     * @param parent The parent ViewGroup that is used for inflation.
-     * @return The View for the position in the AdapterView.
+     *  @param  position    The AdapterView position that is requesting a view
+     *  @param  convertView The recycled view to populate.
+     *  @param  parent The parent ViewGroup that is used for inflation.
+     *  @return The View for the position in the AdapterView.
      */
+
+//    @Override
+//    public View newView(Context context, Cursor c, ViewGroup parent) {
+//
+//        View view = LayoutInflater.from(context).inflate(R.layout.list_item_topten_listview,
+//                parent, false);
+//
+//        TopTracksViewHolder viewHolder = new TopTracksViewHolder(view);
+//        view.setTag(viewHolder);
+//
+//        return view;
+//    }
+
+
+
     @Override
+//    public View bindView(View view, Context context, Cursor cursor) {
     public View getView(int position, View convertView, ViewGroup parent) {
+        TopTracksViewHolder viewHolder;
+
         // Gets the ShowTopTracks object from the ArrayAdapter at the appropriate position
         ShowTopTracks showTopTracks = getItem(position);
 
@@ -58,9 +76,15 @@ class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
                     .inflate((R.layout.list_item_topten_listview), parent, false);
+
+            viewHolder = new TopTracksViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (TopTracksViewHolder) convertView.getTag();
         }
 
-        ImageView artistImageView = (ImageView) convertView.findViewById(R.id.list_top_tracks_imageView);
+
+        ImageView artistImageView = viewHolder.artistImageView;
         Log.d(LOG_TAG, "trackImageUrl: " + showTopTracks.trackImageUrl);
         if (showTopTracks.trackImageUrl.equals(Constants.NO_IMAGE)) {
             artistImageView.setImageResource(R.drawable.no_image);
@@ -73,12 +97,24 @@ class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
                     .into(artistImageView);
         }
 
-        TextView albumNameView = (TextView) convertView.findViewById(R.id.list_album_textView);
+        TextView albumNameView = viewHolder.albumNameView;
         albumNameView.setText(showTopTracks.albumName);
 
-        TextView trackNameView = (TextView) convertView.findViewById(R.id.list_track_textView);
+        TextView trackNameView = viewHolder.trackNameView;
         trackNameView.setText(showTopTracks.trackName);
 
         return convertView;
+    }
+
+    public static class TopTracksViewHolder {
+        public final ImageView artistImageView;
+        public final TextView albumNameView;
+        public final TextView trackNameView;
+
+        public TopTracksViewHolder(View view) {
+            artistImageView = (ImageView) view.findViewById(R.id.list_top_tracks_imageView);
+            albumNameView = (TextView) view.findViewById(R.id.list_album_textView);
+            trackNameView = (TextView) view.findViewById(R.id.list_track_textView);
+        }
     }
 }
