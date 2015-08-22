@@ -19,10 +19,12 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
  * MainActivity for SpotifyStreamer
  * Handles login to Spotify and launches FindArtistFragment
  */
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private static boolean mTwoPane;
     private static String countryCode;
     private static String accessToken = null;
     public static  String accessToken() {return accessToken;}
@@ -32,13 +34,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new FindArtistFragment())
+
+        // Determine if in two-pane mode by testing existence of top_tracks_containert
+        if (findViewById(R.id.top_tracks_container) != null) {
+            mTwoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.top_tracks_container, new TopTracksFragment(),
+                            Constants.TRACKSFRAGMENT_TAG)
                     .commit();
+            } else {
+                mTwoPane = false;
+            }
         }
 
-        // Bind to PlayerService via ServiceFragment
+         // Bind to PlayerService via ServiceFragment
         FragmentManager fm = getFragmentManager();
         ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICE_TAG);
 
@@ -47,13 +57,26 @@ public class MainActivity extends AppCompatActivity {
             fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
         }
 
+        // Should be redundant with static fragment declaration in activity_main.xml
+        getSupportFragmentManager().beginTransaction().replace(R.id.find_artist_fragment,
+                new FindArtistFragment(), Constants.FINDARTISTFRAGMENT_TAG)
+                .commit();
+
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
         spotifyLogin();
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        FindArtistFragment faf = (FindArtistFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.find_artist_fragment);
+    }
+
+    @Override
     protected void onDestroy() {
+        super.onDestroy();
 
     }
 
@@ -140,6 +163,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public static Bitmap getPlaceholderImage() {
         return placeholderImage;
+    }
+
+    /**
+     * Returns true if two-pane setup
+     */
+    public static boolean isTwoPane() {
+        return mTwoPane;
     }
 
     /**

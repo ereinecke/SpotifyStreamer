@@ -60,15 +60,23 @@ public class TopTracksFragment extends Fragment {
 
         setRetainInstance(true);
 
-        // Get country code not yet implemented
+        if (MainActivity.isTwoPane() && (savedInstanceState == null)) {
+            Log.d(LOG_TAG, "onCreate: displaying blank fragment");
+            return;
+        }
+
         countryCode = MainActivity.getUserCountry();
         Log.d(LOG_TAG, "Country Code: " + countryCode);
         if (countryCode == null) countryCode = Constants.COUNTRY_CODE;
 
         Bundle extras = getActivity().getIntent().getExtras();
-        artistId = extras.getString(getString(R.string.key_artist_id));
-        artistName = extras.getString(getString(R.string.key_artist_name));
-        Log.d(LOG_TAG, "onCreate: ArtistName: " + artistName + " ArtistId: " + artistId);
+        if (extras != null) {
+            artistId = extras.getString(getString(R.string.key_artist_id));
+            artistName = extras.getString(getString(R.string.key_artist_name));
+            Log.d(LOG_TAG, "onCreate: ArtistName: " + artistName + " ArtistId: " + artistId);
+        } else {
+            Log.d(LOG_TAG, "onCreate: no extras available");
+        }
     }
 
     @Override
@@ -77,43 +85,49 @@ public class TopTracksFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
 
-        // Get a reference to the ListView and attach this adapter to it.
-        mListView = (ListView) rootView.findViewById(R.id.list_top_tracks);
-
         if (savedInstanceState != null) {
             topTracksArray = savedInstanceState.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
             mPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
+        } else {
+            Bundle extras = getActivity().getIntent().getExtras();
+            if (topTracksArray == null) {
+                topTracksArray = new ArrayList<>();
+            }
+
+            // Get a reference to the ListView and attach this adapter to it.
+            mListView = (ListView) rootView.findViewById(R.id.list_item_top_tracks_display);
 
             // Create ArrayAdapter using persisted artist data
             if (topTracksArray != null) {
                 mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
                 mListView.setAdapter(mTopTracksAdapter);
             }
-        }
 
-        // Set up listener for clicking on an item in the ListView
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            // Set up listener for clicking on an item in the ListView
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.d(LOG_TAG, "item #" + mPosition + " clicked");
-                mPosition = position;
-                if (mPosition >= 0 && (mPosition < topTracksArray.size() )) {
-                    showMediaPlayer(topTracksArray, mPosition);
-                } else {
-                    throw new IllegalArgumentException();
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    Log.d(LOG_TAG, "item #" + mPosition + " clicked");
+                    mPosition = position;
+                    if (mPosition >= 0 && (mPosition < topTracksArray.size())) {
+                        showMediaPlayer(topTracksArray, mPosition);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
                 }
-            }
-        });
+            });
 
-        FetchTopTracks spotifyData = new FetchTopTracks();
-        if (artistId != null) {
-            spotifyData.execute(artistId);
-        } else {
-            Log.d(LOG_TAG, "artistId null");
+            FetchTopTracks spotifyData = new FetchTopTracks();
+            if (artistId != null) {
+                spotifyData.execute(artistId);
+            } else {
+                Log.d(LOG_TAG, "artistId null");
+            }
         }
         return rootView;
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -121,6 +135,8 @@ public class TopTracksFragment extends Fragment {
         outState.putParcelableArrayList(Constants.TOP_TRACKS_ARRAY, topTracksArray);
         outState.putInt(Constants.TOP_TRACKS_POSITION, mPosition);
         outState.putBundle(Constants.TRACK_INFO, trackInfoBundle);
+        outState.putString(getString(R.string.key_artist_id), artistId);
+        outState.putString(getString(R.string.key_artist_name), artistName);
     }
 
     /**

@@ -285,7 +285,9 @@ public class PlayerFragment extends DialogFragment {
     }
 
     private void TimerMethod() {
-        getActivity().runOnUiThread(getSeek);
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(getSeek);
+        }
     }
 
     public Runnable getSeek = new Runnable() {
@@ -322,6 +324,7 @@ public class PlayerFragment extends DialogFragment {
         public void onServiceDisconnected(ComponentName name) {
             Log.d(LOG_TAG,"in onServiceDisconnected()");
             mBound = false;
+            // TODO PlayerActivity leaking ServiceConnection
         }
     };
 

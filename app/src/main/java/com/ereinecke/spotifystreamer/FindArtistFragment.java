@@ -57,12 +57,12 @@ public class FindArtistFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {savedInstanceState.getInt(Constants.ARTISTS_LIST_POSITION);}
+
         View rootView = inflater.inflate(R.layout.fragment_artists, container, false);
+        setRetainInstance(true);
 
         // Set up action listener for Search Artist editText
         final EditText artistSearch = (EditText) rootView.findViewById(R.id.search_artist_editText);
-
-        // Set up action listener for Search Artist editText
         artistSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -108,6 +108,10 @@ public class FindArtistFragment extends Fragment {
             startActivity(intent);
             }
         });
+
+        searchSpotifyArtists spotifyData = new searchSpotifyArtists();
+        spotifyData.execute(artist);
+
         return rootView;
     }
 

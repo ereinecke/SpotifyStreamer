@@ -2,11 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
-    android:id="@+id/container"
+    android:id="@+id/find_artist_fragment"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
-    tools:context=".MainActivity"
+    tools:context="com.ereinecke.spotifystreamer.FindArtistFragment"
     tools:ignore="MergeRootFrame"
     tools:layout="@layout/fragment_artists" />
+
+
+    <!--
+    Doesn't appear to be working - static fragment definition
+    android:name="com.ereinecke.spotifystreamer.FindArtistFragment"
+    -->

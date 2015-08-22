@@ -20,7 +20,6 @@ public class PlayerActivity extends AppCompatActivity {
                     .add(R.id.player_container, new PlayerFragment())
                     .commit();
         }
-
     }
 
     @Override

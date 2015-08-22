@@ -2,13 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
-    android:id="@+id/container"
+    android:id="@+id/artist_detail_container"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.example.android.sunshine.app.ArtistActivity"
-    tools:ignore= "MergeRootFrame" >
+    tools:context="com.ereinecke.spotifystreamer.ArtistActivity"
+    tools:ignore="MergeRootFrame">
 
 </FrameLayout>
 

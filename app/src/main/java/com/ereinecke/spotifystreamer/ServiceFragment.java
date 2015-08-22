@@ -40,6 +40,7 @@ public class ServiceFragment extends Fragment {
         if (getActivity().isFinishing()) {
             getActivity().unbindService(mConnection);
         }
+        mConnection = null;
 
     }
 
