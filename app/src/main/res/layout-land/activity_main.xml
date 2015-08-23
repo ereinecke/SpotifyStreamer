@@ -1,12 +1,16 @@
-<!--suppress AndroidDomInspection -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    android:id="@+id/find_artist_fragment"
+    <fragment
+        android:id="@+id/find_artist_fragment"
+        android:name="com.ereinecke.spotifystreamer.FindArtistFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+        tools:context=".MainActivity"
+        tools:ignore="MergeRootFrame"
+        tools:layout="@layout/fragment_artists"/>
 
-    tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame"
-    tools:layout="@layout/fragment_artists" />
+</FrameLayout>

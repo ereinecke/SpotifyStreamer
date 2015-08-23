@@ -4,12 +4,14 @@
 
 package com.ereinecke.spotifystreamer;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,19 +59,23 @@ public class TopTracksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle extras;
 
         setRetainInstance(true);
-
-        if (MainActivity.isTwoPane() && (savedInstanceState == null)) {
-            Log.d(LOG_TAG, "onCreate: displaying blank fragment");
-            return;
-        }
 
         countryCode = MainActivity.getUserCountry();
         Log.d(LOG_TAG, "Country Code: " + countryCode);
         if (countryCode == null) countryCode = Constants.COUNTRY_CODE;
 
-        Bundle extras = getActivity().getIntent().getExtras();
+        if (MainActivity.isTwoPane()) {
+            // fragment arguments from MainActivity
+            extras = getArguments();
+
+        } else if (getActivity().getIntent() == null) {  // probably started by MainActivity, no Intent
+            extras = getActivity().getIntent().getExtras();
+        } else {        // can't get extras from MainActivity or TopTracksActivity
+            extras = savedInstanceState;
+        }
         if (extras != null) {
             artistId = extras.getString(getString(R.string.key_artist_id));
             artistName = extras.getString(getString(R.string.key_artist_name));
@@ -90,8 +96,20 @@ public class TopTracksFragment extends Fragment {
             mPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
         } else {
             Bundle extras = getActivity().getIntent().getExtras();
+            if (extras == null) {  // don't use intent, must be TwoPane
+                extras = this.getArguments();
+            }
+            if (extras == null) {
+                // Error condition
+                artistId = "";
+                artistName = "";
+            } else {
+                artistId = extras.getString(getString(R.string.key_artist_id));
+                artistName = extras.getString(getString(R.string.key_artist_name));
+            }
             if (topTracksArray == null) {
                 topTracksArray = new ArrayList<>();
+                mPosition = 0;
             }
 
             // Get a reference to the ListView and attach this adapter to it.
@@ -119,12 +137,13 @@ public class TopTracksFragment extends Fragment {
             });
 
             FetchTopTracks spotifyData = new FetchTopTracks();
-            if (artistId != null) {
+            if (artistId != null && artistId != "") {
                 spotifyData.execute(artistId);
             } else {
                 Log.d(LOG_TAG, "artistId null");
             }
         }
+
         return rootView;
     }
 
@@ -225,13 +244,31 @@ public class TopTracksFragment extends Fragment {
 
     private void showMediaPlayer(ArrayList<ShowTopTracks> topTracksArray, int mPosition) {
 
-        Intent intent = new Intent(getActivity(), PlayerActivity.class);
         trackInfoBundle = new Bundle();
         trackInfoBundle.putParcelableArrayList(Constants.TRACK_INFO, topTracksArray);
         trackInfoBundle.putInt(Constants.TOP_TRACKS_POSITION, mPosition);
-        intent.putExtras(trackInfoBundle);
-        Log.d(LOG_TAG, "Starting PlayerActivity");
-        startActivity(intent);
+
+        if (MainActivity.isTwoPane()) {             // start player fragment
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag(Constants.PLAYERFRAGMENT_TAG);
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+
+            DialogFragment newPlayerFragment = new PlayerFragment();
+            newPlayerFragment.setArguments(trackInfoBundle);
+            newPlayerFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+            newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
+
+        } else {                                    // start player activity
+            Intent intent = new Intent(getActivity(), PlayerActivity.class);
+
+            intent.putExtras(trackInfoBundle);
+            Log.d(LOG_TAG, "Starting PlayerActivity");
+            startActivity(intent);
+        }
     }
 
     public static int getListPosition() {

@@ -325,12 +325,12 @@ import java.util.ArrayList;
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         Log.i(LOG_TAG, "In onDestroy");
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        super.onDestroy();
     }
 
     @Override

@@ -54,14 +54,16 @@ public class PlayerFragment extends DialogFragment {
 
 
     public PlayerFragment() {
-     // setHasOptionsMenu(true);
-
+        setHasOptionsMenu(true);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (MainActivity.isTwoPane()) {
+            getActivity().setContentView(R.layout.fragment_player);
+        }
         setRetainInstance(true);
     }
 

@@ -1,9 +1,9 @@
 package com.ereinecke.spotifystreamer;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,11 +50,13 @@ public class TopTracksActivity extends AppCompatActivity  {
             actionbar.setTitle(getString(R.string.top_tracks_label));
             actionbar.setSubtitle(artistName);
         }
-        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // Start the TopTracksFragment
+        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Log.d(LOG_TAG, "adding top_tracks_container");
         fragmentTransaction.add(R.id.top_tracks_container, new TopTracksFragment())
-                .commit();
+                                .commit();
 
     }
 

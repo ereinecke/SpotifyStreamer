@@ -35,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Determine if in two-pane mode by testing existence of top_tracks_containert
+        // Expect FindArtistFragment to be statically loaded by activity_main
+
+        // Determine if in two-pane mode by testing existence of top_tracks_container
         if (findViewById(R.id.top_tracks_container) != null) {
             mTwoPane = true;
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.top_tracks_container, new TopTracksFragment(),
+                getFragmentManager().beginTransaction()
+                    .add(R.id.top_tracks_container, new TopTracksFragment(),
                             Constants.TRACKSFRAGMENT_TAG)
                     .commit();
             } else {
@@ -57,20 +59,16 @@ public class MainActivity extends AppCompatActivity {
             fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
         }
 
-        // Should be redundant with static fragment declaration in activity_main.xml
-        getSupportFragmentManager().beginTransaction().replace(R.id.find_artist_fragment,
-                new FindArtistFragment(), Constants.FINDARTISTFRAGMENT_TAG)
-                .commit();
-
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
+
         spotifyLogin();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        FindArtistFragment faf = (FindArtistFragment) getSupportFragmentManager()
+        FindArtistFragment faf = (FindArtistFragment) getFragmentManager()
                 .findFragmentById(R.id.find_artist_fragment);
     }
 

@@ -1,10 +1,12 @@
 package com.ereinecke.spotifystreamer;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -49,6 +51,7 @@ public class FindArtistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
     }
 
@@ -99,15 +102,31 @@ public class FindArtistFragment extends Fragment {
 
             mPosition = position;
 
-            // Launch the TopTracksActivity
-            Intent intent = new Intent(getActivity(), TopTracksActivity.class);
-            intent.putExtra(getString(R.string.key_artist_name),
-                    artistArray.get(mPosition).artistName);
-            intent.putExtra(getString(R.string.key_artist_id),
-                    artistArray.get(mPosition).artistId);
-            startActivity(intent);
+
+            if (MainActivity.isTwoPane()) { // if TwoPane, start TopTracksFragment
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Bundle extras = new Bundle();
+                extras.putString(getString(R.string.key_artist_name),
+                        artistArray.get(mPosition).artistName);
+                extras.putString(getString(R.string.key_artist_id),
+                        artistArray.get(mPosition).artistId);
+
+                TopTracksFragment topTracksFragment = new TopTracksFragment();
+                topTracksFragment.setArguments(extras);
+
+                Log.d(LOG_TAG, "replacing top_tracks_container");
+                fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
+                        Constants.TRACKSFRAGMENT_TAG)
+                        .commit();
+            } else {        // if not TwoPane, start TopTracksActivity
+                Intent intent = new Intent(getActivity(), TopTracksActivity.class);
+                intent.putExtra(getString(R.string.key_artist_name), artistArray.get(mPosition).artistName);
+                intent.putExtra(getString(R.string.key_artist_id), artistArray.get(mPosition).artistId);
+                startActivity(intent);
             }
-        });
+        }});
 
         searchSpotifyArtists spotifyData = new searchSpotifyArtists();
         spotifyData.execute(artist);

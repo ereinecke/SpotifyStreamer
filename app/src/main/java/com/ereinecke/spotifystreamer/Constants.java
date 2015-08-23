@@ -12,6 +12,7 @@ class Constants {
     public static final String REDIRECT_URI = "whatup://callback";
     public static final String FINDARTISTFRAGMENT_TAG = "FAFTAG";
     public static final String TRACKSFRAGMENT_TAG = "DFTAG";
+    public static final String PLAYERFRAGMENT_TAG = "PLYFTAG";
 
     // Service actions
     public static final String MAIN_ACTION = "com.ereinecke.spotifystreamer.action.main";

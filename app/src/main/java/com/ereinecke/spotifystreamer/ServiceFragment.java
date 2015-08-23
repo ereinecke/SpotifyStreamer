@@ -35,8 +35,9 @@ public class ServiceFragment extends Fragment {
 
     @Override
         public void onDestroy() {
+        super.onDestroy();
 
-        // Only unbind service once app is actually fininshing.
+        // Only unbind service once app is actually finishing.
         if (getActivity().isFinishing()) {
             getActivity().unbindService(mConnection);
         }
