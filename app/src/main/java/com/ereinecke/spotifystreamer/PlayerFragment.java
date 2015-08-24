@@ -68,6 +68,7 @@ public class PlayerFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+        // clickPlay();
     }
 
     @Override
@@ -213,7 +214,8 @@ public class PlayerFragment extends DialogFragment {
     private void clickPlay() {
         // Need to toggle Play and Pause
         if (mPlayerService != null) {
-
+            Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
+            // TopTracksFragment.setListPosition(mPosition);
             if (PlayerService.isPlaying()) {
                 // change button to Play, pause player
                 playButton.setImageDrawable(playButtonDrawable);
@@ -243,7 +245,7 @@ public class PlayerFragment extends DialogFragment {
         } else {
             mPosition = topTracksArrayList.size() - 1;
         }
-        TopTracksFragment.setListPosition(mPosition);
+        setTopTracksPosition(mPosition);
         setTrackInfo(playerView, topTracksArrayList.get(mPosition));
         startScrubber();
         mPlayerService.prevTrack();
@@ -257,7 +259,7 @@ public class PlayerFragment extends DialogFragment {
         } else {
             mPosition = 0;
         }
-        TopTracksFragment.setListPosition(mPosition);
+        setTopTracksPosition(mPosition);
         setTrackInfo(playerView, topTracksArrayList.get(mPosition));
         startScrubber();
         mPlayerService.nextTrack();
@@ -292,7 +294,9 @@ public class PlayerFragment extends DialogFragment {
 
     // stops the scrubber updates
     private void stopScrubber() {
-        seekTimer.cancel();
+        if (seekTimer != null) {
+            seekTimer.cancel();
+        }
     }
 
     private void TimerMethod() {
@@ -319,6 +323,13 @@ public class PlayerFragment extends DialogFragment {
         if (spinner != null) {
             spinner.dismiss();
         }
+    }
+
+
+    private void setTopTracksPosition(int position) {
+        Intent positionIntent = new Intent();
+        positionIntent.putExtra(Constants.CURRENT_TRACK_KEY, position);
+        mPlayerService.sendBroadcast(positionIntent);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

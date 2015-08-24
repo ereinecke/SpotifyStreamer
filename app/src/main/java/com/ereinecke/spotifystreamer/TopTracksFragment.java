@@ -7,6 +7,7 @@ package com.ereinecke.spotifystreamer;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -40,6 +41,9 @@ import retrofit.RetrofitError;
 public class TopTracksFragment extends Fragment {
 
     private static final String LOG_TAG = TopTracksFragment.class.getSimpleName();
+
+    // Call broadcast receiver for list position updates
+    private ChangeTrackReceiver changeTrackReceiver;
 
     private static Bundle trackInfoBundle;
     private static String countryCode;
@@ -285,8 +289,9 @@ public class TopTracksFragment extends Fragment {
         return mPosition;
     }
 
-    public static void setListPosition(int position) {
+    public void setListPosition(int position) {
         mPosition = position;
+        mListView.setSelection(position);
     }
 
     // Don't like doing this, but having a heck of a time passing trackInfo through intent extra
@@ -294,5 +299,20 @@ public class TopTracksFragment extends Fragment {
     // showMediaPlayer().
     public static Bundle getTrackInfo() {
         return trackInfoBundle;
+    }
+
+    // BroadcastReceiver for when highlighted track needs to be updated
+    public class ChangeTrackReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra(Constants.CURRENT_TRACK_KEY)) {
+                int newPos = intent.getIntExtra(Constants.CURRENT_TRACK_KEY, 0);
+                Log.d(LOG_TAG, "changeTrackReceiver called, nwePos: " + newPos);
+                // This logic assumes 10 tracks always
+                if (newPos > 0 && newPos < 10) {
+                    setListPosition(newPos);
+                }
+            }
+        }
     }
 }

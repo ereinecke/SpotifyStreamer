@@ -54,7 +54,8 @@ import java.util.ArrayList;
         }
     }
 
-    // Prepares notification PendingIntents.
+    // Prepares notification PendingIntents. gets albumTrackArt sets up notification
+    // and calls prepareAsync().
     public void initTrack() {
 
         Log.d(LOG_TAG, "Setting up new track, mPosition: " + mPosition);
@@ -101,6 +102,7 @@ import java.util.ArrayList;
                 e.printStackTrace();
                 trackImageArt = MainActivity.getPlaceholderImage();
             }
+            Log.d (LOG_TAG, "got trackImageArt");
             return trackImageArt;
         } // end getAlbumTrackArt.doInBackground
 
@@ -140,6 +142,7 @@ import java.util.ArrayList;
     public void startTrack() {
         Log.d(LOG_TAG, "in startTrack()");
         logMediaPlayerState();
+        currentTrack = topTracksArrayList.get(mPosition);
         if (!mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             stopForegroundService();
@@ -157,8 +160,8 @@ import java.util.ArrayList;
         logMediaPlayerState();
         if (!mMediaPlayer.isPlaying()) {
             playing = true;
-            PlayerFragment.onStartPlay();
-            // mMediaPlayer.start();
+            // PlayerFragment.onStartPlay();
+            mMediaPlayer.start();
         } else {
             Log.d(LOG_TAG, "Attempted to playTrack() when already playing");
         }
@@ -187,6 +190,7 @@ import java.util.ArrayList;
         trackReady = false;
         playing = false;
         currentTrack = topTracksArrayList.get(mPosition);
+        setTopTracksPosition(mPosition);
         startTrack();
     }
 
@@ -201,6 +205,7 @@ import java.util.ArrayList;
         trackReady = false;
         playing = false;
         currentTrack = topTracksArrayList.get(mPosition);
+        setTopTracksPosition(mPosition);
         startTrack();
     }
 
@@ -281,6 +286,7 @@ import java.util.ArrayList;
 
         // the MediaPlayer has moved to the Error state, must be reset.  Now in idle state
         player.reset();
+        startTrack();   // ???
         return true; // Means error handled
     }
 
@@ -289,6 +295,7 @@ import java.util.ArrayList;
         Log.d(LOG_TAG, "onPrepared called: starting player");
         trackReady = true;
         PlayerFragment.onStartPlay();
+        setSeek(0);
         player.start();
     }
 
@@ -296,6 +303,13 @@ import java.util.ArrayList;
     public void onCompletion(MediaPlayer player) {
         trackReady = false;
         nextTrack();
+    }
+
+    // Tells MainActivity to change TopTracks selection position
+    private  void setTopTracksPosition(int position) {
+        Intent positionIntent = new Intent();
+        positionIntent.putExtra(Constants.CURRENT_TRACK_KEY, position);
+        sendBroadcast(positionIntent);
     }
 
     private void logMediaPlayerState() {

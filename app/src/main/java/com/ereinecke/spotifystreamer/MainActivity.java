@@ -170,6 +170,14 @@ public class MainActivity extends AppCompatActivity {
         return mTwoPane;
     }
 
+    public void setTopTracksPosition(int pos) {
+        TopTracksFragment topTracksFragment = (TopTracksFragment) getFragmentManager()
+                .findFragmentByTag(Constants.TRACKSFRAGMENT_TAG);
+
+        topTracksFragment.setListPosition(pos);
+    }
+
+
     /**
      * Get ISO 3166-1 alpha-2 country code for this device using IP address.  This involves
      * calling http://ip-api.com/json and parsing the country code from it.
