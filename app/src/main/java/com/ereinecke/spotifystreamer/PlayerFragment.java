@@ -225,6 +225,7 @@ public class PlayerFragment extends DialogFragment {
                 if (mPlayerService.isPaused()) {  // if paused
                     mPlayerService.playTrack();
                 } else if (mBound) { // Need to call prepareAsync()
+                    setTrackInfo(playerView, topTracksArrayList.get(mPosition));
                     mPlayerService.startTrack();
                 } else {
                     Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
@@ -331,7 +332,6 @@ public class PlayerFragment extends DialogFragment {
             mBound = true;
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
-            // clickPlay();
         }
 
         @Override

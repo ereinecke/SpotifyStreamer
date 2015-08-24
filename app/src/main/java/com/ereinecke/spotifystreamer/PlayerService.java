@@ -289,7 +289,7 @@ import java.util.ArrayList;
         Log.d(LOG_TAG, "onPrepared called: starting player");
         trackReady = true;
         PlayerFragment.onStartPlay();
-         player.start();
+        player.start();
     }
 
     @Override
