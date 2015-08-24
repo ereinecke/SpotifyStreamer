@@ -5,10 +5,21 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="ArtistListStyle">
+        <!-- stub -->
+    </style>
+
+    <style name="TracksListStyle">
+        <!-- stub -->
+    </style>
+
+
     <!-- Put this here to fix rendering error in API 17-18 -->
     <style name="Widget.Holo.ActionMode" parent="@android:style/Widget.Holo.ActionMode">
         <item name="titleTextStyle">@android:style/TextAppearance.Holo.Widget.ActionMode.Title</item>
         <item name="subtitleTextStyle">@android:style/TextAppearance.Holo.Widget.ActionMode.Subtitle</item>
     </style>
+
+
 
 </resources>

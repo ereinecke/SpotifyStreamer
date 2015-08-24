@@ -62,7 +62,7 @@ public class PlayerFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         if (MainActivity.isTwoPane()) {
-            getActivity().setContentView(R.layout.fragment_player);
+            // getActivity().setContentView(R.layout.fragment_player);
         }
         setRetainInstance(true);
     }

@@ -260,6 +260,8 @@ public class TopTracksFragment extends Fragment {
             DialogFragment newPlayerFragment = new PlayerFragment();
             newPlayerFragment.setArguments(trackInfoBundle);
             newPlayerFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+            newPlayerFragment.setShowsDialog(true);
+            // newPlayerFragment.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
 
         } else {                                    // start player activity

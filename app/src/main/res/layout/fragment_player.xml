@@ -5,6 +5,12 @@
     android:id="@+id/player_container"
 
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:minHeight="400dp"
+    android:minWidth="400dp"
+    android:layout_gravity="center_horizontal|center_vertical"
+    android:elevation="20dp"
+    style="@style/AlertDialog.AppCompat"
+    android:theme="@style/AlertDialog.AppCompat">
 
 </FrameLayout>

@@ -7,7 +7,8 @@
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    tools:context="com.ereinecke.spotifystreamer.MainActivity">
+    tools:context="com.ereinecke.spotifystreamer.MainActivity"
+    android:elevation="10dp">
 
     <!--
     This layout is a two-pane layout for the Items master/detail flow.
@@ -19,13 +20,19 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
+        android:elevation="10dp"
         tools:layout="@android:layout/list_content" />
+
+    <FrameLayout
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/medium_grey" />
 
     <FrameLayout
         android:id="@+id/top_tracks_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:elevation="-10dp" />
+        android:background="@color/dark_grey" />
 
 </LinearLayout>

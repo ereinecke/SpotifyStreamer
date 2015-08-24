@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="grey">#cccccc</color>
+    <color name="dark_red">#22FF0000</color>
+    <color name="dark_purple">#22FF00FF</color>
+    <color name="light_grey">#AAAAAA</color>
+    <color name="medium_grey">#777777</color>
+    <color name="dark_grey">#333333</color>
+
+    <color name="item_selection">@color/medium_grey</color>
+</resources>
