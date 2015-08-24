@@ -54,6 +54,7 @@ public class PlayerFragment extends DialogFragment {
 
 
     public PlayerFragment() {
+
         setHasOptionsMenu(true);
     }
 
@@ -61,10 +62,12 @@ public class PlayerFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (MainActivity.isTwoPane()) {
-            // getActivity().setContentView(R.layout.fragment_player);
-        }
         setRetainInstance(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -105,6 +108,7 @@ public class PlayerFragment extends DialogFragment {
         pauseButtonDrawable = getResources().getDrawable(android.R.drawable.ic_media_pause);
         playButtonDrawable = getResources().getDrawable(android.R.drawable.ic_media_play);
         currentTimeView = (TextView) playerView.findViewById(R.id.current_time_textview);
+        currentTimeView.setText("0:00");
 
         // Set up listeners
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +166,6 @@ public class PlayerFragment extends DialogFragment {
             // getActivity().startService(playIntent);
             getActivity().bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
         }
-
         return playerView;
     }
 
@@ -193,6 +196,8 @@ public class PlayerFragment extends DialogFragment {
             textView = (TextView) playerView.findViewById(R.id.end_time_textview);
             //textView.setText(millisToMinutes(trackInfo.trackLength));
             textView.setText("0:30");
+            textView = (TextView) playerView.findViewById(R.id.current_time_textview);
+            textView.setText("0:00");
 
             ImageView trackArt = (ImageView) playerView.findViewById(R.id.album_art_imageview);
             int trackArtSize = playerView.getContext().getResources()
@@ -207,20 +212,23 @@ public class PlayerFragment extends DialogFragment {
 
     private void clickPlay() {
         // Need to toggle Play and Pause
-        if (PlayerService.isPlaying()) {
-            // change button to Play, pause player
-            playButton.setImageDrawable(playButtonDrawable);
-            mPlayerService.pauseTrack();
-            stopScrubber();
-        } else { // change button to Pause
-            playButton.setImageDrawable(pauseButtonDrawable);
-            startScrubber();
-            if (mPlayerService.isPaused()) {  // if paused
-                mPlayerService.playTrack();
-            } else if (mBound) { // Need to call prepareAsync()
-                mPlayerService.startTrack();
-            } else{
-                Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
+        if (mPlayerService != null) {
+
+            if (PlayerService.isPlaying()) {
+                // change button to Play, pause player
+                playButton.setImageDrawable(playButtonDrawable);
+                mPlayerService.pauseTrack();
+                stopScrubber();
+            } else { // change button to Pause
+                playButton.setImageDrawable(pauseButtonDrawable);
+                startScrubber();
+                if (mPlayerService.isPaused()) {  // if paused
+                    mPlayerService.playTrack();
+                } else if (mBound) { // Need to call prepareAsync()
+                    mPlayerService.startTrack();
+                } else {
+                    Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
+                }
             }
         }
     }
@@ -300,12 +308,16 @@ public class PlayerFragment extends DialogFragment {
 
     // start progress dialog
     public static void onStartTrack() {
-        spinner.show();
+        if (spinner != null) {
+            spinner.show();
+        }
     }
 
     // stop progress dialog
     public static void onStartPlay() {
-        spinner.dismiss();
+        if (spinner != null) {
+            spinner.dismiss();
+        }
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -319,7 +331,7 @@ public class PlayerFragment extends DialogFragment {
             mBound = true;
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
-            clickPlay();
+            // clickPlay();
         }
 
         @Override

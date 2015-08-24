@@ -102,7 +102,6 @@ public class FindArtistFragment extends Fragment {
 
             mPosition = position;
 
-
             if (MainActivity.isTwoPane()) { // if TwoPane, start TopTracksFragment
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -118,8 +117,9 @@ public class FindArtistFragment extends Fragment {
 
                 Log.d(LOG_TAG, "replacing top_tracks_container");
                 fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
-                        Constants.TRACKSFRAGMENT_TAG)
-                        .commit();
+                        Constants.TRACKSFRAGMENT_TAG);
+                fragmentTransaction.addToBackStack(Constants.TRACKSFRAGMENT_TAG);
+                fragmentTransaction.commit();
             } else {        // if not TwoPane, start TopTracksActivity
                 Intent intent = new Intent(getActivity(), TopTracksActivity.class);
                 intent.putExtra(getString(R.string.key_artist_name), artistArray.get(mPosition).artistName);
@@ -161,7 +161,6 @@ public class FindArtistFragment extends Fragment {
 
             mSpotifyApi.setAccessToken(MainActivity.accessToken());
 
-
             ArtistsPager artistsPager;
             try {
                 SpotifyService spotify = mSpotifyApi.getService();
@@ -172,7 +171,6 @@ public class FindArtistFragment extends Fragment {
                 Log.d(LOG_TAG,"spotifyError: " + spotifyError.toString());
                 artistsPager = null; // redundant?
             }
-
 
             return artistsPager;
         } // end searchSpotifyData.doInBackground
@@ -225,6 +223,7 @@ public class FindArtistFragment extends Fragment {
             }
             mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
             mListView.setAdapter(mArtistAdapter);
+
         } // end searchSpotifyData.onPostExecute
     } // end searchSpotifyData
 }

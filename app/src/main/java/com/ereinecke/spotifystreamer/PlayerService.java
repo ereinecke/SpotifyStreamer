@@ -46,8 +46,6 @@ import java.util.ArrayList;
     private ShowTopTracks currentTrack;
     private Notification notification;
 
-
-
     public PlayerService() {}
 
     public class PlayerBinder extends Binder {
@@ -64,7 +62,7 @@ import java.util.ArrayList;
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Constants.MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
         pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         // Previous
@@ -86,7 +84,7 @@ import java.util.ArrayList;
         new getAlbumTrackArt().execute(currentTrack.trackImageUrl);
     }
 
-    // Pull down album art on background thread
+    // Pull down album art on background thread.  Start foreground service onPostExecute()
     public class getAlbumTrackArt extends AsyncTask<String, Void, Bitmap> {
 
         private final String LOG_TAG = getAlbumTrackArt.class.getSimpleName();
@@ -110,15 +108,16 @@ import java.util.ArrayList;
         protected void onPostExecute(Bitmap trackAlbumArt) {
 
             setNotification(trackAlbumArt);
-
+            startForegroundService();
+            mMediaPlayer.prepareAsync();
         }
     }
 
-    // Called after getAlbumTrackArt completes, sets up notification, starts the
-    // foreground service and sets track data source.
+    // Called after getAlbumTrackArt completes, sets up notification
     private void setNotification(Bitmap trackAlbumArt) {
 
         if (currentTrack != null) {
+            Log.d(LOG_TAG, "Setting notification");
             // Set up notification
             notification = new NotificationCompat.Builder(this)
                     .setContentTitle(currentTrack.trackName)
@@ -144,11 +143,9 @@ import java.util.ArrayList;
         if (!mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             stopForegroundService();
-            startForegroundService();
-            initTrack();
+            initTrack();        // sets up notification, starts foreground service asynchronously
             PlayerFragment.onStartTrack();  // Starts buffering progress spinner
-            playing = true;
-            mMediaPlayer.prepareAsync();
+//            playing = true;  // will be true even if isPlaying() is false until initTrack completes
         } else {
             Log.d(LOG_TAG, "Attempted to startTrack() when already playing");
         }
@@ -160,7 +157,8 @@ import java.util.ArrayList;
         logMediaPlayerState();
         if (!mMediaPlayer.isPlaying()) {
             playing = true;
-            mMediaPlayer.start();
+            PlayerFragment.onStartPlay();
+            // mMediaPlayer.start();
         } else {
             Log.d(LOG_TAG, "Attempted to playTrack() when already playing");
         }
@@ -186,6 +184,7 @@ import java.util.ArrayList;
             mPosition = topTracksArrayList.size() - 1;
         }
         mMediaPlayer.stop();
+        trackReady = false;
         playing = false;
         currentTrack = topTracksArrayList.get(mPosition);
         startTrack();
@@ -199,12 +198,13 @@ import java.util.ArrayList;
             mPosition = 0;
         }
         mMediaPlayer.stop();
+        trackReady = false;
         playing = false;
         currentTrack = topTracksArrayList.get(mPosition);
         startTrack();
     }
 
-    // Moves MediaPlayer to Initialized
+    // Moves MediaPlayer to Initialized state by starting foreground service and setting data source
     public void startForegroundService() {
         try {
             startForeground(Constants.NOTIFICATION_ID, notification);
@@ -220,10 +220,12 @@ import java.util.ArrayList;
             Log.d(LOG_TAG, "Can't setDataSource to " + currentTrack.trackMediaUrl);
             e.printStackTrace();
         }
+
     }
 
     public void stopForegroundService() {
         Log.i(LOG_TAG, "Stopping foreground service");
+        trackReady = false;
         stopForeground(true);
         stopSelf();
     }
@@ -236,7 +238,6 @@ import java.util.ArrayList;
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        // Log.d(LOG_TAG, "Exiting initMediaPlayer");
         logMediaPlayerState();
     }
 
@@ -253,17 +254,20 @@ import java.util.ArrayList;
     }
 
     public void setSeek(int newPositionMillis) {
-        mMediaPlayer.pause();
-        Log.d("SetSeek: ", "Current Position: " + mMediaPlayer.getCurrentPosition());
-        Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
-        mMediaPlayer.seekTo(newPositionMillis);
-        Log.d("SetSeek: ", "New Position: " + mMediaPlayer.getCurrentPosition());
-        mMediaPlayer.start();
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+            Log.d("SetSeek: ", "Current Position: " + mMediaPlayer.getCurrentPosition());
+            Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
+            mMediaPlayer.seekTo(newPositionMillis);
+            Log.d("SetSeek: ", "New Position: " + mMediaPlayer.getCurrentPosition());
+            mMediaPlayer.start();
+        }
     }
 
     // Callbacks for async operation
     @Override
     public boolean onError(MediaPlayer player, int what, int extra) {
+        trackReady = false;
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_UNKNOWN: {
                 Log.d(LOG_TAG, "Media Error unknown; extra: " + extra);
@@ -285,11 +289,12 @@ import java.util.ArrayList;
         Log.d(LOG_TAG, "onPrepared called: starting player");
         trackReady = true;
         PlayerFragment.onStartPlay();
-        player.start();
+         player.start();
     }
 
     @Override
     public void onCompletion(MediaPlayer player) {
+        trackReady = false;
         nextTrack();
     }
 

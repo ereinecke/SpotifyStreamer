@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class TopTracksFragment extends Fragment {
 
         setRetainInstance(true);
 
-        countryCode = MainActivity.getUserCountry();
+        countryCode =  MainActivity.getUserCountry();
         Log.d(LOG_TAG, "Country Code: " + countryCode);
         if (countryCode == null) countryCode = Constants.COUNTRY_CODE;
 
@@ -71,11 +72,12 @@ public class TopTracksFragment extends Fragment {
             // fragment arguments from MainActivity
             extras = getArguments();
 
-        } else if (getActivity().getIntent() == null) {  // probably started by MainActivity, no Intent
+        } else if (getActivity().getIntent() != null) {  // Started by TopTracksActivity, via Intent
             extras = getActivity().getIntent().getExtras();
         } else {        // can't get extras from MainActivity or TopTracksActivity
             extras = savedInstanceState;
         }
+
         if (extras != null) {
             artistId = extras.getString(getString(R.string.key_artist_id));
             artistName = extras.getString(getString(R.string.key_artist_name));
@@ -91,6 +93,7 @@ public class TopTracksFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
 
+        // TODO: need to account for change in mPosition due to Prev/Next/onCompletion.
         if (savedInstanceState != null) {
             topTracksArray = savedInstanceState.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
             mPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
@@ -136,6 +139,11 @@ public class TopTracksFragment extends Fragment {
                 }
             });
 
+            TextView topTracksHeader = (TextView) rootView.findViewById(R.id.top_tracks_header);
+            if (artistName != null && artistName != "" && MainActivity.isTwoPane()) {
+                topTracksHeader.setText(getString(R.string.top_tracks_label) + " - " + artistName);
+            }
+
             FetchTopTracks spotifyData = new FetchTopTracks();
             if (artistId != null && artistId != "") {
                 spotifyData.execute(artistId);
@@ -146,7 +154,6 @@ public class TopTracksFragment extends Fragment {
 
         return rootView;
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -239,6 +246,7 @@ public class TopTracksFragment extends Fragment {
             // Create ArrayAdapter artist data
             mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
             mListView.setAdapter(mTopTracksAdapter);
+
         } // end searchSpotifyData.onPostExecute
     }
 
