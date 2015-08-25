@@ -39,6 +39,7 @@ class Constants {
     public static final String TOP_TRACKS_ARRAY = "TopTracksArray";
     public static final String TOP_TRACKS_POSITION = "TopTracksPosition";
     public static final String COUNTRY_CODE = "MX"; // fallback country code
+    public static final String LIST_POSITION_KEY = "ListPositionKey";
 
     // PlayerActivity
     public static final String SERVICE_BOUND = "ServiceBound";

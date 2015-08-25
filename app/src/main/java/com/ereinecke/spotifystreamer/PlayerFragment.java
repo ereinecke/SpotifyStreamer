@@ -6,11 +6,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +39,9 @@ public class PlayerFragment extends DialogFragment {
     private static Drawable pauseButtonDrawable;
     private static ShowTopTracks trackInfo;
     private static ArrayList<ShowTopTracks> topTracksArrayList;
-    private static Bundle trackInfoBundle;
     private static int mPosition;
     private Intent playIntent;
     private PlayerService mPlayerService;
-    private Bitmap albumArt;
     private View playerView;
     private boolean mBound;
     private TextView currentTimeView;
@@ -55,13 +51,13 @@ public class PlayerFragment extends DialogFragment {
 
     public PlayerFragment() {
 
-        setHasOptionsMenu(true);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
         setRetainInstance(true);
     }
 
@@ -73,10 +69,15 @@ public class PlayerFragment extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        Log.d(LOG_TAG, "in onDestroy()");
+        // Log.d(LOG_TAG, "in onDestroy()");
         // Unbind from mPlayerService
         if (mBound) {
-            getActivity().unbindService(mConnection);
+            try {
+                getActivity().unbindService(mConnection);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mPlayerService.stopForegroundService();
             mBound = false;
         }
         mPlayerService = null;
@@ -86,6 +87,7 @@ public class PlayerFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle trackInfoBundle;
 
         if (savedInstanceState != null) {
             topTracksArrayList = savedInstanceState.getParcelableArrayList(Constants.TRACK_INFO);
@@ -141,7 +143,7 @@ public class PlayerFragment extends DialogFragment {
 
                 progress = progressValue;
                 if (fromUser) {
-                    Log.d(LOG_TAG, "Progress from user: " + progress);
+                    // Log.d(LOG_TAG, "Progress from user: " + progress);
                     seekTo(progress);
                 }
             }
@@ -181,7 +183,7 @@ public class PlayerFragment extends DialogFragment {
     // Set current track info in the media player
     private void setTrackInfo (View playerView, ShowTopTracks trackInfo) {
         if (trackInfo != null) {
-            Log.d(LOG_TAG, "Track Info: " + trackInfo.toString());
+            // Log.d(LOG_TAG, "Track Info: " + trackInfo.toString());
 
             // Populate layout fields
             TextView textView = (TextView) playerView.findViewById(R.id.artist_name_textview);
@@ -214,7 +216,7 @@ public class PlayerFragment extends DialogFragment {
     private void clickPlay() {
         // Need to toggle Play and Pause
         if (mPlayerService != null) {
-            Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
+            // Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
             // TopTracksFragment.setListPosition(mPosition);
             if (PlayerService.isPlaying()) {
                 // change button to Play, pause player
@@ -230,7 +232,7 @@ public class PlayerFragment extends DialogFragment {
                     setTrackInfo(playerView, topTracksArrayList.get(mPosition));
                     mPlayerService.startTrack();
                 } else {
-                    Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
+                    // Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
                 }
             }
         }
@@ -238,8 +240,7 @@ public class PlayerFragment extends DialogFragment {
 
     // Track controls, specified in media_player.xml
     // List wraps, so if at first item, go to last.
-    // TODO: (for both prev & next) decide if current track should stop and new start automatically
-    public void clickPrev() {
+    private void clickPrev() {
         if (mPosition > 0) {
             mPosition -= 1;
         } else {
@@ -273,7 +274,7 @@ public class PlayerFragment extends DialogFragment {
     }
 
     // field seekbar updates from PlayerService and seekTo
-    public void setSeekBar(int progress) {
+    private void setSeekBar(int progress) {
         int seekPos = mPlayerService.getSeek();
         if (seekPos > 0) {
             seekBar.setProgress(progress / Constants.SCRUBBER_INTERVAL);
@@ -325,7 +326,6 @@ public class PlayerFragment extends DialogFragment {
         }
     }
 
-
     private void setTopTracksPosition(int position) {
         Intent positionIntent = new Intent();
         positionIntent.putExtra(Constants.CURRENT_TRACK_KEY, position);
@@ -335,7 +335,7 @@ public class PlayerFragment extends DialogFragment {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(LOG_TAG, "in onServiceConnected()");
+            // Log.d(LOG_TAG, "in onServiceConnected()");
             PlayerService.PlayerBinder playerBinder =
                     (PlayerService.PlayerBinder) service;
             // get service
@@ -343,13 +343,16 @@ public class PlayerFragment extends DialogFragment {
             mBound = true;
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
+            setTopTracksPosition(mPosition);
+            mPlayerService.playTrack();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(LOG_TAG,"in onServiceDisconnected()");
+            // Log.d(LOG_TAG,"in onServiceDisconnected()");
             mBound = false;
-            // TODO PlayerActivity leaking ServiceConnection
+            mPlayerService = null;
+            mConnection = null;
         }
     };
 

@@ -73,9 +73,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRestoreInstanceState (Bundle outState) {
+        super.onRestoreInstanceState(outState);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     @Override

@@ -38,31 +38,7 @@ class TopTracksAdapter extends ArrayAdapter<ShowTopTracks> {
         super(context, 0, showTopTracks);
     }
 
-    /**
-     * Provides a view for an AdapterView (ListView, GridView, etc.)
-     *
-     *  @param  position    The AdapterView position that is requesting a view
-     *  @param  convertView The recycled view to populate.
-     *  @param  parent The parent ViewGroup that is used for inflation.
-     *  @return The View for the position in the AdapterView.
-     */
-
-//    @Override
-//    public View newView(Context context, Cursor c, ViewGroup parent) {
-//
-//        View view = LayoutInflater.from(context).inflate(R.layout.list_item_topten_listview,
-//                parent, false);
-//
-//        TopTracksViewHolder viewHolder = new TopTracksViewHolder(view);
-//        view.setTag(viewHolder);
-//
-//        return view;
-//    }
-
-
-
     @Override
-//    public View bindView(View view, Context context, Cursor cursor) {
     public View getView(int position, View convertView, ViewGroup parent) {
         TopTracksViewHolder viewHolder;
 

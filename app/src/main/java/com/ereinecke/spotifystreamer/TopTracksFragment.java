@@ -10,6 +10,7 @@ import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,7 +57,6 @@ public class TopTracksFragment extends Fragment {
     private TopTracksAdapter mTopTracksAdapter;
     private ListView mListView;
     private final SpotifyApi mSpotifyApi = new SpotifyApi();
-    private static Bitmap trackAlbumArt;
 
     public TopTracksFragment() {
     }
@@ -160,6 +160,25 @@ public class TopTracksFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (changeTrackReceiver == null) {
+            changeTrackReceiver = new ChangeTrackReceiver();
+            IntentFilter intentFilter = new IntentFilter(Constants.LIST_POSITION_KEY);
+            getActivity().registerReceiver(changeTrackReceiver, intentFilter);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (changeTrackReceiver != null) {
+            getActivity().unregisterReceiver(changeTrackReceiver);
+        }
+        super.onDestroy();
+    }
+
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(Constants.TOP_TRACKS_ARRAY, topTracksArray);
@@ -205,6 +224,8 @@ public class TopTracksFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Tracks tracks) {
+            Bitmap trackAlbumArt;
+
             if (tracks == null || tracks.tracks.isEmpty()) {
                 Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
                         artistName + "\'", Toast.LENGTH_SHORT).show();
@@ -273,7 +294,6 @@ public class TopTracksFragment extends Fragment {
             newPlayerFragment.setArguments(trackInfoBundle);
             newPlayerFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             newPlayerFragment.setShowsDialog(true);
-            // newPlayerFragment.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
 
         } else {                                    // start player activity

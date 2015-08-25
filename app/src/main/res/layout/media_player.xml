@@ -11,7 +11,6 @@
         android:id="@+id/artist_name_textview"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:nestedScrollingEnabled="false"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -70,8 +69,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/current_time_textview"
             android:layout_weight="1"
-            android:layout_marginStart="30dp"
-            android:text="0:00" />
+            android:layout_marginStart="30dp" />
 
         <TextView
             android:layout_width="0dp"

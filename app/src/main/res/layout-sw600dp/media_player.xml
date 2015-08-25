@@ -14,12 +14,10 @@
         android:id="@+id/artist_name_textview"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:nestedScrollingEnabled="false"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:text="Artist Name" />
+        android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +29,6 @@
         android:singleLine="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:text="Album Name"
         android:layout_marginBottom="@dimen/list_horizontal_margin" />
 
     <ImageView
@@ -54,7 +51,6 @@
         android:singleLine="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:text="Song Title"
         android:layout_marginTop="@dimen/list_vertical_margin" />
 
     <SeekBar
@@ -78,7 +74,6 @@
             android:id="@+id/current_time_textview"
             android:layout_weight="1"
             android:layout_marginStart="30dp"
-            android:text="0:00"
             android:layout_marginLeft="30dp" />
 
         <TextView

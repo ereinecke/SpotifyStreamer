@@ -13,7 +13,7 @@
         <string name="no_results_found">No hay resultados para</string>
 
         <!-- Buffering text -->
-        <string name="buffering">Descargando...</string>
+        <string name="buffering">Descargando&#8239;</string>
 
         <!-- Insinuación para campo de búsqueda -->
         <string name="search_hint">Búsqueda de Artista</string>

@@ -49,21 +49,4 @@ public class ArtistActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-//    /**
-//     * ArtistFragment is a container for the artist ListView.
-//     */
-//    public static class ArtistFragment extends Fragment {
-//
-//        public ArtistFragment() {
-//            setHasOptionsMenu(true);
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//
-//            return inflater.inflate(R.layout.list_item_artist_listview, container, false);
-//        }
-//    }
 }

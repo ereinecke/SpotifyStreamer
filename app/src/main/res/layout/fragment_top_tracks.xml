@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TopTracksFragment"
-    android:paddingLeft="4dp">
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
 
 
     <ListView
