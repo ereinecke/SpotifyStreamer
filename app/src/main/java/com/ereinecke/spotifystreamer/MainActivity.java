@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private static boolean mTwoPane;
+    private static boolean mTwoPane = false;
     private static String countryCode;
     private static String accessToken = null;
     public static  String accessToken() {return accessToken;}
@@ -35,19 +35,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(LOG_TAG, "in onCreate()");
+
         // Expect FindArtistFragment to be statically loaded by activity_main
 
         // Determine if in two-pane mode by testing existence of top_tracks_container
         if (findViewById(R.id.top_tracks_container) != null) {
             mTwoPane = true;
-            if (savedInstanceState == null) {
-                getFragmentManager().beginTransaction()
-                    .add(R.id.top_tracks_container, new TopTracksFragment(),
-                            Constants.TRACKSFRAGMENT_TAG)
-                    .commit();
-            } else {
-                mTwoPane = false;
-            }
+        } else {
+            mTwoPane = false;
         }
 
          // Bind to PlayerService via ServiceFragment
@@ -59,17 +55,12 @@ public class MainActivity extends AppCompatActivity {
             fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
         }
 
+        // Caching this in MainActivity as it comes up quite a bit.
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
 
-        spotifyLogin();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        FindArtistFragment faf = (FindArtistFragment) getFragmentManager()
-                .findFragmentById(R.id.find_artist_fragment);
+        // implemented Spotify login, but am not calling it at this point.
+        // spotifyLogin();
     }
 
     @Override
@@ -79,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d(LOG_TAG, "in MainActivity.onDestroy()");
         super.onDestroy();
     }
 
@@ -174,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         return mTwoPane;
     }
 
+    // TODO: Not sure this is used
     public void setTopTracksPosition(int pos) {
         TopTracksFragment topTracksFragment = (TopTracksFragment) getFragmentManager()
                 .findFragmentByTag(Constants.TRACKSFRAGMENT_TAG);

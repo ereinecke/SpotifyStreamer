@@ -35,6 +35,17 @@
         <service android:name=".PlayerService"
             android:exported="false"/>
 
+        <receiver
+            android:name=".TopTracksFragment$ChangeTrackReceiver"
+            android:label="ChangeTrackReceiver"
+            android:exported="false"
+            android:enabled="true">
+
+        <!-- TODO: add intent filter for ChangeTrackReceiver
+            <intent-filter>
+            </intent-filter>   -->
+        </receiver>
+
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

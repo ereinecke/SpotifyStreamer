@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,15 +62,10 @@ public class PlayerFragment extends DialogFragment {
         setRetainInstance(true);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // clickPlay();
-    }
 
     @Override
     public void onDestroy() {
-        // Log.d(LOG_TAG, "in onDestroy()");
+        Log.d(LOG_TAG, "in onDestroy()");
         // Unbind from mPlayerService
         if (mBound) {
             try {
@@ -80,8 +76,22 @@ public class PlayerFragment extends DialogFragment {
             mPlayerService.stopForegroundService();
             mBound = false;
         }
+        this.dismiss();
         mPlayerService = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        clickPlay();
     }
 
     @Override
@@ -90,6 +100,7 @@ public class PlayerFragment extends DialogFragment {
         Bundle trackInfoBundle;
 
         if (savedInstanceState != null) {
+            Log.d(LOG_TAG, "in onCreateView, restoring savedInstanceState");
             topTracksArrayList = savedInstanceState.getParcelableArrayList(Constants.TRACK_INFO);
             mPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
             mBound = savedInstanceState.getBoolean(Constants.SERVICE_BOUND);
@@ -166,7 +177,7 @@ public class PlayerFragment extends DialogFragment {
         // Bind service if necessary
         if (playIntent == null || !mBound) {
             playIntent = new Intent(getActivity(), PlayerService.class);
-            // getActivity().startService(playIntent);
+            getActivity().startService(playIntent);
             getActivity().bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
         }
         return playerView;
@@ -215,8 +226,9 @@ public class PlayerFragment extends DialogFragment {
 
     private void clickPlay() {
         // Need to toggle Play and Pause
+        if (mPlayerService == null) Log.d(LOG_TAG," clickPlay() on null mPlayerService");
         if (mPlayerService != null) {
-            // Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
+            Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
             // TopTracksFragment.setListPosition(mPosition);
             if (PlayerService.isPlaying()) {
                 // change button to Play, pause player
@@ -283,7 +295,7 @@ public class PlayerFragment extends DialogFragment {
     }
 
     // Tracks the seek position on the scrubber.  Interval between updates set in milliseconds
-    private void startScrubber() {
+    public void startScrubber() {
         seekTimer = new Timer();
         seekTimer.schedule(new TimerTask() {
             @Override
@@ -294,7 +306,7 @@ public class PlayerFragment extends DialogFragment {
     }
 
     // stops the scrubber updates
-    private void stopScrubber() {
+    public void stopScrubber() {
         if (seekTimer != null) {
             seekTimer.cancel();
         }
@@ -344,7 +356,9 @@ public class PlayerFragment extends DialogFragment {
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
             setTopTracksPosition(mPosition);
-            mPlayerService.playTrack();
+//            mPlayerService.playTrack();
+            clickPlay();
+
         }
 
         @Override

@@ -29,7 +29,7 @@ public class ServiceFragment extends Fragment {
 
         // Bind to PlayerService
         Intent playIntent = new Intent(getActivity(), PlayerService.class);
-        // getActivity().startService(playIntent);
+        getActivity().startService(playIntent);
         getActivity().bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -39,6 +39,7 @@ public class ServiceFragment extends Fragment {
 
         // Only unbind service once app is actually finishing.
         if (getActivity().isFinishing()) {
+            Log.d(LOG_TAG, "Exiting SpotifyStreamer");
             getActivity().unbindService(mConnection);
         }
         mConnection = null;

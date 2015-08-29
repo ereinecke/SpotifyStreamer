@@ -6,6 +6,7 @@ package com.ereinecke.spotifystreamer;
 
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,7 +35,6 @@ import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 import retrofit.RetrofitError;
 
-
 /**
  * TopTenFragment displays top ten tracks for a selected artist.
  */
@@ -49,7 +49,7 @@ public class TopTracksFragment extends Fragment {
     private static Bundle trackInfoBundle;
     private static String countryCode;
 
-    private static int mPosition = ListView.INVALID_POSITION;
+    private static int mTracksListPosition = ListView.INVALID_POSITION;
     private String artistName;
     private String artistId;
 
@@ -69,12 +69,15 @@ public class TopTracksFragment extends Fragment {
         setRetainInstance(true);
 
         countryCode =  MainActivity.getUserCountry();
-        Log.d(LOG_TAG, "Country Code: " + countryCode);
+        Log.d(LOG_TAG, "in onCreate(), Country Code: " + countryCode);
         if (countryCode == null) countryCode = Constants.COUNTRY_CODE;
 
         if (MainActivity.isTwoPane()) {
             // fragment arguments from MainActivity
             extras = getArguments();
+            if (extras == null) {
+                Log.d(LOG_TAG, "in onCreate(): fragment parameters not available.");
+            }
 
         } else if (getActivity().getIntent() != null) {  // Started by TopTracksActivity, via Intent
             extras = getActivity().getIntent().getExtras();
@@ -86,8 +89,17 @@ public class TopTracksFragment extends Fragment {
             artistId = extras.getString(getString(R.string.key_artist_id));
             artistName = extras.getString(getString(R.string.key_artist_name));
             Log.d(LOG_TAG, "onCreate: ArtistName: " + artistName + " ArtistId: " + artistId);
+            topTracksArray = extras.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
+            mTracksListPosition = extras.getInt(Constants.TOP_TRACKS_POSITION);
         } else {
-            Log.d(LOG_TAG, "onCreate: no extras available");
+            // This should only happen when starting up, before first artist selection
+            // TODO: need to clear list programmatically, when search text changes but doesn't trigger a search
+            Log.d(LOG_TAG, "onCreate: no extras available, blank topTracksFragment");
+
+        changeTrackReceiver = new ChangeTrackReceiver();
+        IntentFilter intentFilter = new IntentFilter(Constants.LIST_POSITION_KEY);
+        getActivity().registerReceiver(changeTrackReceiver, intentFilter);
+        Log.d(LOG_TAG, "in onCreate(), registering changeTrackReceiver");
         }
     }
 
@@ -97,30 +109,43 @@ public class TopTracksFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
 
-        // TODO: need to account for change in mPosition due to Prev/Next/onCompletion.
+        // TODO: need to account for change in mTracksListPosition due to Prev/Next/onCompletion.
         if (savedInstanceState != null) {
             topTracksArray = savedInstanceState.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
-            mPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
-        } else {
+            trackInfoBundle = savedInstanceState.getBundle(Constants.TRACK_INFO);
+            artistId = savedInstanceState.getString(getString(R.string.key_artist_id));
+            artistName = savedInstanceState.getString(getString(R.string.key_artist_name));
+            // don't read mTracksListPosition from savedInstanceState
+            if (mTracksListPosition == ListView.INVALID_POSITION) {
+                mTracksListPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
+            }
+        } else {   // read from intent, launched by TopTracksActivity
             Bundle extras = getActivity().getIntent().getExtras();
-            if (extras == null) {  // don't use intent, must be TwoPane
+            if (extras == null) {  // don't use intent, must be TwoPane. Read fragment arguments.
                 extras = this.getArguments();
             }
             if (extras == null) {
                 // Error condition
+                Log.d(LOG_TAG, "Can't read extras in onCreateView().");
                 artistId = "";
                 artistName = "";
             } else {
                 artistId = extras.getString(getString(R.string.key_artist_id));
                 artistName = extras.getString(getString(R.string.key_artist_name));
+                topTracksArray = extras.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
+                mTracksListPosition = extras.getInt(Constants.TOP_TRACKS_POSITION);
             }
-            if (topTracksArray == null) {
+            if (topTracksArray == null) { // should only happen in TwoPane mode; blank fragment
                 topTracksArray = new ArrayList<>();
-                mPosition = 0;
+                mTracksListPosition = ListView.INVALID_POSITION;
             }
 
             // Get a reference to the ListView and attach this adapter to it.
             mListView = (ListView) rootView.findViewById(R.id.list_item_top_tracks_display);
+            if (mTracksListPosition >= 0) {
+                // mListView.setSelection(mTracksListPosition);
+                mListView.setItemChecked(mTracksListPosition, true);
+            }
 
             // Create ArrayAdapter using persisted artist data
             if (topTracksArray != null) {
@@ -133,48 +158,59 @@ public class TopTracksFragment extends Fragment {
 
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    Log.d(LOG_TAG, "item #" + mPosition + " clicked");
-                    mPosition = position;
-                    if (mPosition >= 0 && (mPosition < topTracksArray.size())) {
-                        showMediaPlayer(topTracksArray, mPosition);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
+                Log.d(LOG_TAG, "item #" + mTracksListPosition + " clicked");
+                mTracksListPosition = position;
+                if (mTracksListPosition >= 0 && (mTracksListPosition < topTracksArray.size())) {
+                    showMediaPlayer(topTracksArray, mTracksListPosition);
+                } else {
+                    throw new IllegalArgumentException();
+                }
                 }
             });
 
-            TextView topTracksHeader = (TextView) rootView.findViewById(R.id.top_tracks_header);
-            if (artistName != null && artistName != "" && MainActivity.isTwoPane()) {
-                topTracksHeader.setText(getString(R.string.top_tracks_label) + " - " + artistName);
+            // in TwoPane mode, set header for TopTracksFragment unless artistName not yet defined
+            if (MainActivity.isTwoPane()) {
+                TextView topTracksHeader = (TextView) rootView.findViewById(R.id.top_tracks_header);
+                if (artistName != null && artistName != "") {
+                    topTracksHeader.setText(getString(R.string.top_tracks_label) + " - " + artistName);
+                }
             }
 
-            FetchTopTracks spotifyData = new FetchTopTracks();
-            if (artistId != null && artistId != "") {
-                spotifyData.execute(artistId);
-            } else {
-                Log.d(LOG_TAG, "artistId null");
+            // Get top tracks list from Spotify in background task
+            // This should only happen if topTracksArray is null or empty
+            if (topTracksArray != null || topTracksArray.size() > 0) {
+                FetchTopTracks spotifyData = new FetchTopTracks();
+                if (artistId != null && artistId != "") {
+                    spotifyData.execute(artistId);
+                } else {
+                    Log.d(LOG_TAG, "Set up blank TopTracksFragment with artistId null");
+                }
             }
         }
-
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        // Register broadcast receiver for track change, use to update mTracksListPosition
         if (changeTrackReceiver == null) {
             changeTrackReceiver = new ChangeTrackReceiver();
             IntentFilter intentFilter = new IntentFilter(Constants.LIST_POSITION_KEY);
             getActivity().registerReceiver(changeTrackReceiver, intentFilter);
+            Log.d(LOG_TAG, "in onResume(), registering changeTrackReceiver");
         }
     }
 
     @Override
-    public void onDestroy() {
+    public void onPause() {
         if (changeTrackReceiver != null) {
+            Log.d(LOG_TAG, "in onPause(), unregistering changeTrackReceiver");
             getActivity().unregisterReceiver(changeTrackReceiver);
+            changeTrackReceiver = null;
         }
-        super.onDestroy();
+        super.onPause();
     }
 
 
@@ -182,7 +218,7 @@ public class TopTracksFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(Constants.TOP_TRACKS_ARRAY, topTracksArray);
-        outState.putInt(Constants.TOP_TRACKS_POSITION, mPosition);
+        outState.putInt(Constants.TOP_TRACKS_POSITION, mTracksListPosition);
         outState.putBundle(Constants.TRACK_INFO, trackInfoBundle);
         outState.putString(getString(R.string.key_artist_id), artistId);
         outState.putString(getString(R.string.key_artist_name), artistName);
@@ -227,6 +263,22 @@ public class TopTracksFragment extends Fragment {
             Bitmap trackAlbumArt;
 
             if (tracks == null || tracks.tracks.isEmpty()) {
+                // Start a blank TopTracksFragment
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Bundle extras = new Bundle();
+                extras.putString(getString(R.string.key_artist_name), "");
+                extras.putString(getString(R.string.key_artist_id), "");
+
+                TopTracksFragment topTracksFragment = new TopTracksFragment();
+                topTracksFragment.setArguments(extras);
+
+                Log.d(LOG_TAG, "replacing top_tracks_container");
+                fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
+                        Constants.TRACKSFRAGMENT_TAG);
+                fragmentTransaction.addToBackStack(null);
+
                 Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
                         artistName + "\'", Toast.LENGTH_SHORT).show();
                 Log.d(LOG_TAG, "Tracks is null");
@@ -282,7 +334,6 @@ public class TopTracksFragment extends Fragment {
         trackInfoBundle.putInt(Constants.TOP_TRACKS_POSITION, mPosition);
 
         if (MainActivity.isTwoPane()) {             // start player fragment
-
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             Fragment prev = getFragmentManager().findFragmentByTag(Constants.PLAYERFRAGMENT_TAG);
             if (prev != null) {
@@ -306,12 +357,14 @@ public class TopTracksFragment extends Fragment {
     }
 
     public static int getListPosition() {
-        return mPosition;
+        return mTracksListPosition;
     }
 
     public void setListPosition(int position) {
-        mPosition = position;
-        mListView.setSelection(position);
+        mTracksListPosition = position;
+        // mListView.setSelection(position); // works if not in touch mode
+        mListView.setItemChecked(position, true); // works in touch mode
+
     }
 
     // Don't like doing this, but having a heck of a time passing trackInfo through intent extra
@@ -327,12 +380,24 @@ public class TopTracksFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra(Constants.CURRENT_TRACK_KEY)) {
                 int newPos = intent.getIntExtra(Constants.CURRENT_TRACK_KEY, 0);
-                Log.d(LOG_TAG, "changeTrackReceiver called, nwePos: " + newPos);
+                Log.d(LOG_TAG, "changeTrackReceiver called, newPos: " + newPos);
                 // This logic assumes 10 tracks always
                 if (newPos > 0 && newPos < 10) {
                     setListPosition(newPos);
                 }
             }
         }
+    }
+
+    // Clear all data from TopTracksFragment, used when artist search gets no hits
+    public void clearTopTracksFragment() {
+
+        TextView topTracksHeader = (TextView) getView().findViewById(R.id.top_tracks_header);
+        topTracksHeader.setText("");
+
+        mTopTracksAdapter = new TopTracksAdapter(getActivity(), new ArrayList<ShowTopTracks>());
+        mListView.setAdapter(mTopTracksAdapter);
+        topTracksArray.clear();
+
     }
 }
