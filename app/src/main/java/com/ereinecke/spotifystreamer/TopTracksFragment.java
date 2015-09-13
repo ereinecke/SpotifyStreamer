@@ -4,10 +4,7 @@
 
 package com.ereinecke.spotifystreamer;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +12,10 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,41 +141,41 @@ public class TopTracksFragment extends Fragment {
                 mTracksListPosition = ListView.INVALID_POSITION;
             }
 
-            // Get a reference to the ListView and attach this adapter to it.
-            mListView = (ListView) rootView.findViewById(R.id.list_item_top_tracks_display);
-            if (mTracksListPosition >= 0) {
-                // mListView.setSelection(mTracksListPosition);
-                mListView.setItemChecked(mTracksListPosition, true);
-            }
+        // Get a reference to the ListView and attach this adapter to it.
+        mListView = (ListView) rootView.findViewById(R.id.list_item_top_tracks_display);
+        if (mTracksListPosition >= 0) {
+            // mListView.setSelection(mTracksListPosition);
+            mListView.setItemChecked(mTracksListPosition, true);
+        }
 
-            // Create ArrayAdapter using persisted artist data
-            if (topTracksArray != null) {
-                mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
-                mListView.setAdapter(mTopTracksAdapter);
-            }
+        // Create ArrayAdapter using persisted artist data
+        if (topTracksArray != null) {
+            mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
+            mListView.setAdapter(mTopTracksAdapter);
+        }
 
-            // Set up listener for clicking on an item in the ListView
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Set up listener for clicking on an item in the ListView
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.d(LOG_TAG, "item #" + mTracksListPosition + " clicked");
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 mTracksListPosition = position;
+                Log.d(LOG_TAG, "item #" + mTracksListPosition + " clicked");
                 if (mTracksListPosition >= 0 && (mTracksListPosition < topTracksArray.size())) {
                     showMediaPlayer(topTracksArray, mTracksListPosition);
                 } else {
                     throw new IllegalArgumentException();
                 }
-                }
-            });
-
-            // in TwoPane mode, set header for TopTracksFragment unless artistName not yet defined
-            if (MainActivity.isTwoPane()) {
-                TextView topTracksHeader = (TextView) rootView.findViewById(R.id.top_tracks_header);
-                if (artistName != null && artistName != "") {
-                    topTracksHeader.setText(getString(R.string.top_tracks_label) + " - " + artistName);
-                }
             }
+        });
+
+        // in TwoPane mode, set header for TopTracksFragment unless artistName not yet defined
+        if (MainActivity.isTwoPane()) {
+            TextView topTracksHeader = (TextView) rootView.findViewById(R.id.top_tracks_header);
+            if (artistName != null && artistName != "") {
+                topTracksHeader.setText(getString(R.string.top_tracks_label) + " - " + artistName);
+            }
+        }
 
             // Get top tracks list from Spotify in background task
             // This should only happen if topTracksArray is null or empty
@@ -337,6 +338,7 @@ public class TopTracksFragment extends Fragment {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             Fragment prev = getFragmentManager().findFragmentByTag(Constants.PLAYERFRAGMENT_TAG);
             if (prev != null) {
+                Log.d(LOG_TAG, "Removing PlayerFragment");
                 ft.remove(prev);
             }
             ft.addToBackStack(null);
@@ -345,7 +347,8 @@ public class TopTracksFragment extends Fragment {
             newPlayerFragment.setArguments(trackInfoBundle);
             newPlayerFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             newPlayerFragment.setShowsDialog(true);
-            newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
+//            newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
+            ft.show(newPlayerFragment);
 
         } else {                                    // start player activity
             Intent intent = new Intent(getActivity(), PlayerActivity.class);

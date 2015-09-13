@@ -27,23 +27,25 @@ public class ServiceFragment extends Fragment {
 
         setRetainInstance(true);
 
-        // Bind to PlayerService
+        // Start and bind to PlayerService
         Intent playIntent = new Intent(getActivity(), PlayerService.class);
-        getActivity().startService(playIntent);
-        getActivity().bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
+        // getActivity().startService(playIntent);
+        getActivity().bindService(playIntent, mConnection,
+//                Context.BIND_AUTO_CREATE);
+                Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
+        Log.d(LOG_TAG, " in onCreate(), started and bound PlayerService");
     }
 
     @Override
         public void onDestroy() {
-        super.onDestroy();
 
         // Only unbind service once app is actually finishing.
         if (getActivity().isFinishing()) {
-            Log.d(LOG_TAG, "Exiting SpotifyStreamer");
+            Log.d(LOG_TAG, "in onDestroy() in ServiceFragment, app close requested");
             getActivity().unbindService(mConnection);
+            mConnection = null;
         }
-        mConnection = null;
-
+        super.onDestroy();
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

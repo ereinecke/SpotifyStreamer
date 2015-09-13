@@ -64,7 +64,7 @@ import java.util.ArrayList;
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Constants.MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         // Previous
@@ -103,7 +103,7 @@ import java.util.ArrayList;
                 e.printStackTrace();
                 trackImageArt = MainActivity.getPlaceholderImage();
             }
-            // Log.d (LOG_TAG, "got trackImageArt");
+            Log.d (LOG_TAG, "got trackImageArt");
             return trackImageArt;
         } // end getAlbumTrackArt.doInBackground
 
@@ -146,7 +146,6 @@ import java.util.ArrayList;
         currentTrack = topTracksArrayList.get(mPosition);
         if (!mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
-            // stopForegroundService();
             initTrack();        // sets up notification, starts foreground service asynchronously
             PlayerFragment.onStartTrack();  // Starts buffering progress spinner
             ;
@@ -159,12 +158,18 @@ import java.util.ArrayList;
     public void playTrack() {
         Log.d(LOG_TAG, "in playTrack()");
         logMediaPlayerState();
-        if (mMediaPlayer != null && !mMediaPlayer.isPlaying()) {
-            playing = true;
-            PlayerFragment.onStartPlay();
-            mMediaPlayer.start();
-        } else {
-            Log.d(LOG_TAG, "Attempted to playTrack() when already playing");
+        if (mMediaPlayer != null) {
+            if (!mMediaPlayer.isPlaying()) {
+                playing = true;
+                PlayerFragment.onStartPlay();
+                mMediaPlayer.start();
+            } else {
+                Log.d(LOG_TAG, "Attempted to playTrack() when already playing");
+            }
+        }
+        else {  // mMediaPlayer null: call startTrack()?
+            Log.d(LOG_TAG, "mMediaPlayer is null in playTrack()");
+            // startTrack();
         }
     }
 
@@ -212,7 +217,8 @@ import java.util.ArrayList;
 
     // Moves MediaPlayer to Initialized state by starting foreground service and setting data source
     public void startForegroundService() {
-        stopForegroundService();
+        Log.d(LOG_TAG, "in startForegroundService()");
+        // stopForegroundService();
         mMediaPlayer.reset();
         try {
             startForeground(Constants.NOTIFICATION_ID, notification);
@@ -233,10 +239,13 @@ import java.util.ArrayList;
 
     public void stopForegroundService() {
         Log.i(LOG_TAG, "Stopping foreground service");
-        mMediaPlayer.stop();
-        trackReady = false;
-        stopForeground(true);
-        stopSelf();
+        if (mMediaPlayer != null) {
+            Log.i(LOG_TAG, "Stopping foreground service");
+            mMediaPlayer.stop();
+            trackReady = false;
+            stopForeground(true);
+            stopSelf();
+        }
     }
 
     private void initMediaPlayer() {
@@ -329,12 +338,13 @@ import java.util.ArrayList;
     }
 
     public static boolean isPlaying() {
+        // Log.d(LOG_TAG, "isPlaying(): " + (mMediaPlayer != null && mMediaPlayer.isPlaying()));
         return (mMediaPlayer != null && mMediaPlayer.isPlaying());
     }
 
     // Assumption that if trackReady = true and isPlaying() is false, must be paused.
     public boolean isPaused() {
-        Log.d(LOG_TAG, "isPaused(): " + (trackReady && !isPlaying()));
+        // Log.d(LOG_TAG, "isPaused(): " + (trackReady && !isPlaying()));
         return (trackReady && !isPlaying());
     }
 
@@ -349,7 +359,7 @@ import java.util.ArrayList;
 
     @Override
     public void onDestroy() {
-        // Log.i(LOG_TAG, "In onDestroy");
+        Log.d(LOG_TAG, "In onDestroy");
         if (mMediaPlayer != null) {
             stopForegroundService();
             mMediaPlayer.release();
@@ -360,12 +370,13 @@ import java.util.ArrayList;
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(LOG_TAG, "in onBind()");
         return mBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        // Log.d(LOG_TAG, "in onUnbind()");
+        Log.d(LOG_TAG, "in onUnbind()");
         mMediaPlayer.stop();
         mMediaPlayer.release();
         mMediaPlayer = null;

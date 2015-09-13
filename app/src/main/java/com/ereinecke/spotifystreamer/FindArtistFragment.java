@@ -1,12 +1,12 @@
 package com.ereinecke.spotifystreamer;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -155,7 +155,7 @@ public class FindArtistFragment extends Fragment {
                     topTracksFragment.setArguments(extras);
 
                     Log.d(LOG_TAG, "replacing top_tracks_container");
-                    fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
+                    fragmentTransaction.replace(R.id.top_tracks_container, (Fragment)topTracksFragment,
                             Constants.TRACKSFRAGMENT_TAG);
                     fragmentTransaction.addToBackStack(Constants.TRACKSFRAGMENT_TAG);
                     fragmentTransaction.commit();

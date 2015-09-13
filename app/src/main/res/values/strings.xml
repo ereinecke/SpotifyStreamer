@@ -13,7 +13,7 @@
     <string name="search_hint">Artist Search</string>
 
     <!-- Buffering text -->
-    <string name="buffering">Sputterfying&#8239;</string>
+    <string name="buffering">Sputterfying....</string>
 
     <!-- No results found text -->
     <string name="no_results_found">No results found for</string>

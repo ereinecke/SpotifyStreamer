@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="450dp"
     android:layout_height="450dp"
+    android:id="@+id/media_player"
     android:layout_gravity="center_horizontal|center_vertical"
     android:clickable="false"
     android:elevation="20dp">

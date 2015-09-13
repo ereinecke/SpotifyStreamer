@@ -15,12 +15,12 @@ class Constants {
     public static final String PLAYERFRAGMENT_TAG = "PLYFTAG";
 
     // Service actions
-    public static final String MAIN_ACTION = "com.ereinecke.spotifystreamer.action.main";
-    public static final String PREV_ACTION = "com.ereinecke.spotifystreamer.action.prev";
-    public static final String PLAY_ACTION = "com.ereinecke.spotifystreamer.action.play";
-    public static final String NEXT_ACTION = "com.ereinecke.spotifystreamer.action.next";
-    public static final String STARTFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.startforeground";
-    public static final String STOPFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.action.stopforeground";
+    public static final String MAIN_ACTION = "com.ereinecke.spotifystreamer.main";
+    public static final String PREV_ACTION = "com.ereinecke.spotifystreamer.prev";
+    public static final String PLAY_ACTION = "com.ereinecke.spotifystreamer.play";
+    public static final String NEXT_ACTION = "com.ereinecke.spotifystreamer.next";
+    public static final String STARTFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.startforeground";
+    public static final String STOPFOREGROUND_ACTION = "com.ereinecke.spotifystreamer.stopforeground";
     public static final String SERVICE_TAG = "Service";
     public static final int    NOTIFICATION_ID = 111;
 
@@ -43,6 +43,6 @@ class Constants {
 
     // PlayerActivity
     public static final String SERVICE_BOUND = "ServiceBound";
-    public static final int     SCRUBBER_INTERVAL = 300; // 30 seconds / 100
+    public static final int    SCRUBBER_INTERVAL = 300; // 30 seconds / 100
 
 }

@@ -1,6 +1,7 @@
 package com.ereinecke.spotifystreamer;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,8 +22,9 @@ public class ArtistActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "in onCreate()");
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.find_artist_fragment, new FindArtistFragment())
+            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.find_artist_fragment, new FindArtistFragment())
+                    .add(R.id.find_artist_fragment, new Fragment())
                     .commit();
         }
     }

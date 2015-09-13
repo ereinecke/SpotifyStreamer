@@ -1,14 +1,16 @@
 package com.ereinecke.spotifystreamer;
 
-import android.app.DialogFragment;
+
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,7 @@ import static android.widget.SeekBar.OnSeekBarChangeListener;
 /**
  * PlayerFragment is a container for the MediaPlayer.
  */
-public class PlayerFragment extends DialogFragment {
+public class PlayerFragment extends DialogFragment implements DialogInterface.OnDismissListener {
 
     private static final String LOG_TAG = PlayerFragment.class.getSimpleName();
     private static ImageButton playButton;
@@ -54,6 +56,11 @@ public class PlayerFragment extends DialogFragment {
 
     }
 
+    static PlayerFragment newInstance() {
+        PlayerFragment playerFragment = new PlayerFragment();
+        return playerFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,31 +74,45 @@ public class PlayerFragment extends DialogFragment {
     public void onDestroy() {
         Log.d(LOG_TAG, "in onDestroy()");
         // Unbind from mPlayerService
-        if (mBound) {
-            try {
-                getActivity().unbindService(mConnection);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            mPlayerService.stopForegroundService();
-            mBound = false;
-        }
-        this.dismiss();
-        mPlayerService = null;
+//        if (mBound) {
+//            try {
+//                Log.d(LOG_TAG, "unbinding mConnection");
+//                getActivity().unbindService(mConnection);
+//                mConnection = null;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            mBound = false;
+//        }
+
         super.onDestroy();
     }
 
     @Override
     public void onDestroyView() {
-        if (getDialog() != null && getRetainInstance())
-            getDialog().setDismissMessage(null);
-        super.onDestroy();
-    }
+        // Workaround for DialogFragment self-destruct per
+        //     https://code.google.com/p/android/issues/detail?id=17423
+         if (getDialog() != null && getRetainInstance())
+            this.getDialog().setOnDismissListener(null);  // TODO: PlayerService not killed, but this causes error
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        clickPlay();
+        // Unbind from mPlayerService
+        if (mBound) {
+            try {
+                Log.d(LOG_TAG, "unbinding mConnection");
+                getActivity().unbindService(mConnection);
+                mConnection = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (getDialog() != null) {
+            getDialog().dismiss();
+        }
+        if (mPlayerService != null) {
+            mPlayerService.stopForegroundService();
+            mPlayerService = null;
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -110,6 +131,7 @@ public class PlayerFragment extends DialogFragment {
             topTracksArrayList = trackInfoBundle.getParcelableArrayList(Constants.TRACK_INFO);
             mPosition = trackInfoBundle.getInt(Constants.TOP_TRACKS_POSITION);
             trackInfo = topTracksArrayList.get(mPosition);
+            mBound = true;
         }
 
         playerView = inflater.inflate(R.layout.media_player, container, false);
@@ -176,9 +198,10 @@ public class PlayerFragment extends DialogFragment {
 
         // Bind service if necessary
         if (playIntent == null || !mBound) {
+            Log.d(LOG_TAG, "binding PlayerService");
             playIntent = new Intent(getActivity(), PlayerService.class);
-            getActivity().startService(playIntent);
-            getActivity().bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
+            getActivity().bindService(playIntent, mConnection,
+                    Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
         }
         return playerView;
     }
@@ -226,10 +249,9 @@ public class PlayerFragment extends DialogFragment {
 
     private void clickPlay() {
         // Need to toggle Play and Pause
-        if (mPlayerService == null) Log.d(LOG_TAG," clickPlay() on null mPlayerService");
+        if (mPlayerService == null) Log.d(LOG_TAG, " clickPlay() on null mPlayerService");
         if (mPlayerService != null) {
             Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
-            // TopTracksFragment.setListPosition(mPosition);
             if (PlayerService.isPlaying()) {
                 // change button to Play, pause player
                 playButton.setImageDrawable(playButtonDrawable);
@@ -244,7 +266,7 @@ public class PlayerFragment extends DialogFragment {
                     setTrackInfo(playerView, topTracksArrayList.get(mPosition));
                     mPlayerService.startTrack();
                 } else {
-                    // Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
+                    Log.d(LOG_TAG, "clickPlay() called with PlayerService unbound");
                 }
             }
         }
@@ -289,6 +311,7 @@ public class PlayerFragment extends DialogFragment {
     private void setSeekBar(int progress) {
         int seekPos = mPlayerService.getSeek();
         if (seekPos > 0) {
+            Log.d(LOG_TAG, "setSeekBar to: " + progress + "msec; " + progress/Constants.SCRUBBER_INTERVAL + "%" );
             seekBar.setProgress(progress / Constants.SCRUBBER_INTERVAL);
             currentTimeView.setText(millisToMinutes(mPlayerService.getSeek()));
         }
@@ -356,9 +379,7 @@ public class PlayerFragment extends DialogFragment {
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
             setTopTracksPosition(mPosition);
-//            mPlayerService.playTrack();
             clickPlay();
-
         }
 
         @Override

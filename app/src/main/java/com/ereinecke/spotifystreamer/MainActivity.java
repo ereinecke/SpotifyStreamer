@@ -1,10 +1,11 @@
 package com.ereinecke.spotifystreamer;
 
-import android.app.FragmentManager;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
          // Bind to PlayerService via ServiceFragment
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICE_TAG);
 
         if (serviceFragment == null) {
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: Not sure this is used
     public void setTopTracksPosition(int pos) {
-        TopTracksFragment topTracksFragment = (TopTracksFragment) getFragmentManager()
+        TopTracksFragment topTracksFragment = (TopTracksFragment) getSupportFragmentManager()
                 .findFragmentByTag(Constants.TRACKSFRAGMENT_TAG);
 
         topTracksFragment.setListPosition(pos);
