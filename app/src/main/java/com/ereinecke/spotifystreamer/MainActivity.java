@@ -1,10 +1,10 @@
 package com.ereinecke.spotifystreamer;
 
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static String accessToken = null;
     public static  String accessToken() {return accessToken;}
     private static Bitmap placeholderImage;
+    private boolean sfmBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = false;
         }
 
-         // Bind to PlayerService via ServiceFragment
-        FragmentManager fm = getSupportFragmentManager();
-        ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICE_TAG);
+        // Bind to PlayerService via ServiceFragment
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment serviceFragment = fm.findFragmentByTag(Constants.SERVICE_TAG);
 
-        if (serviceFragment == null) {
-            serviceFragment = new ServiceFragment();
-            fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
+            if (serviceFragment == null) {
+                serviceFragment = new ServiceFragment();
+                fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
         }
 
         // Caching this in MainActivity as it comes up quite a bit.
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         // implemented Spotify login, but am not calling it at this point.
         // spotifyLogin();
     }
+
 
     @Override
     public void onRestoreInstanceState (Bundle outState) {

@@ -45,7 +45,7 @@ public class FindArtistFragment extends Fragment {
     private ListView mListView;
     private Toast toast;
     private final SpotifyApi mSpotifyApi = new SpotifyApi();
-    boolean newView;
+    boolean newView;  // flag to prevent afterTextChanged listener from firing on creation
 
     public FindArtistFragment() {
     }
@@ -56,7 +56,7 @@ public class FindArtistFragment extends Fragment {
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
-        newView = true; // flag to prevent Spotify search on fragment recreation
+        Log.d(LOG_TAG, "in onCreate, newView: " + newView);
     }
 
     @Override
@@ -71,6 +71,7 @@ public class FindArtistFragment extends Fragment {
             artist = savedInstanceState.getString(getString(R.string.key_artist_name));
             Log.d(LOG_TAG, "Extras include: ArtistName: " + artist + "; ArtistListPosition: " +
                     mArtistListPosition);
+            newView = true; // flag to prevent Spotify search on fragment recreation
         }
 
         View rootView = inflater.inflate(R.layout.fragment_artists, container, false);
@@ -107,21 +108,11 @@ public class FindArtistFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 artist = artistSearch.getText().toString();
                 Log.d(LOG_TAG, " in afterTextChanged(), Artist: " + artist);
-                // don't want to run if we have a good array that matches text
                 Log.d(LOG_TAG, " artistArray size: " + artistArray.size());
-                if (artistArray.size() == 0) {
-                        Log.d(LOG_TAG, "Searching Spotify...");
-                        searchSpotifyArtists spotifyData = new searchSpotifyArtists();
-                        spotifyData.execute(artist);
-                }
-                // if artist in search field is different from in the list, search Spotify
-                // this should keep us from searching after a rotation
-                else if (!artist.equals(artistArray.get(0).artistName)) {
-                    Log.d(LOG_TAG, "Searching Spotify...");
-                    searchSpotifyArtists spotifyData = new searchSpotifyArtists();
-                    spotifyData.execute(artist);
-                    newView = false;
-                }
+                newView = false;
+                Log.d(LOG_TAG, "Searching Spotify...");
+                searchSpotifyArtists spotifyData = new searchSpotifyArtists();
+                spotifyData.execute(artist);
             }
 
             @Override
@@ -201,7 +192,8 @@ public class FindArtistFragment extends Fragment {
         @Override
         protected ArtistsPager doInBackground(String... params) {
             String artist;
-            if (params.length == 0) {
+            if (params.length == 0 || newView) {
+                newView = false;
                 return null;
             }
             else {artist = params[0];}

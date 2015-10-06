@@ -1,12 +1,13 @@
 package com.ereinecke.spotifystreamer;
 
-import android.app.Fragment;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 /**
@@ -20,6 +21,7 @@ public class ServiceFragment extends Fragment {
     private boolean mBound;
     private PlayerService mPlayerService;
 
+    public ServiceFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,13 +29,15 @@ public class ServiceFragment extends Fragment {
 
         setRetainInstance(true);
 
-        // Start and bind to PlayerService
-        Intent playIntent = new Intent(getActivity(), PlayerService.class);
-        // getActivity().startService(playIntent);
-        getActivity().bindService(playIntent, mConnection,
-//                Context.BIND_AUTO_CREATE);
-                Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
-        Log.d(LOG_TAG, " in onCreate(), started and bound PlayerService");
+        if (!mBound) {
+            // Start and bind to PlayerService
+            Intent playIntent = new Intent(getActivity(), PlayerService.class);
+            // getActivity().startService(playIntent);
+            getActivity().bindService(playIntent, mConnection,
+                    Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
+
+            Log.d(LOG_TAG, " in onCreate(), started and bound PlayerService");
+        }
     }
 
     @Override

@@ -347,8 +347,8 @@ public class TopTracksFragment extends Fragment {
             newPlayerFragment.setArguments(trackInfoBundle);
             newPlayerFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             newPlayerFragment.setShowsDialog(true);
-//            newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
-            ft.show(newPlayerFragment);
+            newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
+//            ft.show(newPlayerFragment);
 
         } else {                                    // start player activity
             Intent intent = new Intent(getActivity(), PlayerActivity.class);

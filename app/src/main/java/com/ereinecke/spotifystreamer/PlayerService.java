@@ -241,7 +241,7 @@ import java.util.ArrayList;
         Log.i(LOG_TAG, "Stopping foreground service");
         if (mMediaPlayer != null) {
             Log.i(LOG_TAG, "Stopping foreground service");
-            mMediaPlayer.stop();
+            //mMediaPlayer.stop();
             trackReady = false;
             stopForeground(true);
             stopSelf();

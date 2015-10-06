@@ -53,7 +53,6 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
 
     public PlayerFragment() {
-
     }
 
     static PlayerFragment newInstance() {
@@ -74,17 +73,16 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
     public void onDestroy() {
         Log.d(LOG_TAG, "in onDestroy()");
         // Unbind from mPlayerService
-//        if (mBound) {
-//            try {
-//                Log.d(LOG_TAG, "unbinding mConnection");
-//                getActivity().unbindService(mConnection);
-//                mConnection = null;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            mBound = false;
-//        }
-
+        if (mBound) {
+            try {
+                Log.d(LOG_TAG, "unbinding mConnection");
+                getActivity().unbindService(mConnection);
+                mConnection = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mBound = false;
+        }
         super.onDestroy();
     }
 
@@ -93,7 +91,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         // Workaround for DialogFragment self-destruct per
         //     https://code.google.com/p/android/issues/detail?id=17423
          if (getDialog() != null && getRetainInstance())
-            this.getDialog().setOnDismissListener(null);  // TODO: PlayerService not killed, but this causes error
+            this.getDialog().setOnDismissListener(null);
 
         // Unbind from mPlayerService
         if (mBound) {
