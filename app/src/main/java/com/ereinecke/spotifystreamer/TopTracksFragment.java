@@ -67,7 +67,7 @@ public class TopTracksFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle extras;
 
-        setRetainInstance(true);
+        // setRetainInstance(true);
 
         countryCode =  MainActivity.getUserCountry();
         Log.d(LOG_TAG, "in onCreate(), Country Code: " + countryCode);

@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = false;
         }
 
+        /* Testing: don't call ServiceFragment at all
         // Bind to PlayerService via ServiceFragment
             FragmentManager fm = getSupportFragmentManager();
             Fragment serviceFragment = fm.findFragmentByTag(Constants.SERVICE_TAG);
@@ -56,12 +55,13 @@ public class MainActivity extends AppCompatActivity {
                 serviceFragment = new ServiceFragment();
                 fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
         }
+        */
 
         // Caching this in MainActivity as it comes up quite a bit.
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
 
-        // implemented Spotify login, but am not calling it at this point.
+        // Implemented Spotify login, but am not calling it at this point.
         // spotifyLogin();
     }
 

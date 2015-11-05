@@ -7,16 +7,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class FindArtistFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
+        // setRetainInstance(true);
         setHasOptionsMenu(true);
         Log.d(LOG_TAG, "in onCreate, newView: " + newView);
     }
@@ -85,7 +86,7 @@ public class FindArtistFragment extends Fragment {
             mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
             mListView.setAdapter(mArtistAdapter);
             if (mArtistListPosition != ListView.INVALID_POSITION) {
-                Log.d(LOG_TAG,"setting artist array position to " + mArtistListPosition);
+                Log.d(LOG_TAG, "setting artist array position to " + mArtistListPosition);
 
                 // Whole lotta stuff that probably doesn't need to be here
                 mListView.performItemClick(mListView.getChildAt(mArtistListPosition),
@@ -98,31 +99,36 @@ public class FindArtistFragment extends Fragment {
                 Log.d(LOG_TAG, "artist array position: " + mListView.getCheckedItemPosition());
                 Log.d(LOG_TAG, "choice mode is " + mListView.getChoiceMode());
                 mListView.invalidateViews();  // force a redraw
+                Log.d(LOG_TAG, "performItemClick at pos: " + mArtistListPosition);
+                mListView.performItemClick(mListView.getAdapter()
+                         .getView(mArtistListPosition, null, null), mArtistListPosition,
+                          mListView.getItemIdAtPosition(mArtistListPosition));
             }
         }
 
         // Set up action listener for Search Artist editText
         final EditText artistSearch = (EditText) rootView.findViewById(R.id.search_artist_editText);
-        artistSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                artist = artistSearch.getText().toString();
-                Log.d(LOG_TAG, " in afterTextChanged(), Artist: " + artist);
-                Log.d(LOG_TAG, " artistArray size: " + artistArray.size());
-                newView = false;
-                Log.d(LOG_TAG, "Searching Spotify...");
-                searchSpotifyArtists spotifyData = new searchSpotifyArtists();
-                spotifyData.execute(artist);
-            }
 
+        artistSearch.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.d(LOG_TAG, "In onEditorAction(), actionId: " + actionId);
+                if (actionId == EditorInfo.IME_ACTION_DONE  ||
+                        actionId == EditorInfo.IME_ACTION_SEARCH) {
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    artist = artistSearch.getText().toString();
+                    Log.d(LOG_TAG, " in onEditorAction(), Artist: " + artist);
+                    Log.d(LOG_TAG, " artistArray size: " + artistArray.size());
+                    newView = false;
+                    Log.d(LOG_TAG, "Searching Spotify...");
+                    searchSpotifyArtists spotifyData = new searchSpotifyArtists();
+                    spotifyData.execute(artist);
+                    return true;
+                } else {
+                    return false;
+                }
             }
-        });  // end artistSearch.addTextChangedListener
+        });  // end artistSearch.onEditorActionListener
 
         // Set up listener for clicking on an item in the ListView
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

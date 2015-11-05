@@ -65,7 +65,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        // setRetainInstance(true);
     }
 
 
@@ -92,24 +92,6 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         //     https://code.google.com/p/android/issues/detail?id=17423
          if (getDialog() != null && getRetainInstance())
             this.getDialog().setOnDismissListener(null);
-
-        // Unbind from mPlayerService
-        if (mBound) {
-            try {
-                Log.d(LOG_TAG, "unbinding mConnection");
-                getActivity().unbindService(mConnection);
-                mConnection = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (getDialog() != null) {
-            getDialog().dismiss();
-        }
-        if (mPlayerService != null) {
-            mPlayerService.stopForegroundService();
-            mPlayerService = null;
-        }
         super.onDestroyView();
     }
 
@@ -131,7 +113,6 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             trackInfo = topTracksArrayList.get(mPosition);
             mBound = true;
         }
-
         playerView = inflater.inflate(R.layout.media_player, container, false);
 
         // Identify widgets
@@ -193,6 +174,11 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
         // Populate layout fields
         setTrackInfo(playerView, trackInfo);
+
+        // Get position if playing
+        if (mPlayerService.isPlaying()) {
+            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService);
+        }
 
         // Bind service if necessary
         if (playIntent == null || !mBound) {
@@ -368,7 +354,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            // Log.d(LOG_TAG, "in onServiceConnected()");
+            Log.d(LOG_TAG, "in onServiceConnected()");
             PlayerService.PlayerBinder playerBinder =
                     (PlayerService.PlayerBinder) service;
             // get service
@@ -382,7 +368,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            // Log.d(LOG_TAG,"in onServiceDisconnected()");
+            Log.d(LOG_TAG,"in onServiceDisconnected()");
             mBound = false;
             mPlayerService = null;
             mConnection = null;

@@ -46,6 +46,7 @@ import java.util.ArrayList;
     private PendingIntent pNextIntent;
     private ShowTopTracks currentTrack;
     private Notification notification;
+    public boolean playerServiceRunning = false;
 
     public PlayerService() {}
 
@@ -111,8 +112,10 @@ import java.util.ArrayList;
         protected void onPostExecute(Bitmap trackAlbumArt) {
 
             setNotification(trackAlbumArt);
-            startForegroundService();
-            mMediaPlayer.prepareAsync();
+            if (!PlayerService.isPlaying()) {
+                startForegroundService();
+                mMediaPlayer.prepareAsync();
+            }
         }
     }
 
@@ -218,8 +221,10 @@ import java.util.ArrayList;
     // Moves MediaPlayer to Initialized state by starting foreground service and setting data source
     public void startForegroundService() {
         Log.d(LOG_TAG, "in startForegroundService()");
-        // stopForegroundService();
-        mMediaPlayer.reset();
+        if (!mMediaPlayer.isPlaying()) {
+            // stopForegroundService();
+            mMediaPlayer.reset();
+        }
         try {
             startForeground(Constants.NOTIFICATION_ID, notification);
         } catch (Exception e) {
@@ -227,18 +232,22 @@ import java.util.ArrayList;
             e.printStackTrace();
         }
 
-        try {
-            mMediaPlayer.setDataSource(currentTrack.trackMediaUrl);
-            Log.d(LOG_TAG, "setDatasource to " + currentTrack.trackMediaUrl);
-        } catch (IOException e) {
-            Log.d(LOG_TAG, "Can't setDataSource to " + currentTrack.trackMediaUrl);
-            e.printStackTrace();
+        if (!mMediaPlayer.isPlaying()) {
+            try {
+                mMediaPlayer.setDataSource(currentTrack.trackMediaUrl);
+                Log.d(LOG_TAG, "setDatasource to " + currentTrack.trackMediaUrl);
+            } catch (IOException e) {
+                Log.d(LOG_TAG, "Can't setDataSource to " + currentTrack.trackMediaUrl);
+                e.printStackTrace();
+            }
+        } else {
+            // get seek position and continue to update
+            setSeek(getSeek());
         }
 
     }
 
     public void stopForegroundService() {
-        Log.i(LOG_TAG, "Stopping foreground service");
         if (mMediaPlayer != null) {
             Log.i(LOG_TAG, "Stopping foreground service");
             //mMediaPlayer.stop();
@@ -361,7 +370,8 @@ import java.util.ArrayList;
     public void onDestroy() {
         Log.d(LOG_TAG, "In onDestroy");
         if (mMediaPlayer != null) {
-            stopForegroundService();
+            // stopForegroundService();
+            // unbind service??
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
