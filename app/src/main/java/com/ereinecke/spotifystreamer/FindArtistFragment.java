@@ -55,7 +55,6 @@ public class FindArtistFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // setRetainInstance(true);
         setHasOptionsMenu(true);
         Log.d(LOG_TAG, "in onCreate, newView: " + newView);
     }
@@ -113,8 +112,9 @@ public class FindArtistFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 Log.d(LOG_TAG, "In onEditorAction(), actionId: " + actionId);
-                if (actionId == EditorInfo.IME_ACTION_DONE  ||
-                        actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED ||
+                    actionId == EditorInfo.IME_ACTION_DONE        ||
+                    actionId == EditorInfo.IME_ACTION_SEARCH) {
 
                     artist = artistSearch.getText().toString();
                     Log.d(LOG_TAG, " in onEditorAction(), Artist: " + artist);

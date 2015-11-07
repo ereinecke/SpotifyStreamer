@@ -1,0 +1,29 @@
+Leaked serviceconnection error - happens when PlayerFragment kills PlayerService
+
+09-01 07:53:43.339  11582-11582/com.ereinecke.spotifystreamer D/PlayerFragment﹕ binding PlayerService
+09-01 07:53:43.488  11582-11582/com.ereinecke.spotifystreamer D/PlayerFragment﹕ in clickPlay(), mPosition: 2
+09-01 07:53:50.293  11582-11582/com.ereinecke.spotifystreamer W/System.err﹕ at com.ereinecke.spotifystreamer.PlayerFragment.onDestroyView(PlayerFragment.java:95)
+09-01 07:53:50.754  11582-11582/com.ereinecke.spotifystreamer E/ActivityThread﹕ Activity com.ereinecke.spotifystreamer.MainActivity has leaked ServiceConnection com.ereinecke.spotifystreamer.PlayerFragment$7@41352fe0 that was originally bound here
+    android.app.ServiceConnectionLeaked: Activity com.ereinecke.spotifystreamer.MainActivity has leaked ServiceConnection com.ereinecke.spotifystreamer.PlayerFragment$7@41352fe0 that was originally bound here
+            at android.app.LoadedApk$ServiceDispatcher.<init>(LoadedApk.java:969)
+            at android.app.LoadedApk.getServiceDispatcher(LoadedApk.java:863)
+            at android.app.ContextImpl.bindService(ContextImpl.java:1470)
+            at android.app.ContextImpl.bindService(ContextImpl.java:1459)
+            at android.content.ContextWrapper.bindService(ContextWrapper.java:473)
+            at com.ereinecke.spotifystreamer.PlayerFragment.onCreateView(PlayerFragment.java:218)
+            at android.app.Fragment.performCreateView(Fragment.java:1695)
+            at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:885)
+            at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1057)
+            at android.app.BackStackRecord.run(BackStackRecord.java:682)
+            at android.app.FragmentManagerImpl.execPendingActions(FragmentManager.java:1435)
+            at android.app.FragmentManagerImpl$1.run(FragmentManager.java:441)
+            at android.os.Handler.handleCallback(Handler.java:725)
+            at android.os.Handler.dispatchMessage(Handler.java:92)
+            at android.os.Looper.loop(Looper.java:137)
+            at android.app.ActivityThread.main(ActivityThread.java:5227)
+            at java.lang.reflect.Method.invokeNative(Native Method)
+            at java.lang.reflect.Method.invoke(Method.java:511)
+            at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:795)
+            at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:562)
+            at dalvik.system.NativeStart.main(Native Method)
+09-01 07:53:55.488  11582-11582/com.ereinecke.spotifystreamer W/System.err﹕ at com.ereinecke.spotifystreamer.PlayerFragment.onDestroyView(PlayerFragment.java:95)

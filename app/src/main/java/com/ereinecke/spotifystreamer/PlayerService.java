@@ -46,7 +46,6 @@ import java.util.ArrayList;
     private PendingIntent pNextIntent;
     private ShowTopTracks currentTrack;
     private Notification notification;
-    public boolean playerServiceRunning = false;
 
     public PlayerService() {}
 
@@ -56,7 +55,7 @@ import java.util.ArrayList;
         }
     }
 
-    // Prepares notification PendingIntents. gets albumTrackArt sets up notification
+    // Prepares notification PendingIntents, gets albumTrackArt, sets up notification
     // and calls prepareAsync().
     public void initTrack() {
 
@@ -170,9 +169,8 @@ import java.util.ArrayList;
                 Log.d(LOG_TAG, "Attempted to playTrack() when already playing");
             }
         }
-        else {  // mMediaPlayer null: call startTrack()?
+        else {  // mMediaPlayer null
             Log.d(LOG_TAG, "mMediaPlayer is null in playTrack()");
-            // startTrack();
         }
     }
 
@@ -282,13 +280,11 @@ import java.util.ArrayList;
     }
 
     public void setSeek(int newPositionMillis) {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.pause();
-            Log.d("SetSeek: ", "Current Position: " + mMediaPlayer.getCurrentPosition());
-            Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
+         if (mMediaPlayer.isPlaying()) {
+            // Log.d("SetSeek: ", "Current Position: " + mMediaPlayer.getCurrentPosition());
+            // Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
             mMediaPlayer.seekTo(newPositionMillis);
             Log.d("SetSeek: ", "New Position: " + mMediaPlayer.getCurrentPosition());
-            mMediaPlayer.start();
         }
     }
 
@@ -347,7 +343,7 @@ import java.util.ArrayList;
     }
 
     public static boolean isPlaying() {
-        // Log.d(LOG_TAG, "isPlaying(): " + (mMediaPlayer != null && mMediaPlayer.isPlaying()));
+        Log.d(LOG_TAG, "isPlaying(): " + (mMediaPlayer != null && mMediaPlayer.isPlaying()));
         return (mMediaPlayer != null && mMediaPlayer.isPlaying());
     }
 
@@ -372,7 +368,7 @@ import java.util.ArrayList;
         if (mMediaPlayer != null) {
             // stopForegroundService();
             // unbind service??
-            mMediaPlayer.release();
+            // mMediaPlayer.release();
             mMediaPlayer = null;
         }
         super.onDestroy();
@@ -387,9 +383,9 @@ import java.util.ArrayList;
     @Override
     public boolean onUnbind(Intent intent) {
         Log.d(LOG_TAG, "in onUnbind()");
-        mMediaPlayer.stop();
-        mMediaPlayer.release();
-        mMediaPlayer = null;
+        // mMediaPlayer.stop();
+        // mMediaPlayer.release();
+        // mMediaPlayer = null;
         return false;
     }
 }

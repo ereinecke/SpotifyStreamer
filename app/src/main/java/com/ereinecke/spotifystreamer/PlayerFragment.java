@@ -65,13 +65,13 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-        // setRetainInstance(true);
     }
 
 
     @Override
     public void onDestroy() {
         Log.d(LOG_TAG, "in onDestroy()");
+
         // Unbind from mPlayerService
         if (mBound) {
             try {
@@ -178,6 +178,8 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         // Get position if playing
         if (mPlayerService.isPlaying()) {
             Log.d(LOG_TAG, "mPlayerService: " + mPlayerService);
+            setSeekBar(mPlayerService.getSeek());
+            mBound = true;
         }
 
         // Bind service if necessary
@@ -215,7 +217,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             // Could just set it in media_player.xml, but leaving this here for when I get
             // full tracks working
             textView = (TextView) playerView.findViewById(R.id.end_time_textview);
-            //textView.setText(millisToMinutes(trackInfo.trackLength));
+            // textView.setText(millisToMinutes(trackInfo.trackLength));
             textView.setText("0:30");
             textView = (TextView) playerView.findViewById(R.id.current_time_textview);
             textView.setText("0:00");
@@ -228,15 +230,19 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
                     .resize(trackArtSize, trackArtSize)
                     .into(trackArt);
         }
-        seekBar.setProgress(0);
+        //
+        // Log.d(LOG_TAG,"PlayerService.getSeek(): " + mPlayerService.getSeek());
+        seekBar.setProgress(mPlayerService.getSeek());
     }
 
     private void clickPlay() {
         // Need to toggle Play and Pause
-        if (mPlayerService == null) Log.d(LOG_TAG, " clickPlay() on null mPlayerService");
-        if (mPlayerService != null) {
-            Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
-            if (PlayerService.isPlaying()) {
+        if (mPlayerService == null) {
+            Log.d(LOG_TAG, " clickPlay() on null mPlayerService");
+        }
+        else {
+            // Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
+            if (mPlayerService.isPlaying()) {
                 // change button to Play, pause player
                 playButton.setImageDrawable(playButtonDrawable);
                 mPlayerService.pauseTrack();
@@ -286,16 +292,18 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
     // newPosition is from 1 to 100
     private void seekTo(int newPosition) {
+        Log.d(LOG_TAG,"Calling seekTo with newPosition = " + newPosition);
         // mPlayerService.setSeek((int) trackInfo.trackLength / newPosition);
-        mPlayerService.setSeek(30000 / newPosition);
+        mPlayerService.setSeek(30000 * newPosition/100);
         setSeekBar(30000 / newPosition);
     }
 
     // field seekbar updates from PlayerService and seekTo
     private void setSeekBar(int progress) {
+        // Log.d(LOG_TAG,"mPlayerService.getSeek(): " + mPlayerService.getSeek());
         int seekPos = mPlayerService.getSeek();
         if (seekPos > 0) {
-            Log.d(LOG_TAG, "setSeekBar to: " + progress + "msec; " + progress/Constants.SCRUBBER_INTERVAL + "%" );
+            // Log.d(LOG_TAG, "setSeekBar to: " + progress + " msec; " + progress/Constants.SCRUBBER_INTERVAL + "%" );
             seekBar.setProgress(progress / Constants.SCRUBBER_INTERVAL);
             currentTimeView.setText(millisToMinutes(mPlayerService.getSeek()));
         }
@@ -327,7 +335,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
     public Runnable getSeek = new Runnable() {
         public void run() {
-            setSeekBar(PlayerService.getSeek());
+            setSeekBar(mPlayerService.getSeek());
         }
     };
 
@@ -359,16 +367,21 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
                     (PlayerService.PlayerBinder) service;
             // get service
             mPlayerService = playerBinder.getService();
+            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService);
             mBound = true;
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
             setTopTracksPosition(mPosition);
-            clickPlay();
+            if (!mPlayerService.isPlaying()) {
+                Log.d(LOG_TAG, "in onServiceConnected, isPlaying(): " + mPlayerService.isPlaying());
+                clickPlay();
+            };
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.d(LOG_TAG,"in onServiceDisconnected()");
+            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService);
             mBound = false;
             mPlayerService = null;
             mConnection = null;

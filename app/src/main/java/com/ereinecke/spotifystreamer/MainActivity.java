@@ -46,17 +46,6 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = false;
         }
 
-        /* Testing: don't call ServiceFragment at all
-        // Bind to PlayerService via ServiceFragment
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment serviceFragment = fm.findFragmentByTag(Constants.SERVICE_TAG);
-
-            if (serviceFragment == null) {
-                serviceFragment = new ServiceFragment();
-                fm.beginTransaction().add(serviceFragment, Constants.SERVICE_TAG).commit();
-        }
-        */
-
         // Caching this in MainActivity as it comes up quite a bit.
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();

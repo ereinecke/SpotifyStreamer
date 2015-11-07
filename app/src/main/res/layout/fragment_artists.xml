@@ -20,7 +20,7 @@
         android:editable="true"
         android:singleLine="true"
         android:inputType="textNoSuggestions"
-        android:imeOptions="actionSearch"/>
+        android:imeOptions="actionSearch|normal"/>
 
     <ListView
         android:layout_width="match_parent"

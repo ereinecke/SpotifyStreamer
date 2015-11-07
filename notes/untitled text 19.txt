@@ -1,0 +1,23 @@
+Please go to www.udacity.com/coach/scheduled-chat at the time of your appointment.
+---
+Please fill out this mandatory form at least 10 hours before your appointment! This information helps our coaches prepare and make the most out of your meeting together.
+
+Project: P2 Spotify
+Link to Github: http://github.com/ereinecke/spotifystreamer
+Snippets of code:
+Additional questions for coaches:
+
+I've been stuck for some time on the same problem, and in fact I may be adding more defects in an attempt to fix the problem.  I failed the P2 submission primarily because the app would crash on rotation.  I was given the guidance to add the following to onDestroyView() in PlayerFragment:
+        // Workaround for DialogFragment self-destruct per
+        // https://code.google.com/p/android/issues/detail?id=17423
+        if (getDialog() != null && getRetainInstance())
+            this.getDialog().setOnDismissListener(null); 
+
+Alas, that was not sufficient, but I (much later) figured out that I was using a mix of Fragment and SupportFragments in various modules.  I've corrected that, going for SupportFragments across the board.  I am still getting run-time exceptions on rotation.
+
+It may be rooted in the way I'm trying to persist the PlayerService.  Following the suggestion to wrap the service in a fragment that is persisted so that the Service stays alive, I created ServiceFragment.java, which does just that- it's called at startup, and I've tried binding as well as starting + binding.  The error that gets me is that I have a Leaked ServiceConnection when MainActivity is destroyed and recreated.  If I close the ServiceConnection, the player stops because the service is no longer bound.  The error message gives me the line where the Service Connection is created, but I can't figure out where to catch the exception.  
+
+A second problem that has eluded me (I'm very embarrassed to tell you how many hours I've spent on these problems) is the call to searchSpotifyArtists (an AsyncTask) in FindArtistFragment.  I can see that I've successfully persisted the ArtistsArray through the rotation and shouldn't need to make a network call to get the data, but I do.  I believe I only call that function from the afterTextChangedListener.  I've come to the conclusion that that listener is fired when the existing artist search text is restored,
+so I tried to set the flag newView when savedInstanceState is null, and setting the flag after the first call to searchSpotifyArtists.  I don't know why that search is being triggered, and it breaks the specs.   
+
+Thanks!

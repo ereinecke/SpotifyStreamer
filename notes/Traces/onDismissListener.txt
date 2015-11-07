@@ -1,0 +1,53 @@
+onDismissListener is already taken by DialogFragment and cannot be replaced - 
+Crashes PlayerFragment on rotation
+
+
+-01 08:11:59.629  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ binding PlayerService
+09-01 08:11:59.754  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ in clickPlay(), mPosition: 2
+09-01 08:12:00.035  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 1587812284%; 5292707 msec
+09-01 08:12:02.769  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 183%; 0 msec
+09-01 08:12:03.074  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 418%; 1 msec
+09-01 08:12:03.379  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 731%; 2 msec
+09-01 08:12:03.668  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 1019%; 3 msec
+09-01 08:12:03.972  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 1332%; 4 msec
+09-01 08:12:04.269  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 1620%; 5 msec
+09-01 08:12:04.574  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 1933%; 6 msec
+09-01 08:12:04.957  19171-19171/com.ereinecke.spotifystreamer D/PlayerFragment﹕ setSeekBar to: 2325%; 7 msec
+09-01 08:12:05.050  19171-19171/com.ereinecke.spotifystreamer E/AndroidRuntime﹕ FATAL EXCEPTION: main
+    java.lang.RuntimeException: Unable to destroy activity {com.ereinecke.spotifystreamer/com.ereinecke.spotifystreamer.MainActivity}: java.lang.IllegalStateException: OnDismissListener is already taken by DialogFragment and can not be replaced.
+            at android.app.ActivityThread.performDestroyActivity(ActivityThread.java:3579)
+            at android.app.ActivityThread.handleDestroyActivity(ActivityThread.java:3597)
+            at android.app.ActivityThread.handleRelaunchActivity(ActivityThread.java:3797)
+            at android.app.ActivityThread.access$700(ActivityThread.java:153)
+            at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1253)
+            at android.os.Handler.dispatchMessage(Handler.java:99)
+            at android.os.Looper.loop(Looper.java:137)
+            at android.app.ActivityThread.main(ActivityThread.java:5227)
+            at java.lang.reflect.Method.invokeNative(Native Method)
+            at java.lang.reflect.Method.invoke(Method.java:511)
+            at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:795)
+            at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:562)
+            at dalvik.system.NativeStart.main(Native Method)
+     Caused by: java.lang.IllegalStateException: OnDismissListener is already taken by DialogFragment and can not be replaced.
+            at android.app.Dialog.setOnDismissListener(Dialog.java:1150)
+            at com.ereinecke.spotifystreamer.PlayerFragment.onDestroyView(PlayerFragment.java:95)
+            at android.app.Fragment.performDestroyView(Fragment.java:1893)
+            at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:949)
+            at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1057)
+            at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1039)
+            at android.app.FragmentManagerImpl.dispatchDestroy(FragmentManager.java:1868)
+            at android.app.Activity.performDestroy(Activity.java:5272)
+            at android.app.Instrumentation.callActivityOnDestroy(Instrumentation.java:1110)
+            at android.app.ActivityThread.performDestroyActivity(ActivityThread.java:3566)
+            at android.app.ActivityThread.handleDestroyActivity(ActivityThread.java:3597)
+            at android.app.ActivityThread.handleRelaunchActivity(ActivityThread.java:3797)
+            at android.app.ActivityThread.access$700(ActivityThread.java:153)
+            at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1253)
+            at android.os.Handler.dispatchMessage(Handler.java:99)
+            at android.os.Looper.loop(Looper.java:137)
+            at android.app.ActivityThread.main(ActivityThread.java:5227)
+            at java.lang.reflect.Method.invokeNative(Native Method)
+            at java.lang.reflect.Method.invoke(Method.java:511)
+            at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:795)
+            at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:562)
+            at dalvik.system.NativeStart.main(Native Method)
