@@ -2,9 +2,27 @@
     <string name="app_name" translateable="false" tools:ignore="MissingTranslation">Spotify Streamer</string>
 
     <!-- Action bar strings -->
+    <string name="action_set_location">Set country code</string>
+    <string name="action_notification_controls">Notification Controls</string>
     <string name="action_settings">Settings</string>
-    <!-- Log out of Spotify -->
-    <string name="action_logout">Logout</string>
+    <!-- Log out of Spotify
+    <string name="action_logout">Logout</string> -->
+
+    <!-- Preference strings -->
+    <string name="pref_country_code_key">cc_key</string>
+    <string name="pref_notification_controls_key">not_ctrl_key</string>
+    <string name="pref_notification_lockscreen_key">lockscreen_key</string>
+
+    <string name="pref_country_code">Country Code</string>
+    <string name="pref_country_code_title">Select Country Code</string>
+
+    <string name="pref_notification_controls_drawer">Drawer Notification</string>
+    <string name="pref_notification_controls_lockscreen">Lockscreen Notification</string>
+    <string name="action_set_notification_controls_drawer">Enable drawer notifications</string>
+    <string name="action_set_notification_controls_lockscreen">Enable lockscreen notifications</string>
+
+    <string name="pref_set_notctrl_drawer">NotificationDrawer</string>
+    <string name="pref_set_notctrl_lockscreen">NotificationLockscreen</string>
 
     <!-- Top tracks activity label for action bar -->
     <string name="top_tracks_label">Top 10 Tracks</string>
@@ -35,3 +53,4 @@
     <string name="album_art">Album Art</string>
 
 </resources>
+

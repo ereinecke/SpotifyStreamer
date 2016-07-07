@@ -56,8 +56,6 @@ public class TopTracksActivity extends AppCompatActivity  {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Log.d(LOG_TAG, "adding top_tracks_container");
-//       Fragment topTracksFragment = new TopTracksFragment();
-//       fragmentTransaction.add(R.id.top_tracks_container, topTracksFragment)
         fragmentTransaction.add(R.id.top_tracks_container, new TopTracksFragment())
                                 .commit();
 

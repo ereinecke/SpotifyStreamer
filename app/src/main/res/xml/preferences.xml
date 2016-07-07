@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="@string/pref_country_code_key"
+        android:title="@string/pref_country_code"
+        android:dialogTitle="@string/pref_country_code_title"
+        android:entries="@array/pref_country_code_entries" />
+        android:entryValues="@array/pref_country_code_values"
+        android:defaultValue="@string/pref_syncConnectionTypes_default" />
+
+    <CheckBoxPreference
+        android:key="@string/pref_notification_controls_drawer"
+        android:title="@string/action_set_notification_controls_drawer"
+        android:summary="@string/pref_set_notctrl_drawer"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:key="@string/pref_notification_controls_lockscreen"
+        android:title="@string/action_set_notification_controls_lockscreen"
+        android:summary="@string/pref_set_notctrl_lockscreen"
+        android:defaultValue="true" />
+
+</PreferenceScreen>

@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            // TODO: create SettingsActivity.java
+            // TODO: create SettingsFragment.java
             // startActivity(new Intent(this, SettingsActivity.class));
             // Pop a toast as an interim measure
             Toast.makeText(getApplicationContext(), "Settings not yet implemented",
