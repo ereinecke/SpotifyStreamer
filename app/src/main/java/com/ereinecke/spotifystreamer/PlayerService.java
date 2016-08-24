@@ -150,7 +150,6 @@ import java.util.ArrayList;
             mMediaPlayer.reset();
             initTrack();        // sets up notification, starts foreground service asynchronously
             PlayerFragment.onStartTrack();  // Starts buffering progress spinner
-            ;
         } else {
             Log.d(LOG_TAG, "Attempted to startTrack() when already playing");
         }

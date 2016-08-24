@@ -152,7 +152,7 @@ public class FindArtistFragment extends Fragment {
                     topTracksFragment.setArguments(extras);
 
                     Log.d(LOG_TAG, "replacing top_tracks_container");
-                    fragmentTransaction.replace(R.id.top_tracks_container, (Fragment)topTracksFragment,
+                    fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
                             Constants.TRACKSFRAGMENT_TAG);
                     fragmentTransaction.addToBackStack(Constants.TRACKSFRAGMENT_TAG);
                     fragmentTransaction.commit();

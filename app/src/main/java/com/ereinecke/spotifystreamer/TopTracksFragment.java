@@ -5,6 +5,7 @@
 package com.ereinecke.spotifystreamer;
 
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -74,7 +75,7 @@ public class TopTracksFragment extends Fragment {
         if (countryCode == null) countryCode = Constants.COUNTRY_CODE;
 
         if (MainActivity.isTwoPane()) {
-            // fragment arguments from MainActivity
+            // fragment arguments from FindArtistFragment
             extras = getArguments();
             if (extras == null) {
                 Log.d(LOG_TAG, "in onCreate(): fragment parameters not available.");
@@ -104,6 +105,7 @@ public class TopTracksFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -116,7 +118,7 @@ public class TopTracksFragment extends Fragment {
             trackInfoBundle = savedInstanceState.getBundle(Constants.TRACK_INFO);
             artistId = savedInstanceState.getString(getString(R.string.key_artist_id));
             artistName = savedInstanceState.getString(getString(R.string.key_artist_name));
-            // don't read mTracksListPosition from savedInstanceState
+            // TODO: ?? don't read mTracksListPosition from savedInstanceState
             if (mTracksListPosition == ListView.INVALID_POSITION) {
                 mTracksListPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
             }
@@ -146,6 +148,7 @@ public class TopTracksFragment extends Fragment {
         if (mTracksListPosition >= 0) {
             // mListView.setSelection(mTracksListPosition);
             mListView.setItemChecked(mTracksListPosition, true);
+            // TODO: Scroll list to proper position?
         }
 
         // Create ArrayAdapter using persisted artist data
@@ -172,7 +175,7 @@ public class TopTracksFragment extends Fragment {
         // in TwoPane mode, set header for TopTracksFragment unless artistName not yet defined
         if (MainActivity.isTwoPane()) {
             TextView topTracksHeader = (TextView) rootView.findViewById(R.id.top_tracks_header);
-            if (artistName != null && artistName != "") {
+            if (artistName != null && !artistName.equals("")) {
                 topTracksHeader.setText(getString(R.string.top_tracks_label) + " - " + artistName);
             }
         }
@@ -279,6 +282,7 @@ public class TopTracksFragment extends Fragment {
                 fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
                         Constants.TRACKSFRAGMENT_TAG);
                 fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
                 Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
                         artistName + "\'", Toast.LENGTH_SHORT).show();

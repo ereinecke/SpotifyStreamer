@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:id="@+id/media_player"
     android:layout_width="match_parent"
@@ -86,7 +87,8 @@
                 android:layout_weight="1"
                 android:layout_marginStart="30dp"
                 android:layout_marginLeft="30dp"
-                android:text="0:00" />
+                android:text="0:00"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="0dp"

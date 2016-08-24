@@ -17,7 +17,6 @@
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:gravity="center|start"
         android:hint="@string/search_hint"
-        android:editable="true"
         android:singleLine="true"
         android:inputType="textNoSuggestions"
         android:imeOptions="actionSearch|normal"/>

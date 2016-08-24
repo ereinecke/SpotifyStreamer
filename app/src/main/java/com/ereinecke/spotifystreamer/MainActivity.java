@@ -40,18 +40,14 @@ public class MainActivity extends AppCompatActivity {
         // Expect FindArtistFragment to be statically loaded by activity_main
 
         // Determine if in two-pane mode by testing existence of top_tracks_container
-        if (findViewById(R.id.top_tracks_container) != null) {
-            mTwoPane = true;
-        } else {
-            mTwoPane = false;
-        }
+        mTwoPane = findViewById(R.id.top_tracks_container) != null;
 
         // Caching this in MainActivity as it comes up quite a bit.
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
 
         // Implemented Spotify login, but am not calling it at this point.
-        // spotifyLogin();
+        spotifyLogin();
     }
 
 

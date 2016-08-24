@@ -8,7 +8,8 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     tools:context="com.ereinecke.spotifystreamer.MainActivity"
-    android:elevation="10dp">
+    android:elevation="10dp"
+    tools:ignore="UnusedAttribute">
 
     <!--
     This layout is a two-pane layout for the Items master/detail flow.
@@ -21,7 +22,8 @@
         android:layout_height="match_parent"
         android:layout_weight="3"
         android:elevation="10dp"
-        tools:layout="@android:layout/list_content" />
+        tools:layout="@android:layout/list_content"
+        tools:ignore="UnusedAttribute" />
 
     <FrameLayout
         android:layout_width="2dp"

@@ -1,6 +1,7 @@
 package com.ereinecke.spotifystreamer;
 
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -56,8 +57,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
     }
 
     static PlayerFragment newInstance() {
-        PlayerFragment playerFragment = new PlayerFragment();
-        return playerFragment;
+        return new PlayerFragment();
     }
 
     @Override
@@ -95,6 +95,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         super.onDestroyView();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -201,9 +202,10 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
     }
 
     // Set current track info in the media player
+    @SuppressLint("SetTextI18n")
     private void setTrackInfo (View playerView, ShowTopTracks trackInfo) {
         if (trackInfo != null) {
-            // Log.d(LOG_TAG, "Track Info: " + trackInfo.toString());
+            Log.d(LOG_TAG, "Track Info: " + trackInfo.toString());
 
             // Populate layout fields
             TextView textView = (TextView) playerView.findViewById(R.id.artist_name_textview);
@@ -230,8 +232,8 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
                     .resize(trackArtSize, trackArtSize)
                     .into(trackArt);
         }
-        //
-        // Log.d(LOG_TAG,"PlayerService.getSeek(): " + mPlayerService.getSeek());
+
+        Log.d(LOG_TAG,"PlayerService.getSeek(): " + mPlayerService.getSeek());
         seekBar.setProgress(mPlayerService.getSeek());
     }
 
@@ -333,7 +335,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         }
     }
 
-    public Runnable getSeek = new Runnable() {
+    public final Runnable getSeek = new Runnable() {
         public void run() {
             setSeekBar(mPlayerService.getSeek());
         }
@@ -367,7 +369,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
                     (PlayerService.PlayerBinder) service;
             // get service
             mPlayerService = playerBinder.getService();
-            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService);
+            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService.toString());
             mBound = true;
 
             mPlayerService.setTrackList(topTracksArrayList, mPosition);
@@ -375,7 +377,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             if (!mPlayerService.isPlaying()) {
                 Log.d(LOG_TAG, "in onServiceConnected, isPlaying(): " + mPlayerService.isPlaying());
                 clickPlay();
-            };
+            }
         }
 
         @Override
@@ -389,6 +391,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
     };
 
     // Convert milliseconds to HH:MM:SS string for duration scrubber.  Omit hours if == 0
+    @SuppressLint("DefaultLocale")
     private String millisToMinutes(long millis) {
         String minutesString;
 
