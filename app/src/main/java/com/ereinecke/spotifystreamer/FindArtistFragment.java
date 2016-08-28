@@ -237,7 +237,7 @@ public class FindArtistFragment extends Fragment {
                     mArtistAdapter.notifyDataSetChanged();
                 }
                 if (MainActivity.isTwoPane()) {  // clear out toptracksfragment
-                    // TODO: need to call TopTracksFragment.clearTopTracksFragment
+                    // TODO: need to call TopTracksFragment.clearTopTracksFragment, perhaps via broadcast
                 }
                 return;
             }

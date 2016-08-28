@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "com.ereinecke.spotifystreamer"
@@ -43,5 +43,5 @@ dependencies {
     compile 'com.spotify.sdk:spotify-player:1.0.0-beta9@aar'
 
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 }

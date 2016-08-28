@@ -13,30 +13,50 @@ public class DebugMediaPlayer extends MediaPlayer {
     @Override
     public void start() {
         Log.d(LOG_TAG, "Calling start()");
-        super.start();
+        try {
+            super.start();
+        } catch (Exception e) {
+            Log.d(LOG_TAG, "Exception starting MediaPlayer: " + e.getMessage());
+        }
     }
 
     @Override
     public void stop() {
         Log.d(LOG_TAG, "Calling stop()");
-        super.stop();
+        try {
+            super.stop();
+        } catch (Exception e) {
+            Log.d(LOG_TAG, "Exception stopping MediaPlayer: " + e.getMessage());
+        }
     }
 
     @Override
     public void pause() {
         Log.d(LOG_TAG, "Calling pause()");
-        super.pause();
+        try {
+            super.pause();
+        } catch (Exception e) {
+            Log.d(LOG_TAG, "Exception pausing MediaPlayer: " + e.getMessage());
+        }
     }
 
     @Override
     public void release() {
         Log.d(LOG_TAG, "Calling release()");
-        super.release();
+        try {
+            super.release();
+        } catch (Exception e) {
+            Log.d(LOG_TAG, "Exception releasing MediaPlayer: " + e.getMessage());
+        }
     }
 
     @Override
     public void reset() {
         Log.d(LOG_TAG, "Calling reset()");
-        super.reset();
+        try {
+            super.reset();
+        } catch (Exception e) {
+            Log.d(LOG_TAG, "Exception releasing MediaPlayer: " + e.getMessage());
+        }
     }
 }

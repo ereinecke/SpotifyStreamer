@@ -70,7 +70,7 @@ public class TopTracksFragment extends Fragment {
 
         // setRetainInstance(true);
 
-        countryCode =  MainActivity.getUserCountry();
+        countryCode = MainActivity.getUserCountry();
         Log.d(LOG_TAG, "in onCreate(), Country Code: " + countryCode);
         if (countryCode == null) countryCode = Constants.COUNTRY_CODE;
 
@@ -98,10 +98,10 @@ public class TopTracksFragment extends Fragment {
             // TODO: need to clear list programmatically, when search text changes but doesn't trigger a search
             Log.d(LOG_TAG, "onCreate: no extras available, blank topTracksFragment");
 
-        changeTrackReceiver = new ChangeTrackReceiver();
-        IntentFilter intentFilter = new IntentFilter(Constants.LIST_POSITION_KEY);
-        getActivity().registerReceiver(changeTrackReceiver, intentFilter);
-        Log.d(LOG_TAG, "in onCreate(), registering changeTrackReceiver");
+            changeTrackReceiver = new ChangeTrackReceiver();
+            IntentFilter intentFilter = new IntentFilter(Constants.LIST_POSITION_KEY);
+            getActivity().registerReceiver(changeTrackReceiver, intentFilter);
+            Log.d(LOG_TAG, "in onCreate(), registering changeTrackReceiver");
         }
     }
 
@@ -114,6 +114,7 @@ public class TopTracksFragment extends Fragment {
 
         // TODO: need to account for change in mTracksListPosition due to Prev/Next/onCompletion.
         if (savedInstanceState != null) {
+
             topTracksArray = savedInstanceState.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
             trackInfoBundle = savedInstanceState.getBundle(Constants.TRACK_INFO);
             artistId = savedInstanceState.getString(getString(R.string.key_artist_id));
@@ -123,6 +124,7 @@ public class TopTracksFragment extends Fragment {
                 mTracksListPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
             }
         } else {   // read from intent, launched by TopTracksActivity
+
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras == null) {  // don't use intent, must be TwoPane. Read fragment arguments.
                 extras = this.getArguments();
@@ -138,10 +140,12 @@ public class TopTracksFragment extends Fragment {
                 topTracksArray = extras.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
                 mTracksListPosition = extras.getInt(Constants.TOP_TRACKS_POSITION);
             }
-            if (topTracksArray == null) { // should only happen in TwoPane mode; blank fragment
-                topTracksArray = new ArrayList<>();
-                mTracksListPosition = ListView.INVALID_POSITION;
-            }
+        }
+
+        if (topTracksArray == null) { // should only happen in TwoPane mode; blank fragment
+            topTracksArray = new ArrayList<>();
+            mTracksListPosition = ListView.INVALID_POSITION;
+        }
 
         // Get a reference to the ListView and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.list_item_top_tracks_display);
@@ -165,7 +169,8 @@ public class TopTracksFragment extends Fragment {
                 mTracksListPosition = position;
                 Log.d(LOG_TAG, "item #" + mTracksListPosition + " clicked");
                 if (mTracksListPosition >= 0 && (mTracksListPosition < topTracksArray.size())) {
-                    showMediaPlayer(topTracksArray, mTracksListPosition);
+                    // Last parameter true means stop player before starting
+                    showMediaPlayer(topTracksArray, mTracksListPosition, true);
                 } else {
                     throw new IllegalArgumentException();
                 }
@@ -180,15 +185,14 @@ public class TopTracksFragment extends Fragment {
             }
         }
 
-            // Get top tracks list from Spotify in background task
-            // This should only happen if topTracksArray is null or empty
-            if (topTracksArray != null || topTracksArray.size() > 0) {
-                FetchTopTracks spotifyData = new FetchTopTracks();
-                if (artistId != null && artistId != "") {
-                    spotifyData.execute(artistId);
-                } else {
-                    Log.d(LOG_TAG, "Set up blank TopTracksFragment with artistId null");
-                }
+        // Get top tracks list from Spotify in background task
+        // This should only happen if topTracksArray is null or empty
+        if (topTracksArray != null || topTracksArray.size() > 0) {
+            FetchTopTracks spotifyData = new FetchTopTracks();
+            if (artistId != null && artistId != "") {
+                spotifyData.execute(artistId);
+            } else {
+                Log.d(LOG_TAG, "Set up blank TopTracksFragment with artistId null");
             }
         }
         return rootView;
@@ -217,7 +221,6 @@ public class TopTracksFragment extends Fragment {
         super.onPause();
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -226,6 +229,20 @@ public class TopTracksFragment extends Fragment {
         outState.putBundle(Constants.TRACK_INFO, trackInfoBundle);
         outState.putString(getString(R.string.key_artist_id), artistId);
         outState.putString(getString(R.string.key_artist_name), artistName);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle outState) {
+
+        super.onActivityCreated(outState);
+
+        if (outState != null) {
+            topTracksArray = outState.getParcelableArrayList(Constants.TOP_TRACKS_ARRAY);
+            mTracksListPosition = outState.getInt(Constants.TOP_TRACKS_POSITION);
+            trackInfoBundle = outState.getBundle(Constants.TRACK_INFO);
+            artistId = outState.getString(getString(R.string.key_artist_id));
+            artistName = outState.getString(getString(R.string.key_artist_name));
+        }
     }
 
     /**
@@ -332,11 +349,27 @@ public class TopTracksFragment extends Fragment {
         } // end searchSpotifyData.onPostExecute
     }
 
-    private void showMediaPlayer(ArrayList<ShowTopTracks> topTracksArray, int mPosition) {
+
+    /* Brings up PlayerActivity or PlayerFragment as appropriate.  If called with a null
+     * topTracksArray, then just bring player forward showing what is currently playing.
+     */
+    private void showMediaPlayer() {
+        showMediaPlayer(null, Constants.USE_CURRENT, false);
+    }
+
+    private void showMediaPlayer(ArrayList<ShowTopTracks> topTracksArray, int mPosition,
+                                 boolean newTrack) {
 
         trackInfoBundle = new Bundle();
+        if (topTracksArray == null) {
+            trackInfoBundle.putInt(Constants.TOP_TRACKS_POSITION, Constants.USE_CURRENT);
+
+        } else {
+            trackInfoBundle.putInt(Constants.TOP_TRACKS_POSITION, mPosition);
+        }
         trackInfoBundle.putParcelableArrayList(Constants.TRACK_INFO, topTracksArray);
-        trackInfoBundle.putInt(Constants.TOP_TRACKS_POSITION, mPosition);
+        trackInfoBundle.putBoolean(Constants.NEW_TRACK, newTrack);
+
 
         if (MainActivity.isTwoPane()) {             // start player fragment
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -352,7 +385,6 @@ public class TopTracksFragment extends Fragment {
             newPlayerFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             newPlayerFragment.setShowsDialog(true);
             newPlayerFragment.show(ft, Constants.PLAYERFRAGMENT_TAG);
-//            ft.show(newPlayerFragment);
 
         } else {                                    // start player activity
             Intent intent = new Intent(getActivity(), PlayerActivity.class);

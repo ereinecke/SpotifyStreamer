@@ -13,6 +13,7 @@ class Constants {
     public static final String FINDARTISTFRAGMENT_TAG = "FAFTAG";
     public static final String TRACKSFRAGMENT_TAG = "DFTAG";
     public static final String PLAYERFRAGMENT_TAG = "PLYFTAG";
+    public static final String SERVICEFRAGMENT_TAG = "SFFTAG";
 
     // Service actions
     public static final String MAIN_ACTION = "com.ereinecke.spotifystreamer.main";
@@ -40,6 +41,8 @@ class Constants {
     public static final String TOP_TRACKS_POSITION = "TopTracksPosition";
     public static final String COUNTRY_CODE = "MX"; // fallback country code
     public static final String LIST_POSITION_KEY = "ListPositionKey";
+    public static final String NEW_TRACK = "NewTrack";
+    public static final int    USE_CURRENT = -1;
 
     // PlayerActivity
     public static final String SERVICE_BOUND = "ServiceBound";

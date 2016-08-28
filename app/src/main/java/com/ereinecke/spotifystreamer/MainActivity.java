@@ -1,9 +1,12 @@
 package com.ereinecke.spotifystreamer;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static String countryCode;
     private static String accessToken = null;
     public static  String accessToken() {return accessToken;}
+
     private static Bitmap placeholderImage;
     private boolean sfmBound;
 
@@ -39,6 +43,16 @@ public class MainActivity extends AppCompatActivity {
 
         // Expect FindArtistFragment to be statically loaded by activity_main
 
+        // ServiceFragment exists to keep bound to MediaPlayer, should just be started once.
+        FragmentManager fm = getSupportFragmentManager();
+        ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
+        if (serviceFragment == null) {
+            serviceFragment = new ServiceFragment();
+            // serviceFragment.setTargetFragment(this, 0);
+            fm.beginTransaction().add(serviceFragment, Constants.SERVICEFRAGMENT_TAG)
+                .commit();
+        }
+
         // Determine if in two-pane mode by testing existence of top_tracks_container
         mTwoPane = findViewById(R.id.top_tracks_container) != null;
 
@@ -47,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
 
         // Implemented Spotify login, but am not calling it at this point.
-        spotifyLogin();
+        // spotifyLogin();
     }
 
 
@@ -92,6 +106,20 @@ public class MainActivity extends AppCompatActivity {
             AuthenticationClient.logout(this);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /* used to tell if PlayerService is running.  This needs to be implemented in PlayerActivity as
+     * well.
+     */
+    public boolean isPlayerServiceRunning() {
+
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (service.service.getClassName().equals("PlayerService")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -154,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
         return mTwoPane;
     }
 
-    // TODO: Not sure this is used
     public void setTopTracksPosition(int pos) {
         TopTracksFragment topTracksFragment = (TopTracksFragment) getSupportFragmentManager()
                 .findFragmentByTag(Constants.TRACKSFRAGMENT_TAG);

@@ -27,6 +27,8 @@ public class ServiceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Important: this keeps this non-ui fragment alive through display reconfigurations;
+        // PlayerService is bound here
         setRetainInstance(true);
 
         if (!mBound) {
@@ -66,7 +68,12 @@ public class ServiceFragment extends Fragment {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.d(LOG_TAG,"in onServiceDisconnected()");
+            mPlayerService = null;
             mBound = false;
         }
     };
+
+    public PlayerService getPlayerService() {
+        return mPlayerService;
+    }
 }

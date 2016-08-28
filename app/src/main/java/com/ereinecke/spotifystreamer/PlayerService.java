@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
@@ -61,6 +62,10 @@ import java.util.ArrayList;
 
         Log.d(LOG_TAG, "Setting up new track, mPosition: " + mPosition);
         logMediaPlayerState();
+
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+        }
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Constants.MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -113,6 +118,7 @@ import java.util.ArrayList;
             setNotification(trackAlbumArt);
             if (!PlayerService.isPlaying()) {
                 startForegroundService();
+
                 mMediaPlayer.prepareAsync();
             }
         }
@@ -241,7 +247,10 @@ import java.util.ArrayList;
             // get seek position and continue to update
             setSeek(getSeek());
         }
+        // Trigger a UI update
 
+        // Connect to PlayerFragment
+        // TODO: Send a broadcast to PlayerFragment to ensure UI is in sync with what's playing
     }
 
     public void stopForegroundService() {
@@ -270,6 +279,15 @@ import java.util.ArrayList;
         mPosition = position;
         this.topTracksArrayList = topTracksArrayList;
         currentTrack = topTracksArrayList.get(mPosition);
+    }
+
+    /* For when a newly created PlayerFragment needs to know what's playing */
+    public Bundle getTrackList() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.CURRENT_TRACK_KEY, mPosition);
+        bundle.putParcelableArrayList(Constants.TOP_TRACKS_ARRAY, topTracksArrayList);
+
+        return bundle;
     }
 
     public static int getSeek() {
@@ -320,7 +338,11 @@ import java.util.ArrayList;
     @Override
     public void onCompletion(MediaPlayer player) {
         trackReady = false;
-        nextTrack();
+        if (mMediaPlayer != null) {
+            // Tell PlayerFragment to update UI
+            PlayerFragment.updateTrackInfo(mPosition);
+            nextTrack();
+        }
     }
 
     // Tells MainActivity to change TopTracks selection position

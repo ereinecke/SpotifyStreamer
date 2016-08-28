@@ -26,7 +26,6 @@
         <string name="pause">Pausar</string>
         <string name="next">Próximo</string>
         <string name="album_art">Imagen del Álbum</string>
-        <string name="action_set_location" translatable="false">Configuración del código nacional</string>
         <string name="action_notification_controls">Controles de notificación</string>
 
 </resources>
