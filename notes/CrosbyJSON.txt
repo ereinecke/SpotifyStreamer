@@ -1,0 +1,589 @@
+# response to https://api.spotify.com/v1/search?type=artist&q=crosby
+
+{
+"artists": {
+"href": "https://api.spotify.com/v1/search?query=crosby&offset=0&limit=20&type=artist",
+"items": [
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/2pdvghEHZJtgSXZ7cvNLou"
+},
+"followers": {
+"href": null,
+"total": 106685
+},
+"genres": [
+"country rock",
+"folk rock"
+],
+"href": "https://api.spotify.com/v1/artists/2pdvghEHZJtgSXZ7cvNLou",
+"id": "2pdvghEHZJtgSXZ7cvNLou",
+"images": [
+{
+"height": 619,
+"url": "https://i.scdn.co/image/b9c086901cca94cab20e8fcdc35bd79c7b39526a",
+"width": 999
+},
+{
+"height": 396,
+"url": "https://i.scdn.co/image/7d26d42a2969e495d8917b077501e02fca5da5e0",
+"width": 639
+},
+{
+"height": 124,
+"url": "https://i.scdn.co/image/8ee7e65ec865603c08b0f6af1eeb0dc944d7872d",
+"width": 200
+},
+{
+"height": 40,
+"url": "https://i.scdn.co/image/f10a24a75fe763187b870479c4c2df81ce2923f8",
+"width": 64
+}
+],
+"name": "Crosby, Stills & Nash",
+"popularity": 56,
+"type": "artist",
+"uri": "spotify:artist:2pdvghEHZJtgSXZ7cvNLou"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/1CYsQCypByMVgnv17qsSbQ"
+},
+"followers": {
+"href": null,
+"total": 65736
+},
+"genres": [
+"folk rock"
+],
+"href": "https://api.spotify.com/v1/artists/1CYsQCypByMVgnv17qsSbQ",
+"id": "1CYsQCypByMVgnv17qsSbQ",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/66c24dee5d65905dfc3162670cc9fb760bd6653b",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/c28814938002a5c6916d54242e0f19b7f5adf470",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/3aed297a4612824fef31ed349f229b08f84e8dcd",
+"width": 64
+}
+],
+"name": "Crosby, Stills, Nash & Young",
+"popularity": 56,
+"type": "artist",
+"uri": "spotify:artist:1CYsQCypByMVgnv17qsSbQ"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/6ZjFtWeHP9XN7FeKSUe80S"
+},
+"followers": {
+"href": null,
+"total": 105351
+},
+"genres": [
+"adult standards",
+"christmas"
+],
+"href": "https://api.spotify.com/v1/artists/6ZjFtWeHP9XN7FeKSUe80S",
+"id": "6ZjFtWeHP9XN7FeKSUe80S",
+"images": [
+{
+"height": 1254,
+"url": "https://i.scdn.co/image/bce578f0f9138f68d8868b1b7c0a2b11bffaab78",
+"width": 1000
+},
+{
+"height": 803,
+"url": "https://i.scdn.co/image/083c655da228527891e8d8e1c638c6a378303cad",
+"width": 640
+},
+{
+"height": 251,
+"url": "https://i.scdn.co/image/f2ef71ea0e958b98581de2aaf5e832e70df57234",
+"width": 200
+},
+{
+"height": 80,
+"url": "https://i.scdn.co/image/90262a725cedeb0d927f79a11334683dcb391e76",
+"width": 64
+}
+],
+"name": "Bing Crosby",
+"popularity": 52,
+"type": "artist",
+"uri": "spotify:artist:6ZjFtWeHP9XN7FeKSUe80S"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/1EE8fj8itdenD88iAylcYh"
+},
+"followers": {
+"href": null,
+"total": 1172
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/1EE8fj8itdenD88iAylcYh",
+"id": "1EE8fj8itdenD88iAylcYh",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/421f000de9cc1340736001bdc72a9fa102a1cd76",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/6018e22c40978b5bec6fbe5666e1cbc401927a5f",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/c61deccf83b9d7f5d26cdacf4b13aae2747debc6",
+"width": 64
+}
+],
+"name": "Bob Crosby & The Bob Cats",
+"popularity": 41,
+"type": "artist",
+"uri": "spotify:artist:1EE8fj8itdenD88iAylcYh"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/59zdhVoWxSoHMc74n098Re"
+},
+"followers": {
+"href": null,
+"total": 11340
+},
+"genres": [
+"folk rock"
+],
+"href": "https://api.spotify.com/v1/artists/59zdhVoWxSoHMc74n098Re",
+"id": "59zdhVoWxSoHMc74n098Re",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/00b6b6eed8deb5ccd19a94dad98d1dba7ed59d17",
+"width": 640
+},
+{
+"height": 320,
+"url": "https://i.scdn.co/image/d5a6be0b4460abc1c41065cc58fdfba36d940322",
+"width": 320
+},
+{
+"height": 160,
+"url": "https://i.scdn.co/image/cadf0644f288f64caf42e51a002cdaebcf53d09d",
+"width": 160
+}
+],
+"name": "David Crosby",
+"popularity": 43,
+"type": "artist",
+"uri": "spotify:artist:59zdhVoWxSoHMc74n098Re"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/2GGam1I3xwhmR0FiarvIsD"
+},
+"followers": {
+"href": null,
+"total": 37
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/2GGam1I3xwhmR0FiarvIsD",
+"id": "2GGam1I3xwhmR0FiarvIsD",
+"images": [],
+"name": "Kim Crosby",
+"popularity": 32,
+"type": "artist",
+"uri": "spotify:artist:2GGam1I3xwhmR0FiarvIsD"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/1MN2HKoliHEaJvDyf2SDVG"
+},
+"followers": {
+"href": null,
+"total": 20
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/1MN2HKoliHEaJvDyf2SDVG",
+"id": "1MN2HKoliHEaJvDyf2SDVG",
+"images": [],
+"name": "Jason Crosby",
+"popularity": 31,
+"type": "artist",
+"uri": "spotify:artist:1MN2HKoliHEaJvDyf2SDVG"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/2mDlls63YpRsMjgpyXxyu6"
+},
+"followers": {
+"href": null,
+"total": 3644
+},
+"genres": [
+"folk rock"
+],
+"href": "https://api.spotify.com/v1/artists/2mDlls63YpRsMjgpyXxyu6",
+"id": "2mDlls63YpRsMjgpyXxyu6",
+"images": [
+{
+"height": 1243,
+"url": "https://i.scdn.co/image/7f263cf8a1a75b6274169f8c0b56da2d903584f2",
+"width": 1000
+},
+{
+"height": 795,
+"url": "https://i.scdn.co/image/def67d1bd370a332888c7a0ce883d2e763a03c67",
+"width": 640
+},
+{
+"height": 249,
+"url": "https://i.scdn.co/image/68783ff672daf95859a05828e7683ca03e300a37",
+"width": 200
+},
+{
+"height": 80,
+"url": "https://i.scdn.co/image/e7d29ac4891d9647c597f43e83efbf1013f744a3",
+"width": 64
+}
+],
+"name": "Crosby & Nash",
+"popularity": 37,
+"type": "artist",
+"uri": "spotify:artist:2mDlls63YpRsMjgpyXxyu6"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/08vqoIPzUKFbYWJLfwiz8a"
+},
+"followers": {
+"href": null,
+"total": 135
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/08vqoIPzUKFbYWJLfwiz8a",
+"id": "08vqoIPzUKFbYWJLfwiz8a",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/fb2895afe84885dbe7f2b602877de17c79e1eca8",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/8945fd0981c6d1c868bd8d14abd47374ff508c16",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/2ca850e2398384c7120a03669490c10dbd8f4437",
+"width": 64
+}
+],
+"name": "James Wyatt Crosby",
+"popularity": 23,
+"type": "artist",
+"uri": "spotify:artist:08vqoIPzUKFbYWJLfwiz8a"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/0Ah1dddhPFov0Wgx3JTrTc"
+},
+"followers": {
+"href": null,
+"total": 724
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/0Ah1dddhPFov0Wgx3JTrTc",
+"id": "0Ah1dddhPFov0Wgx3JTrTc",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/6f328fab5600b75fb1f7f77d9d747cf30d2695e5",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/5e6e06fbe4ae83347f1db1b51eb1f753130d7561",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/afda0fe2a807301332993c03f9c37f77247f1e8e",
+"width": 64
+}
+],
+"name": "Caitlin Crosby",
+"popularity": 20,
+"type": "artist",
+"uri": "spotify:artist:0Ah1dddhPFov0Wgx3JTrTc"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/1f708zcisEeFNzcCUTHEgh"
+},
+"followers": {
+"href": null,
+"total": 523
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/1f708zcisEeFNzcCUTHEgh",
+"id": "1f708zcisEeFNzcCUTHEgh",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/033e31d3cb20ca7ed7d0f8417ff936561e068b65",
+"width": 640
+},
+{
+"height": 320,
+"url": "https://i.scdn.co/image/973f31eecdcdf90ff5845a7b36bcca88f6719a7b",
+"width": 320
+},
+{
+"height": 160,
+"url": "https://i.scdn.co/image/498ea31d203d4c5e3b5aea84a8c82456b9828b53",
+"width": 160
+}
+],
+"name": "Jeff Crosby",
+"popularity": 18,
+"type": "artist",
+"uri": "spotify:artist:1f708zcisEeFNzcCUTHEgh"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/6wUL6C3zRBBf4N0QwYdws4"
+},
+"followers": {
+"href": null,
+"total": 250
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/6wUL6C3zRBBf4N0QwYdws4",
+"id": "6wUL6C3zRBBf4N0QwYdws4",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/58cb0f4b23ccc5453e887935e23347fd4b0e7063",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/cc45cc8478a0536e19881398f1c1eed718994eea",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/c26523a101ef053d9ef48c068577efc6979b73f7",
+"width": 64
+}
+],
+"name": "Bob Crosby & His Orchestra",
+"popularity": 21,
+"type": "artist",
+"uri": "spotify:artist:6wUL6C3zRBBf4N0QwYdws4"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/6N6bWTUzNNtmgbdM50WKAu"
+},
+"followers": {
+"href": null,
+"total": 54
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/6N6bWTUzNNtmgbdM50WKAu",
+"id": "6N6bWTUzNNtmgbdM50WKAu",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/7e6b1843bbee8215673eeaada7aab98bd47afd91",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/fe20e583244e7b941eb3bafcf370c3a3caa8e194",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/1f9d654162bfcc824f993a368c7e88fb53aa776b",
+"width": 64
+}
+],
+"name": "Gary Crosby",
+"popularity": 21,
+"type": "artist",
+"uri": "spotify:artist:6N6bWTUzNNtmgbdM50WKAu"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/3jZr4k7qTAs5FZH4tLOk2m"
+},
+"followers": {
+"href": null,
+"total": 19
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/3jZr4k7qTAs5FZH4tLOk2m",
+"id": "3jZr4k7qTAs5FZH4tLOk2m",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/65655c10dbd832862f4ef295f8109928505c339a",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/20d4ff72e35e9a5473533a3e567739dedac40fd8",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/02d5ac6ce9269b169b8ac3f0bb23bc8f3647c036",
+"width": 64
+}
+],
+"name": "Crosby",
+"popularity": 19,
+"type": "artist",
+"uri": "spotify:artist:3jZr4k7qTAs5FZH4tLOk2m"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/3QtY8pwaVGGIpbRLJNiSuj"
+},
+"followers": {
+"href": null,
+"total": 146
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/3QtY8pwaVGGIpbRLJNiSuj",
+"id": "3QtY8pwaVGGIpbRLJNiSuj",
+"images": [],
+"name": "Paul Simon With David Crosby And Graham Nash",
+"popularity": 13,
+"type": "artist",
+"uri": "spotify:artist:3QtY8pwaVGGIpbRLJNiSuj"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/5lP4FZO4ThhC9glGDwlgrV"
+},
+"followers": {
+"href": null,
+"total": 536
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/5lP4FZO4ThhC9glGDwlgrV",
+"id": "5lP4FZO4ThhC9glGDwlgrV",
+"images": [
+{
+"height": 640,
+"url": "https://i.scdn.co/image/8a6659af7d72226226b79066f0763b4ea61a639d",
+"width": 640
+},
+{
+"height": 300,
+"url": "https://i.scdn.co/image/b8e39d5984e666d516961aeee60845ead85eed93",
+"width": 300
+},
+{
+"height": 64,
+"url": "https://i.scdn.co/image/c6b07947599b52aaccc83c978be824bc472264e2",
+"width": 64
+}
+],
+"name": "Bob Crosby",
+"popularity": 22,
+"type": "artist",
+"uri": "spotify:artist:5lP4FZO4ThhC9glGDwlgrV"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/2UC7aOsf3Hqw65342HArUu"
+},
+"followers": {
+"href": null,
+"total": 19
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/2UC7aOsf3Hqw65342HArUu",
+"id": "2UC7aOsf3Hqw65342HArUu",
+"images": [],
+"name": "Israel Crosby",
+"popularity": 14,
+"type": "artist",
+"uri": "spotify:artist:2UC7aOsf3Hqw65342HArUu"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/4FnW44ieNWue11GFhJTibm"
+},
+"followers": {
+"href": null,
+"total": 15
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/4FnW44ieNWue11GFhJTibm",
+"id": "4FnW44ieNWue11GFhJTibm",
+"images": [],
+"name": "Dixie Lee Crosby",
+"popularity": 12,
+"type": "artist",
+"uri": "spotify:artist:4FnW44ieNWue11GFhJTibm"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/5NYjaxy8h1ukoKqB6qNdJo"
+},
+"followers": {
+"href": null,
+"total": 339
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/5NYjaxy8h1ukoKqB6qNdJo",
+"id": "5NYjaxy8h1ukoKqB6qNdJo",
+"images": [],
+"name": "Crosby, Stills & Nash With Jackson Browne",
+"popularity": 9,
+"type": "artist",
+"uri": "spotify:artist:5NYjaxy8h1ukoKqB6qNdJo"
+},
+{
+"external_urls": {
+"spotify": "https://open.spotify.com/artist/6htnmY9pwmNQ70HC7uAvya"
+},
+"followers": {
+"href": null,
+"total": 63
+},
+"genres": [],
+"href": "https://api.spotify.com/v1/artists/6htnmY9pwmNQ70HC7uAvya",
+"id": "6htnmY9pwmNQ70HC7uAvya",
+"images": [],
+"name": "Justin Crosby",
+"popularity": 14,
+"type": "artist",
+"uri": "spotify:artist:6htnmY9pwmNQ70HC7uAvya"
+}
+],
+"limit": 20,
+"next": "https://api.spotify.com/v1/search?query=crosby&offset=20&limit=20&type=artist",
+"offset": 0,
+"previous": null,
+"total": 176
+}
+}
