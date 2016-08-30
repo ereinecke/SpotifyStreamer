@@ -10,12 +10,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,18 +21,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyError;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.Tracks;
-import retrofit.RetrofitError;
 
 /**
  * TopTenFragment displays top ten tracks for a selected artist.
@@ -67,8 +56,6 @@ public class TopTracksFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras;
-
-        // setRetainInstance(true);
 
         countryCode = MainActivity.getUserCountry();
         Log.d(LOG_TAG, "in onCreate(), Country Code: " + countryCode);
@@ -188,10 +175,12 @@ public class TopTracksFragment extends Fragment {
         // Get top tracks list from Spotify in background task
         // This should only happen if topTracksArray is null or empty
         if (topTracksArray != null || topTracksArray.size() > 0) {
-            FetchTopTracks spotifyData = new FetchTopTracks();
+            FetchTopTracks spotifyData = new FetchTopTracks(artistName, topTracksArray,
+                    mListView, this, mSpotifyApi);
             if (artistId != null && artistId != "") {
                 spotifyData.execute(artistId);
             } else {
+                clearTopTracksFragment();
                 Log.d(LOG_TAG, "Set up blank TopTracksFragment with artistId null");
             }
         }
@@ -243,110 +232,6 @@ public class TopTracksFragment extends Fragment {
             artistId = outState.getString(getString(R.string.key_artist_id));
             artistName = outState.getString(getString(R.string.key_artist_name));
         }
-    }
-
-    /**
-     * FetchTopTracks is an AsyncTask to fetch the Top 10 Tracks for an artist from Spotify.
-     * A List of Track is passed to onPostExecute to populate the ListArray
-     * tracksArray
-     */
-    public class FetchTopTracks extends AsyncTask<String, Void, Tracks> {
-
-        private final String LOG_TAG = FetchTopTracks.class.getSimpleName();
-
-        @Override
-        protected Tracks doInBackground(String... params) {
-            String artistId;
-            if (params.length == 0) {
-                return null;
-            } else {
-                artistId = params[0];
-            }
-
-            SpotifyService spotify = mSpotifyApi.getService();
-            Map<String, Object> country = new HashMap<>();
-            country.put("country", countryCode);
-            Log.d(LOG_TAG, "artistId: " + artistId);
-            Tracks tracks;
-            try {
-                tracks = spotify.getArtistTopTrack(artistId, country);
-                Log.d(LOG_TAG, tracks.toString());
-            } catch (RetrofitError error) {
-                SpotifyError spotifyError = SpotifyError.fromRetrofitError(error);
-                Log.d(LOG_TAG, "spotifyError: " + spotifyError.toString());
-                tracks = null; // redundant?
-            }
-            return tracks;
-        } // end searchSpotifyData.doInBackground
-
-        @Override
-        protected void onPostExecute(Tracks tracks) {
-            Bitmap trackAlbumArt;
-
-            if (tracks == null || tracks.tracks.isEmpty()) {
-                // Start a blank TopTracksFragment
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                Bundle extras = new Bundle();
-                extras.putString(getString(R.string.key_artist_name), "");
-                extras.putString(getString(R.string.key_artist_id), "");
-
-                TopTracksFragment topTracksFragment = new TopTracksFragment();
-                topTracksFragment.setArguments(extras);
-
-                Log.d(LOG_TAG, "replacing top_tracks_container");
-                fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
-                        Constants.TRACKSFRAGMENT_TAG);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-                Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
-                        artistName + "\'", Toast.LENGTH_SHORT).show();
-                Log.d(LOG_TAG, "Tracks is null");
-                return;
-            }
-
-            // Populate ListArray here
-            topTracksArray.clear();
-            for (Track track : tracks.tracks) {
-                // AAARGGHHH!  Can't use external urls with MediaPlayer. Stuck with previews for now.
-                // String trackUrl = track.external_urls.get("spotify");
-                String trackUrl = track.preview_url;
-                long trackLength = track.duration_ms;
-                final String imageUrl;
-                // The image is pulled from the album the track is from
-                // Don't like this approach; we have to download track art twice, here
-                // and when populating the adapter.
-                if (track.album.images.size() > 0) {
-                    imageUrl = track.album.images.get(1).url;
-                } else {
-                    imageUrl = Constants.NO_IMAGE;
-                    trackAlbumArt = MainActivity.getPlaceholderImage();
-                }
-                ShowTopTracks showTopTracks = new ShowTopTracks(track.name, track.album.name,
-                        artistName, track.id, imageUrl, trackUrl, trackLength);
-                        // artistName, track.id, imageUrl, trackUrl, trackLength, trackAlbumArt);
-                topTracksArray.add(showTopTracks);
-                Log.d(LOG_TAG, " Track List: " + showTopTracks.toString());
-            }
-            Context context = getActivity();
-            while (context == null) {
-                // NOTE: not sure if this is a good approach
-                try {
-                    wait(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                context = getActivity();
-            }
-
-            // Create ArrayAdapter artist data
-            mTopTracksAdapter = new TopTracksAdapter(getActivity(), topTracksArray);
-            mListView.setAdapter(mTopTracksAdapter);
-
-        } // end searchSpotifyData.onPostExecute
     }
 
 
