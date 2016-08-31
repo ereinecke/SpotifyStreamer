@@ -43,6 +43,7 @@ public class TopTracksFragment extends Fragment {
     private static int mTracksListPosition = ListView.INVALID_POSITION;
     private String artistName;
     private String artistId;
+    private View rootView;
 
     private ArrayList<ShowTopTracks> topTracksArray = new ArrayList<>();
     private TopTracksAdapter mTopTracksAdapter;
@@ -97,7 +98,7 @@ public class TopTracksFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
+        rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
 
         // TODO: need to account for change in mTracksListPosition due to Prev/Next/onCompletion.
         if (savedInstanceState != null) {
@@ -316,8 +317,10 @@ public class TopTracksFragment extends Fragment {
     // Clear all data from TopTracksFragment, used when artist search gets no hits
     public void clearTopTracksFragment() {
 
-        TextView topTracksHeader = (TextView) getView().findViewById(R.id.top_tracks_header);
-        topTracksHeader.setText("");
+        if (MainActivity.isTwoPane()) {
+            TextView topTracksHeader = (TextView) rootView.findViewById(R.id.top_tracks_header);
+            topTracksHeader.setText("");
+        }
 
         mTopTracksAdapter = new TopTracksAdapter(getActivity(), new ArrayList<ShowTopTracks>());
         mListView.setAdapter(mTopTracksAdapter);

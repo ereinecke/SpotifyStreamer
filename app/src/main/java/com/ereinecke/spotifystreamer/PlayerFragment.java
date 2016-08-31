@@ -66,6 +66,20 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Connect to ServiceFragment to get mPlayerService
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
+        if (serviceFragment == null) {
+            // Hopefully won't start second PlayerService, shouldn't happen
+            serviceFragment = new ServiceFragment();
+            fm.beginTransaction().add(serviceFragment, Constants.SERVICEFRAGMENT_TAG).commit();
+        }
+
+        // mPlayerService = serviceFragment.getPlayerService();
+        Intent playIntent = new Intent(getActivity(), PlayerService.class);
+        getActivity().bindService(playIntent, mConnection,
+                    Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
+
         setHasOptionsMenu(true);
     }
 
@@ -83,7 +97,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            mBound = false;
+            // mBound = false;
         }
         super.onDestroy();
     }
@@ -103,43 +117,20 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
                              Bundle savedInstanceState) {
         Bundle trackInfoBundle;
 
-        // Bind to running service or start a bound service.  This will happen asynchronously,
-        // completing in mConnections's onServiceConnected()
-        if (!mBound) {
-            Log.d(LOG_TAG, "binding PlayerService");
-            playIntent = new Intent(getActivity(), PlayerService.class);
-            getActivity().bindService(playIntent, mConnection,
-                    Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
-        } else {
-            // Connect to ServiceFragment to get mPlayerService
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
-            if (serviceFragment == null) {
-                serviceFragment = new ServiceFragment();
-                // serviceFragment.setTargetFragment(this, 0);
-                fm.beginTransaction().add(serviceFragment, Constants.SERVICEFRAGMENT_TAG)
-                        .commit();
-                mPlayerService = serviceFragment.getPlayerService();
-                mBound = true;
-            }
-        }
-
+        // Get track list from savedInstanceState or TopTracksFragment
         if (savedInstanceState != null) {
             Log.d(LOG_TAG, "in onCreateView, restoring savedInstanceState");
             topTracksArrayList = savedInstanceState.getParcelableArrayList(Constants.TRACK_INFO);
             mPosition = savedInstanceState.getInt(Constants.TOP_TRACKS_POSITION);
-            // Do I need to restore mBound?
-            mBound = savedInstanceState.getBoolean(Constants.SERVICE_BOUND);
             newTrack = false;
         } else {
             // Get track list from TopTracksFragment
-            // TODO: Need a case to get track list from the Player?
             trackInfoBundle = TopTracksFragment.getTrackInfo();
             topTracksArrayList = trackInfoBundle.getParcelableArrayList(Constants.TRACK_INFO);
             mPosition = trackInfoBundle.getInt(Constants.TOP_TRACKS_POSITION);
-            trackInfo = topTracksArrayList.get(mPosition);
             newTrack = trackInfoBundle.getBoolean(Constants.NEW_TRACK);
         }
+        trackInfo = topTracksArrayList.get(mPosition);
         playerView = inflater.inflate(R.layout.media_player, container, false);
 
         // Identify widgets
@@ -202,9 +193,13 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         // Populate layout fields
         setTrackInfo(playerView, trackInfo);
 
-        // Get position if playing
+        if (newTrack) {  // stop current track
+            clickPlay();
+        }
+
+        // Update position if playing
         if (mPlayerService.isPlaying()) {
-            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService);
+            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService + " is playing");
             playButton.setImageDrawable(pauseButtonDrawable);
             setSeekBar(mPlayerService.getSeek());
             startScrubber();
@@ -395,12 +390,11 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
                     (PlayerService.PlayerBinder) service;
             // Get service and bind to it
             mPlayerService = playerBinder.getService();
-            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService.toString());
+            Log.d(LOG_TAG, "mPlayerService: " + mPlayerService.toString() + " connected");
             mBound = true;
 
             // if newTrack, kill the playing track and clear the newTrack flag
-            if (mPlayerService != null || newTrack) {
-                // TODO: Need to end service to avoid leaking?
+            if (newTrack) {
                 mPlayerService.stopForegroundService();
                 newTrack = false;
             }

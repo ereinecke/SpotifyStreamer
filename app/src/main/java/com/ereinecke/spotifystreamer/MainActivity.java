@@ -2,7 +2,6 @@ package com.ereinecke.spotifystreamer;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -14,8 +13,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 /**
  * MainActivity for SpotifyStreamer
@@ -48,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
         if (serviceFragment == null) {
             serviceFragment = new ServiceFragment();
-            // serviceFragment.setTargetFragment(this, 0);
             fm.beginTransaction().add(serviceFragment, Constants.SERVICEFRAGMENT_TAG)
                 .commit();
         }
@@ -122,48 +118,17 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    /**
-     * Handles login to Spotify via WebView
-     */
-    private void spotifyLogin() {
-
-        AuthenticationRequest.Builder builder =
-                new AuthenticationRequest.Builder(Constants.CLIENT_ID,
-                        AuthenticationResponse.Type.TOKEN, Constants.REDIRECT_URI);
-
-        builder.setScopes(new String[]{"streaming"});
-        AuthenticationRequest request = builder.build();
-
-        AuthenticationClient.openLoginActivity(this, Constants.REQUEST_CODE, request);
-    }
-
-    /**
-     * Handles the result of the spotifyLogin activity
-     * @param requestCode - identifies the correct activity result
-     * @param resultCode -
-     * @param intent - intent that launched spotify login
-     *
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        // Check if result comes from the correct activity
-        if (requestCode == Constants.REQUEST_CODE) {
-            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            switch (response.getType()) {
-                // Response was successful and contains auth token
-                case TOKEN:
-                    accessToken = response.getAccessToken();
-                    Log.d(LOG_TAG, "Spotify accessToken: " + accessToken);
-                    break;
-                case ERROR:
-                    Log.d(LOG_TAG, "Error obtaining access token: " + response.getError());
-                    accessToken = null;
-                    break;
-                default:
-                    Log.d(LOG_TAG, "Unexpected Spotify responseType(): " + response.getType());
-                    accessToken = null;
+    /* startServiceFragment starts a ServiceFragment which starts a bound PlayerService. */
+    public void startServiceFragment() {
+        if (!isPlayerServiceRunning()) {
+            // ServiceFragment exists to keep bound to MediaPlayer.
+            FragmentManager fm = getSupportFragmentManager();
+            ServiceFragment serviceFragment = (ServiceFragment)
+                    fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
+            if (serviceFragment == null) {
+                serviceFragment = new ServiceFragment();
+                fm.beginTransaction().add(serviceFragment, Constants.SERVICEFRAGMENT_TAG)
+                        .commit();
             }
         }
     }
@@ -188,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
         topTracksFragment.setListPosition(pos);
     }
-
 
     /**
      * Get ISO 3166-1 alpha-2 country code for this device using IP address.  This involves

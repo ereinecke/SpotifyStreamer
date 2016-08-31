@@ -150,8 +150,14 @@ import java.util.ArrayList;
     // Play from beginning
     public void startTrack() {
         Log.d(LOG_TAG, "in startTrack()");
-        logMediaPlayerState();
-        currentTrack = topTracksArrayList.get(mPosition);
+        // logMediaPlayerState();
+
+        if (topTracksArrayList == null) {
+            return;
+        } else {
+            currentTrack = topTracksArrayList.get(mPosition);
+        }
+
         if (!mMediaPlayer.isPlaying()) {
             mMediaPlayer.reset();
             initTrack();        // sets up notification, starts foreground service asynchronously
@@ -164,7 +170,7 @@ import java.util.ArrayList;
     // Resume play from pause
     public void playTrack() {
         Log.d(LOG_TAG, "in playTrack()");
-        logMediaPlayerState();
+        // logMediaPlayerState();
         if (mMediaPlayer != null) {
             if (!mMediaPlayer.isPlaying()) {
                 playing = true;
@@ -182,7 +188,7 @@ import java.util.ArrayList;
     public void pauseTrack() {
         // If playing, pause
         Log.d(LOG_TAG, "in pauseTrack()");
-        logMediaPlayerState();
+        // logMediaPlayerState();
         if (mMediaPlayer.isPlaying()) {
             playing = false;
             mMediaPlayer.pause();
@@ -256,7 +262,7 @@ import java.util.ArrayList;
     public void stopForegroundService() {
         if (mMediaPlayer != null) {
             Log.i(LOG_TAG, "Stopping foreground service");
-            //mMediaPlayer.stop();
+            mMediaPlayer.stop();
             trackReady = false;
             stopForeground(true);
             stopSelf();
@@ -272,7 +278,7 @@ import java.util.ArrayList;
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        logMediaPlayerState();
+        // logMediaPlayerState();
     }
 
      public void setTrackList(ArrayList<ShowTopTracks> topTracksArrayList, int position) {

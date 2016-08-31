@@ -31,10 +31,9 @@ public class ServiceFragment extends Fragment {
         // PlayerService is bound here
         setRetainInstance(true);
 
-        if (!mBound) {
+        if (!mBound || mPlayerService == null) {
             // Start and bind to PlayerService
             Intent playIntent = new Intent(getActivity(), PlayerService.class);
-            // getActivity().startService(playIntent);
             getActivity().bindService(playIntent, mConnection,
                     Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
 
@@ -45,13 +44,14 @@ public class ServiceFragment extends Fragment {
     @Override
         public void onDestroy() {
 
-        // Only unbind service once app is actually finishing.
-        if (getActivity().isFinishing()) {
-            Log.d(LOG_TAG, "in onDestroy() in ServiceFragment, app close requested");
+        try {
             getActivity().unbindService(mConnection);
+        } catch (Exception e) {
+            Log.d(LOG_TAG, "Exception unbinding from PlayerService: " + e.getMessage());
+        } finally {
             mConnection = null;
+            super.onDestroy();
         }
-        super.onDestroy();
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -74,6 +74,9 @@ public class ServiceFragment extends Fragment {
     };
 
     public PlayerService getPlayerService() {
+        if (mPlayerService == null) {
+            Log.d(LOG_TAG, "PlayerService is null.");
+        }
         return mPlayerService;
     }
 }
