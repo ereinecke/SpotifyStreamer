@@ -1,7 +1,5 @@
 package com.ereinecke.spotifystreamer;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,24 +47,5 @@ public class PlayerActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-   /* Used to tell if PlayerService is running.  This needs to be implemented in MainActivity as
-    * well.
-    */
-    public boolean isPlayerServiceRunning() {
-
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (service.service.getClassName().equals("PlayerService")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void killPlayerService() {
-        if (isPlayerServiceRunning()) {
-
-        }
     }
 }

@@ -56,12 +56,45 @@ import java.util.ArrayList;
         }
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(LOG_TAG, "In onDestroy()");
+        if (mMediaPlayer != null) {
+            // stopForegroundService();
+            // unbind service??
+            // mMediaPlayer.release();
+            Log.d(LOG_TAG, "MediaPlayer: " + mMediaPlayer.toString());
+            mMediaPlayer = null;
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        Log.d(LOG_TAG, "in onBind(), mBinder: " + mBinder.toString());
+        return mBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(LOG_TAG, "in onUnbind()");
+        // mMediaPlayer.stop();
+        // mMediaPlayer.release();
+        // mMediaPlayer = null;
+        return false;
+    }
+
     // Prepares notification PendingIntents, gets albumTrackArt, sets up notification
     // and calls prepareAsync().
     public void initTrack() {
 
         Log.d(LOG_TAG, "Setting up new track, mPosition: " + mPosition);
-        logMediaPlayerState();
+        // logMediaPlayerState();
 
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
@@ -116,6 +149,8 @@ import java.util.ArrayList;
         protected void onPostExecute(Bitmap trackAlbumArt) {
 
             setNotification(trackAlbumArt);
+            // TODO: Send tracklist to PlayerFragment
+
             if (!PlayerService.isPlaying()) {
                 startForegroundService();
 
@@ -150,12 +185,15 @@ import java.util.ArrayList;
     // Play from beginning
     public void startTrack() {
         Log.d(LOG_TAG, "in startTrack()");
-        // logMediaPlayerState();
 
         if (topTracksArrayList == null) {
             return;
         } else {
             currentTrack = topTracksArrayList.get(mPosition);
+        }
+        // Initialize MediaPlayer if necessary
+        if (mMediaPlayer == null) {
+            initMediaPlayer();
         }
 
         if (!mMediaPlayer.isPlaying()) {
@@ -209,6 +247,8 @@ import java.util.ArrayList;
         playing = false;
         currentTrack = topTracksArrayList.get(mPosition);
         setTopTracksPosition(mPosition);
+        // Tell PlayerFragment to update UI
+        PlayerFragment.updateTrackInfo(mPosition);
         startTrack();
     }
 
@@ -219,11 +259,15 @@ import java.util.ArrayList;
         } else {                // set to first
             mPosition = 0;
         }
-        mMediaPlayer.stop();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+        }
         trackReady = false;
         playing = false;
         currentTrack = topTracksArrayList.get(mPosition);
         setTopTracksPosition(mPosition);
+        // Tell PlayerFragment to update UI
+        PlayerFragment.updateTrackInfo(mPosition);
         startTrack();
     }
 
@@ -270,15 +314,18 @@ import java.util.ArrayList;
     }
 
     private void initMediaPlayer() {
-        Log.d(LOG_TAG, " in initMediaPlayer()");
-        // mMediaPlayer = new MediaPlayer();
+        if (mMediaPlayer != null) {
+            Log.d(LOG_TAG, " in initMediaPlayer(), mMediaPlayer: " + mMediaPlayer.toString());
+        } else {
+            Log.d(LOG_TAG, " creating new MediaPlayer");
+        }
         mMediaPlayer = new DebugMediaPlayer();
         mMediaPlayer.setOnErrorListener(this);
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        // logMediaPlayerState();
+
     }
 
      public void setTrackList(ArrayList<ShowTopTracks> topTracksArrayList, int position) {
@@ -290,8 +337,8 @@ import java.util.ArrayList;
     /* For when a newly created PlayerFragment needs to know what's playing */
     public Bundle getTrackList() {
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.CURRENT_TRACK_KEY, mPosition);
-        bundle.putParcelableArrayList(Constants.TOP_TRACKS_ARRAY, topTracksArrayList);
+        bundle.putInt(Constants.TOP_TRACKS_POSITION, mPosition);
+        bundle.putParcelableArrayList(Constants.TRACK_INFO, topTracksArrayList);
 
         return bundle;
     }
@@ -345,8 +392,6 @@ import java.util.ArrayList;
     public void onCompletion(MediaPlayer player) {
         trackReady = false;
         if (mMediaPlayer != null) {
-            // Tell PlayerFragment to update UI
-            PlayerFragment.updateTrackInfo(mPosition);
             nextTrack();
         }
     }
@@ -358,16 +403,6 @@ import java.util.ArrayList;
         sendBroadcast(positionIntent);
     }
 
-    private void logMediaPlayerState() {
-        if (mMediaPlayer == null) Log.d(LOG_TAG, "MediaPlayer null");
-        else {
-            Log.d(LOG_TAG, "Media player isPlaying(): " + isPlaying() + "; " +
-                    "playing: " + playing + "\n");
-            if (isPlaying() != playing) {
-                Log.d(LOG_TAG, "isPlaying() and playing are not in agreement.");
-            }
-        }
-    }
 
     public static boolean isPlaying() {
         Log.d(LOG_TAG, "isPlaying(): " + (mMediaPlayer != null && mMediaPlayer.isPlaying()));
@@ -380,39 +415,4 @@ import java.util.ArrayList;
         return (trackReady && !isPlaying());
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(LOG_TAG, "in onCreate()");
-
-        // Initialize MediaPlayer
-        if (mMediaPlayer == null) { initMediaPlayer(); }
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(LOG_TAG, "In onDestroy");
-        if (mMediaPlayer != null) {
-            // stopForegroundService();
-            // unbind service??
-            // mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        Log.d(LOG_TAG, "in onBind()");
-        return mBinder;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.d(LOG_TAG, "in onUnbind()");
-        // mMediaPlayer.stop();
-        // mMediaPlayer.release();
-        // mMediaPlayer = null;
-        return false;
-    }
 }

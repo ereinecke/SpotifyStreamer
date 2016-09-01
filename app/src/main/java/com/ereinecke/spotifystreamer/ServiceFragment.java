@@ -34,6 +34,7 @@ public class ServiceFragment extends Fragment {
         if (!mBound || mPlayerService == null) {
             // Start and bind to PlayerService
             Intent playIntent = new Intent(getActivity(), PlayerService.class);
+            getActivity().startService(playIntent);
             getActivity().bindService(playIntent, mConnection,
                     Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
 
@@ -57,12 +58,13 @@ public class ServiceFragment extends Fragment {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(LOG_TAG, "in onServiceConnected()");
+
             PlayerService.PlayerBinder playerBinder =
                     (PlayerService.PlayerBinder) service;
             // get service
             mPlayerService = playerBinder.getService();
             mBound = true;
+            Log.d(LOG_TAG, "in onServiceConnected(), PlayerService: " + mPlayerService.toString());
         }
 
         @Override
@@ -76,6 +78,8 @@ public class ServiceFragment extends Fragment {
     public PlayerService getPlayerService() {
         if (mPlayerService == null) {
             Log.d(LOG_TAG, "PlayerService is null.");
+        } else {
+            Log.d(LOG_TAG, "Returning PlayerService " + mPlayerService.toString());
         }
         return mPlayerService;
     }

@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static  String accessToken() {return accessToken;}
 
     private static Bitmap placeholderImage;
+    private static ServiceFragment mServiceFragment;
     private boolean sfmBound;
 
     @Override
@@ -42,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
 
         // ServiceFragment exists to keep bound to MediaPlayer, should just be started once.
         FragmentManager fm = getSupportFragmentManager();
-        ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
-        if (serviceFragment == null) {
-            serviceFragment = new ServiceFragment();
-            fm.beginTransaction().add(serviceFragment, Constants.SERVICEFRAGMENT_TAG)
+        mServiceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
+        if (mServiceFragment == null) {
+            mServiceFragment = new ServiceFragment();
+            fm.beginTransaction().add(mServiceFragment, Constants.SERVICEFRAGMENT_TAG)
                 .commit();
+            fm.executePendingTransactions();
         }
 
         // Determine if in two-pane mode by testing existence of top_tracks_container
@@ -56,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         placeholderImage = ((BitmapDrawable) getResources()
                 .getDrawable(R.mipmap.ic_launcher)).getBitmap();
 
-        // Implemented Spotify login, but am not calling it at this point.
-        // spotifyLogin();
+        isPlayerServiceRunning();
+
     }
 
 
@@ -112,10 +114,15 @@ public class MainActivity extends AppCompatActivity {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)) {
             if (service.service.getClassName().equals("PlayerService")) {
+                Log.d(LOG_TAG, "PlayerService is running");
                 return true;
             }
         }
         return false;
+    }
+
+    public static ServiceFragment getServiceFragment() {
+        return mServiceFragment;
     }
 
     /* startServiceFragment starts a ServiceFragment which starts a bound PlayerService. */
@@ -123,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
         if (!isPlayerServiceRunning()) {
             // ServiceFragment exists to keep bound to MediaPlayer.
             FragmentManager fm = getSupportFragmentManager();
-            ServiceFragment serviceFragment = (ServiceFragment)
+            mServiceFragment = (ServiceFragment)
                     fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
-            if (serviceFragment == null) {
-                serviceFragment = new ServiceFragment();
-                fm.beginTransaction().add(serviceFragment, Constants.SERVICEFRAGMENT_TAG)
+            if (mServiceFragment == null) {
+                mServiceFragment = new ServiceFragment();
+                fm.beginTransaction().add(mServiceFragment, Constants.SERVICEFRAGMENT_TAG)
                         .commit();
             }
         }

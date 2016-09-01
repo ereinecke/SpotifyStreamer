@@ -13,7 +13,7 @@ class Constants {
     public static final String FINDARTISTFRAGMENT_TAG = "FAFTAG";
     public static final String TRACKSFRAGMENT_TAG = "DFTAG";
     public static final String PLAYERFRAGMENT_TAG = "PLYFTAG";
-    public static final String SERVICEFRAGMENT_TAG = "SFFTAG";
+    public static final String SERVICEFRAGMENT_TAG = "SFTAG";
 
     // Service actions
     public static final String MAIN_ACTION = "com.ereinecke.spotifystreamer.main";
