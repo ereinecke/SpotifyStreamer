@@ -143,8 +143,8 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             mPosition = trackInfoBundle.getInt(Constants.TOP_TRACKS_POSITION);
             newTrack = trackInfoBundle.getBoolean(Constants.NEW_TRACK);
         }
-        // Get tracklist from PlayerService
-        if (mPlayerService != null && mPlayerService.isPlaying()) {
+        // Get tracklist from PlayerService if it's playing
+        if (!newTrack && mPlayerService != null && mPlayerService.isPlaying()) {
             trackInfoBundle = mPlayerService.getTrackList();
             topTracksArrayList = trackInfoBundle.getParcelableArrayList(Constants.TRACK_INFO);
             mPosition = trackInfoBundle.getInt(Constants.TOP_TRACKS_POSITION);
