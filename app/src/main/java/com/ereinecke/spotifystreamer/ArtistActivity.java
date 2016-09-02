@@ -23,7 +23,6 @@ public class ArtistActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.find_artist_fragment, new FindArtistFragment())
                     .add(R.id.find_artist_fragment, new Fragment())
                     .commit();
         }

@@ -70,7 +70,7 @@ public class FetchTopTracks extends AsyncTask<String, Void, Tracks> {
         } catch (RetrofitError error) {
             SpotifyError spotifyError = SpotifyError.fromRetrofitError(error);
             Log.d(LOG_TAG, "spotifyError: " + spotifyError.toString());
-            tracks = null; // redundant?
+            tracks = null;
         }
         return tracks;
     } // end searchSpotifyData.doInBackground

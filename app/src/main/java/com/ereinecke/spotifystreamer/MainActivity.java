@@ -10,9 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.spotify.sdk.android.authentication.AuthenticationClient;
 
 /**
  * MainActivity for SpotifyStreamer
@@ -30,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static Bitmap placeholderImage;
     private static ServiceFragment mServiceFragment;
-    private boolean sfmBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public void onRestoreInstanceState (Bundle outState) {
         super.onRestoreInstanceState(outState);
@@ -70,14 +65,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.d(LOG_TAG, "in MainActivity.onDestroy()");
         super.onDestroy();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // getMenuInflater().inflate(R.menu.detail, menu);
         return true;
     }
 
@@ -90,19 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            // TODO: create SettingsFragment.java
             // startActivity(new Intent(this, SettingsActivity.class));
-            // Pop a toast as an interim measure
-            Toast.makeText(getApplicationContext(), "Settings not yet implemented",
-                           Toast.LENGTH_SHORT)
-                 .show();
             return true;
         }
 
-        if (id == R.id.action_logout) {
-            Log.d(LOG_TAG, "Logging out!");
-            AuthenticationClient.logout(this);
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -114,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)) {
             if (service.service.getClassName().equals("PlayerService")) {
-                Log.d(LOG_TAG, "PlayerService is running");
                 return true;
             }
         }
@@ -123,21 +107,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static ServiceFragment getServiceFragment() {
         return mServiceFragment;
-    }
-
-    /* startServiceFragment starts a ServiceFragment which starts a bound PlayerService. */
-    public void startServiceFragment() {
-        if (!isPlayerServiceRunning()) {
-            // ServiceFragment exists to keep bound to MediaPlayer.
-            FragmentManager fm = getSupportFragmentManager();
-            mServiceFragment = (ServiceFragment)
-                    fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
-            if (mServiceFragment == null) {
-                mServiceFragment = new ServiceFragment();
-                fm.beginTransaction().add(mServiceFragment, Constants.SERVICEFRAGMENT_TAG)
-                        .commit();
-            }
-        }
     }
 
     /**

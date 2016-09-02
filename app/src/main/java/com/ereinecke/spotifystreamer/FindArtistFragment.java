@@ -111,16 +111,13 @@ public class FindArtistFragment extends Fragment {
         artistSearch.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Log.d(LOG_TAG, "In onEditorAction(), actionId: " + actionId);
                 if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED ||
                     actionId == EditorInfo.IME_ACTION_DONE        ||
                     actionId == EditorInfo.IME_ACTION_SEARCH) {
 
                     artist = artistSearch.getText().toString();
-                    Log.d(LOG_TAG, " in onEditorAction(), Artist: " + artist);
-                    Log.d(LOG_TAG, " artistArray size: " + artistArray.size());
+
                     newView = false;
-                    Log.d(LOG_TAG, "Searching Spotify...");
                     searchSpotifyArtists spotifyData = new searchSpotifyArtists();
                     spotifyData.execute(artist);
                     return true;
@@ -151,7 +148,6 @@ public class FindArtistFragment extends Fragment {
                     TopTracksFragment topTracksFragment = new TopTracksFragment();
                     topTracksFragment.setArguments(extras);
 
-                    Log.d(LOG_TAG, "replacing top_tracks_container");
                     fragmentTransaction.replace(R.id.top_tracks_container, topTracksFragment,
                             Constants.TRACKSFRAGMENT_TAG);
                     fragmentTransaction.addToBackStack(Constants.TRACKSFRAGMENT_TAG);
@@ -178,8 +174,6 @@ public class FindArtistFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(LOG_TAG, "in onSaveInstanceState: ArtistName: " + artist + "; ArtistListPosition :" +
-                mArtistListPosition);
         outState.putInt(Constants.ARTISTS_LIST_POSITION, mArtistListPosition);
         outState.putParcelableArrayList(Constants.ARTIST_ARRAY, artistArray);
         outState.putString(getString(R.string.key_artist_name), artist);

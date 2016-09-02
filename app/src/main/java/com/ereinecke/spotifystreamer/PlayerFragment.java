@@ -67,7 +67,6 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
         // Connect to ServiceFragment to get mPlayerService
         FragmentManager fm = getActivity().getSupportFragmentManager();
-//        ServiceFragment serviceFragment = (ServiceFragment) fm.findFragmentByTag(Constants.SERVICEFRAGMENT_TAG);
         ServiceFragment serviceFragment = MainActivity.getServiceFragment();
         Log.d(LOG_TAG, "Existing ServiceFragment at " + serviceFragment.toString());
         if (serviceFragment == null) {
@@ -79,18 +78,14 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         }
 
         mPlayerService = serviceFragment.getPlayerService();
-        PlayerService fragmentService = mPlayerService;
-        Log.d(LOG_TAG, "in onCreate(), mPlayerService: " + mPlayerService.toString());
         Intent playIntent = new Intent(getActivity(), PlayerService.class);
         getActivity().bindService(playIntent, mConnection,
                 Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
 
         if (mPlayerService == null) {
             Log.d(LOG_TAG, "found null PlayerService.");
-
         }
         else {
-            Log.d(LOG_TAG, "PlayerService " + mPlayerService + " playing? " + mPlayerService.isPlaying());
             mBound = true;
         }
         setHasOptionsMenu(true);
@@ -144,7 +139,8 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             newTrack = trackInfoBundle.getBoolean(Constants.NEW_TRACK);
         }
         // Get tracklist from PlayerService if it's playing
-        if (savedInstanceState != null && !newTrack && mPlayerService != null && mPlayerService.isPlaying()) {
+        if (savedInstanceState != null && !newTrack &&
+                mPlayerService != null && mPlayerService.isPlaying()) {
             trackInfoBundle = mPlayerService.getTrackList();
             topTracksArrayList = trackInfoBundle.getParcelableArrayList(Constants.TRACK_INFO);
             mPosition = trackInfoBundle.getInt(Constants.TOP_TRACKS_POSITION);
@@ -192,7 +188,6 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
                 progress = progressValue;
                 if (fromUser) {
-                    // Log.d(LOG_TAG, "Progress from user: " + progress);
                     seekTo(progress);
                 }
             }
@@ -307,7 +302,6 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             Log.d(LOG_TAG, " clickPlay() on null mPlayerService");
         }
         else {
-            // Log.d(LOG_TAG, "in clickPlay(), mPosition: " + mPosition);
             if (mPlayerService.isPlaying()) {
                 // change button to Play, pause player
                 playButton.setImageDrawable(playButtonDrawable);
@@ -369,7 +363,6 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         // Log.d(LOG_TAG,"mPlayerService.getSeek(): " + mPlayerService.getSeek());
         int seekPos = mPlayerService.getSeek();
         if (seekPos > 0) {
-            // Log.d(LOG_TAG, "setSeekBar to: " + progress + " msec; " + progress/Constants.SCRUBBER_INTERVAL + "%" );
             seekBar.setProgress(progress / Constants.SCRUBBER_INTERVAL);
             currentTimeView.setText(millisToMinutes(mPlayerService.getSeek()));
         }

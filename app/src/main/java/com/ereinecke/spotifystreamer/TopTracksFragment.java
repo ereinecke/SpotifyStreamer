@@ -239,10 +239,6 @@ public class TopTracksFragment extends Fragment {
     /* Brings up PlayerActivity or PlayerFragment as appropriate.  If called with a null
      * topTracksArray, then just bring player forward showing what is currently playing.
      */
-    private void showMediaPlayer() {
-        showMediaPlayer(null, Constants.USE_CURRENT, false);
-    }
-
     private void showMediaPlayer(ArrayList<ShowTopTracks> topTracksArray, int mPosition,
                                  boolean newTrack) {
 
@@ -287,7 +283,7 @@ public class TopTracksFragment extends Fragment {
 
     public void setListPosition(int position) {
         mTracksListPosition = position;
-        // mListView.setSelection(position); // works if not in touch mode
+        mListView.setSelection(position); // works if not in touch mode
         mListView.setItemChecked(position, true); // works in touch mode
 
     }

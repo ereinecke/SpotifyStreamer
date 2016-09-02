@@ -65,9 +65,6 @@ import java.util.ArrayList;
     public void onDestroy() {
         Log.d(LOG_TAG, "In onDestroy()");
         if (mMediaPlayer != null) {
-            // stopForegroundService();
-            // unbind service??
-            // mMediaPlayer.release();
             Log.d(LOG_TAG, "MediaPlayer: " + mMediaPlayer.toString());
             mMediaPlayer = null;
         }
@@ -83,9 +80,6 @@ import java.util.ArrayList;
     @Override
     public boolean onUnbind(Intent intent) {
         Log.d(LOG_TAG, "in onUnbind()");
-        // mMediaPlayer.stop();
-        // mMediaPlayer.release();
-        // mMediaPlayer = null;
         return false;
     }
 
@@ -94,7 +88,6 @@ import java.util.ArrayList;
     public void initTrack() {
 
         Log.d(LOG_TAG, "Setting up new track, mPosition: " + mPosition);
-        // logMediaPlayerState();
 
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
@@ -208,7 +201,6 @@ import java.util.ArrayList;
     // Resume play from pause
     public void playTrack() {
         Log.d(LOG_TAG, "in playTrack()");
-        // logMediaPlayerState();
         if (mMediaPlayer != null) {
             if (!mMediaPlayer.isPlaying()) {
                 playing = true;
@@ -226,7 +218,6 @@ import java.util.ArrayList;
     public void pauseTrack() {
         // If playing, pause
         Log.d(LOG_TAG, "in pauseTrack()");
-        // logMediaPlayerState();
         if (mMediaPlayer.isPlaying()) {
             playing = false;
             mMediaPlayer.pause();
@@ -275,7 +266,6 @@ import java.util.ArrayList;
     public void startForegroundService() {
         Log.d(LOG_TAG, "in startForegroundService()");
         if (!mMediaPlayer.isPlaying()) {
-            // stopForegroundService();
             mMediaPlayer.reset();
         }
         try {
@@ -297,7 +287,6 @@ import java.util.ArrayList;
             // get seek position and continue to update
             setSeek(getSeek());
         }
-        // Trigger a UI update
 
         // Connect to PlayerFragment
         // TODO: Send a broadcast to PlayerFragment to ensure UI is in sync with what's playing
@@ -351,8 +340,6 @@ import java.util.ArrayList;
 
     public void setSeek(int newPositionMillis) {
          if (mMediaPlayer.isPlaying()) {
-            // Log.d("SetSeek: ", "Current Position: " + mMediaPlayer.getCurrentPosition());
-            // Log.d(LOG_TAG, "Setting position to: " + newPositionMillis);
             mMediaPlayer.seekTo(newPositionMillis);
             Log.d("SetSeek: ", "New Position: " + mMediaPlayer.getCurrentPosition());
         }
@@ -411,7 +398,6 @@ import java.util.ArrayList;
 
     // Assumption that if trackReady = true and isPlaying() is false, must be paused.
     public boolean isPaused() {
-        // Log.d(LOG_TAG, "isPaused(): " + (trackReady && !isPlaying()));
         return (trackReady && !isPlaying());
     }
 

@@ -37,8 +37,6 @@ public class ServiceFragment extends Fragment {
             getActivity().startService(playIntent);
             getActivity().bindService(playIntent, mConnection,
                     Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
-
-            Log.d(LOG_TAG, " in onCreate(), started and bound PlayerService");
         }
     }
 
