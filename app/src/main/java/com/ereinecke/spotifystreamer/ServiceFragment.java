@@ -21,7 +21,8 @@ public class ServiceFragment extends Fragment {
     private boolean mBound;
     private PlayerService mPlayerService;
 
-    public ServiceFragment() {}
+    public ServiceFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class ServiceFragment extends Fragment {
     }
 
     @Override
-        public void onDestroy() {
+    public void onDestroy() {
 
         try {
             getActivity().unbindService(mConnection);
@@ -67,7 +68,7 @@ public class ServiceFragment extends Fragment {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(LOG_TAG,"in onServiceDisconnected()");
+            Log.d(LOG_TAG, "in onServiceDisconnected()");
             mPlayerService = null;
             mBound = false;
         }

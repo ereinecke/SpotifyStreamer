@@ -15,7 +15,7 @@ import android.view.MenuItem;
  * Adds artist name to ActionBar as a subtitle.
  */
 
-public class TopTracksActivity extends AppCompatActivity  {
+public class TopTracksActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = TopTracksActivity.class.getSimpleName();
 
@@ -56,7 +56,7 @@ public class TopTracksActivity extends AppCompatActivity  {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Log.d(LOG_TAG, "adding top_tracks_container");
         fragmentTransaction.add(R.id.top_tracks_container, new TopTracksFragment())
-                                .commit();
+                .commit();
 
     }
 

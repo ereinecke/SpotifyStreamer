@@ -23,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
     private static boolean mTwoPane = false;
     private static String countryCode;
     private static String accessToken = null;
-    public static  String accessToken() {return accessToken;}
+
+    public static String accessToken() {
+        return accessToken;
+    }
 
     private static Bitmap placeholderImage;
     private static ServiceFragment mServiceFragment;
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         if (mServiceFragment == null) {
             mServiceFragment = new ServiceFragment();
             fm.beginTransaction().add(mServiceFragment, Constants.SERVICEFRAGMENT_TAG)
-                .commit();
+                    .commit();
             fm.executePendingTransactions();
         }
 
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestoreInstanceState (Bundle outState) {
+    public void onRestoreInstanceState(Bundle outState) {
         super.onRestoreInstanceState(outState);
     }
 
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean isPlayerServiceRunning() {
 
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)) {
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (service.service.getClassName().equals("PlayerService")) {
                 return true;
             }

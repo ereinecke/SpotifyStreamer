@@ -19,12 +19,11 @@ public class ShowTopTracks implements Parcelable {
 
     // Basic constructor
     public ShowTopTracks(String trackName, String albumName, String artistName, String trackId,
-                         String trackImageUrl, String trackMediaUrl, long trackLength)
-    {
-        this.trackName  = trackName;
-        this.albumName  = albumName;
+                         String trackImageUrl, String trackMediaUrl, long trackLength) {
+        this.trackName = trackName;
+        this.albumName = albumName;
         this.artistName = artistName;
-        this.trackId    = trackId;
+        this.trackId = trackId;
         this.trackImageUrl = trackImageUrl;
         this.trackMediaUrl = trackMediaUrl;
         this.trackLength = trackLength;
@@ -34,13 +33,13 @@ public class ShowTopTracks implements Parcelable {
     // Constructor for use by Parcelable creator
     private ShowTopTracks(Parcel source) {
         // Reconstruct from the parcel
-        trackName     = source.readString();
-        albumName     = source.readString();
-        artistName    = source.readString();
-        trackId       = source.readString();
+        trackName = source.readString();
+        albumName = source.readString();
+        artistName = source.readString();
+        trackId = source.readString();
         trackImageUrl = source.readString();
         trackMediaUrl = source.readString();
-        trackLength   = source.readLong();
+        trackLength = source.readLong();
     }
 
     public void writeToParcel(Parcel dest, int flags) {

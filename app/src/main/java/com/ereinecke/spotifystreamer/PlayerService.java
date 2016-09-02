@@ -23,14 +23,14 @@ import java.util.ArrayList;
 /**
  * Media Player foreground service
  * Significant contribution from these tutorials:
- *      http://truiton.com/2014/10/android-foreground-service-example
- *      http://code.tutsplus.com/tutorials/create-a-music-player-on-android-song-playback--mobile-22778
- *
- *      TODO: Handle audio focus
+ * http://truiton.com/2014/10/android-foreground-service-example
+ * http://code.tutsplus.com/tutorials/create-a-music-player-on-android-song-playback--mobile-22778
+ * <p/>
+ * TODO: Handle audio focus
  */
 
-    public class PlayerService extends Service implements MediaPlayer.OnErrorListener,
-            MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+public class PlayerService extends Service implements MediaPlayer.OnErrorListener,
+        MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
     private static final String LOG_TAG = PlayerService.class.getSimpleName();
 
@@ -48,7 +48,8 @@ import java.util.ArrayList;
     private ShowTopTracks currentTrack;
     private Notification notification;
 
-    public PlayerService() {}
+    public PlayerService() {
+    }
 
     public class PlayerBinder extends Binder {
         PlayerService getService() {
@@ -95,7 +96,7 @@ import java.util.ArrayList;
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Constants.MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                                    Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         // Previous
@@ -134,7 +135,7 @@ import java.util.ArrayList;
                 e.printStackTrace();
                 trackImageArt = MainActivity.getPlaceholderImage();
             }
-            Log.d (LOG_TAG, "got trackImageArt");
+            Log.d(LOG_TAG, "got trackImageArt");
             return trackImageArt;
         } // end getAlbumTrackArt.doInBackground
 
@@ -209,8 +210,7 @@ import java.util.ArrayList;
             } else {
                 Log.d(LOG_TAG, "Attempted to playTrack() when already playing");
             }
-        }
-        else {  // mMediaPlayer null
+        } else {  // mMediaPlayer null
             Log.d(LOG_TAG, "mMediaPlayer is null in playTrack()");
         }
     }
@@ -271,7 +271,7 @@ import java.util.ArrayList;
         try {
             startForeground(Constants.NOTIFICATION_ID, notification);
         } catch (Exception e) {
-            Log.d(LOG_TAG,"Error trying to start Foreground service: probably already running.");
+            Log.d(LOG_TAG, "Error trying to start Foreground service: probably already running.");
             e.printStackTrace();
         }
 
@@ -317,7 +317,7 @@ import java.util.ArrayList;
 
     }
 
-     public void setTrackList(ArrayList<ShowTopTracks> topTracksArrayList, int position) {
+    public void setTrackList(ArrayList<ShowTopTracks> topTracksArrayList, int position) {
         mPosition = position;
         this.topTracksArrayList = topTracksArrayList;
         currentTrack = topTracksArrayList.get(mPosition);
@@ -333,13 +333,13 @@ import java.util.ArrayList;
     }
 
     public static int getSeek() {
-        if (mMediaPlayer != null ) {
+        if (mMediaPlayer != null) {
             return mMediaPlayer.getCurrentPosition();
         } else return -1;
     }
 
     public void setSeek(int newPositionMillis) {
-         if (mMediaPlayer.isPlaying()) {
+        if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.seekTo(newPositionMillis);
             Log.d("SetSeek: ", "New Position: " + mMediaPlayer.getCurrentPosition());
         }
@@ -384,7 +384,7 @@ import java.util.ArrayList;
     }
 
     // Tells MainActivity to change TopTracks selection position
-    private  void setTopTracksPosition(int position) {
+    private void setTopTracksPosition(int position) {
         Intent positionIntent = new Intent();
         positionIntent.putExtra(Constants.CURRENT_TRACK_KEY, position);
         sendBroadcast(positionIntent);

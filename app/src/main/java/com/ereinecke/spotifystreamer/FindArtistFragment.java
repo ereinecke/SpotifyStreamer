@@ -56,7 +56,6 @@ public class FindArtistFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-        Log.d(LOG_TAG, "in onCreate, newView: " + newView);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class FindArtistFragment extends Fragment {
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
         // Create ArrayAdapter using persisted artist data
-        if (artistArray != null  && artistArray.size() > 0) {
+        if (artistArray != null && artistArray.size() > 0) {
             mArtistAdapter = new ArtistAdapter(getActivity(), artistArray);
             mListView.setAdapter(mArtistAdapter);
             if (mArtistListPosition != ListView.INVALID_POSITION) {
@@ -100,8 +99,8 @@ public class FindArtistFragment extends Fragment {
                 mListView.invalidateViews();  // force a redraw
                 Log.d(LOG_TAG, "performItemClick at pos: " + mArtistListPosition);
                 mListView.performItemClick(mListView.getAdapter()
-                         .getView(mArtistListPosition, null, null), mArtistListPosition,
-                          mListView.getItemIdAtPosition(mArtistListPosition));
+                                .getView(mArtistListPosition, null, null), mArtistListPosition,
+                        mListView.getItemIdAtPosition(mArtistListPosition));
             }
         }
 
@@ -112,8 +111,8 @@ public class FindArtistFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED ||
-                    actionId == EditorInfo.IME_ACTION_DONE        ||
-                    actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_SEARCH) {
 
                     artist = artistSearch.getText().toString();
 
@@ -195,8 +194,9 @@ public class FindArtistFragment extends Fragment {
             if (params.length == 0 || newView) {
                 newView = false;
                 return null;
+            } else {
+                artist = params[0];
             }
-            else {artist = params[0];}
 
             mSpotifyApi.setAccessToken(MainActivity.accessToken());
 
@@ -207,7 +207,7 @@ public class FindArtistFragment extends Fragment {
                 Log.d(LOG_TAG, artistsPager.toString());
             } catch (RetrofitError error) {
                 SpotifyError spotifyError = SpotifyError.fromRetrofitError(error);
-                Log.d(LOG_TAG,"spotifyError: " + spotifyError.toString());
+                Log.d(LOG_TAG, "spotifyError: " + spotifyError.toString());
                 artistsPager = null; // redundant?
             }
 
@@ -217,7 +217,9 @@ public class FindArtistFragment extends Fragment {
         @Override
         protected void onPostExecute(ArtistsPager artistsPager) {
             // Cancel pending toast - this happens because search occurs after every keystroke
-            if (toast != null) {toast.cancel();}
+            if (toast != null) {
+                toast.cancel();
+            }
             if (artistsPager == null || artistsPager.artists.items.size() == 0) {
                 Toast toast = Toast.makeText(getActivity(), getText(R.string.no_results_found) + " \'" +
                         artist + "\'", Toast.LENGTH_SHORT);
@@ -242,8 +244,7 @@ public class FindArtistFragment extends Fragment {
                 String url;
                 if (artist.images.size() > 0) {
                     url = artist.images.get(1).url;
-                }
-                else {
+                } else {
                     url = Constants.NO_IMAGE;
                 }
                 ShowArtist showArtist = new ShowArtist(artist.name, artist.id, url);

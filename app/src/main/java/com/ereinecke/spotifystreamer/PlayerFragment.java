@@ -84,8 +84,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
         if (mPlayerService == null) {
             Log.d(LOG_TAG, "found null PlayerService.");
-        }
-        else {
+        } else {
             mBound = true;
         }
         setHasOptionsMenu(true);
@@ -114,7 +113,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
     public void onDestroyView() {
         // Workaround for DialogFragment self-destruct per
         //     https://code.google.com/p/android/issues/detail?id=17423
-         if (getDialog() != null && getRetainInstance())
+        if (getDialog() != null && getRetainInstance())
             this.getDialog().setOnDismissListener(null);
         super.onDestroyView();
     }
@@ -193,10 +192,12 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekbar) { }
+            public void onStartTrackingTouch(SeekBar seekbar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekbar) { }
+            public void onStopTrackingTouch(SeekBar seekbar) {
+            }
         });
 
         // set up spinner
@@ -262,7 +263,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
     // Set current track info in the media player
     @SuppressLint("SetTextI18n")
-    private static void setTrackInfo (View playerView, ShowTopTracks trackInfo) {
+    private static void setTrackInfo(View playerView, ShowTopTracks trackInfo) {
         if (trackInfo != null) {
             Log.d(LOG_TAG, "Track Info: " + trackInfo.toString());
 
@@ -292,7 +293,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
                     .into(trackArt);
         }
 
-        Log.d(LOG_TAG,"PlayerService.getSeek(): " + mPlayerService.getSeek());
+        Log.d(LOG_TAG, "PlayerService.getSeek(): " + mPlayerService.getSeek());
         seekBar.setProgress(mPlayerService.getSeek());
     }
 
@@ -300,8 +301,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         // Need to toggle Play and Pause
         if (mPlayerService == null) {
             Log.d(LOG_TAG, " clickPlay() on null mPlayerService");
-        }
-        else {
+        } else {
             if (mPlayerService.isPlaying()) {
                 // change button to Play, pause player
                 playButton.setImageDrawable(playButtonDrawable);
@@ -352,9 +352,9 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
     // newPosition is from 1 to 100
     private void seekTo(int newPosition) {
-        Log.d(LOG_TAG,"Calling seekTo with newPosition = " + newPosition);
+        Log.d(LOG_TAG, "Calling seekTo with newPosition = " + newPosition);
         // mPlayerService.setSeek((int) trackInfo.trackLength / newPosition);
-        mPlayerService.setSeek(30000 * newPosition/100);
+        mPlayerService.setSeek(30000 * newPosition / 100);
         setSeekBar(30000 / newPosition);
     }
 
@@ -439,7 +439,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(LOG_TAG,"in onServiceDisconnected()");
+            Log.d(LOG_TAG, "in onServiceDisconnected()");
             Log.d(LOG_TAG, "mPlayerService: " + mPlayerService);
             mBound = false;
             mPlayerService = null;
@@ -456,7 +456,7 @@ public class PlayerFragment extends DialogFragment implements DialogInterface.On
         Long minutes = TimeUnit.MINUTES.convert(millis, TimeUnit.MILLISECONDS) % 60;
         Long seconds = TimeUnit.SECONDS.convert(millis, TimeUnit.MILLISECONDS) % 60;
 
-        if (hours > 0) minutesString =  String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        if (hours > 0) minutesString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
         else minutesString = String.format("%2d:%02d", minutes, seconds);
 
         return minutesString;

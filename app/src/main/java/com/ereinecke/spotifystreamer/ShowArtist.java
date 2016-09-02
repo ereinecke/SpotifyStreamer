@@ -14,8 +14,7 @@ public class ShowArtist implements Parcelable {
     final String artistImageUrl;
 
     // Basic constructor
-    public ShowArtist(String artistName, String artistId, String artistImageUrl)
-    {
+    public ShowArtist(String artistName, String artistId, String artistImageUrl) {
         this.artistName = artistName;
         this.artistId = artistId;
         this.artistImageUrl = artistImageUrl;
@@ -24,12 +23,12 @@ public class ShowArtist implements Parcelable {
     // Constructor for use by Parcelable creator
     private ShowArtist(Parcel source) {
         // Reconstruct from the parcel
-        artistName     = source.readString();
-        artistId       = source.readString();
+        artistName = source.readString();
+        artistId = source.readString();
         artistImageUrl = source.readString();
     }
 
-     public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(artistName);
         dest.writeString(artistId);
         dest.writeString(artistImageUrl);
